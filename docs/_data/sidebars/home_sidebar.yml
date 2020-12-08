@@ -10,8 +10,14 @@ entries:
       title: Overview
       url: /
     - output: web,pdf
-      title: module name here
+      title: Core
       url: core.html
+    - output: web,pdf
+      title: 'Attention Modules '
+      url: attention.html
+    - output: web,pdf
+      title: Models
+      url: transformer.html
     output: web
     title: reformer_fastai
   output: web

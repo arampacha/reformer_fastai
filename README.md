@@ -3,6 +3,7 @@
 
 
 ### Project Links
+
 - [Fastai forums thread](https://forums.fast.ai/t/reproducibility-challenge-2020-fastai-folks-interested/80336/39)
 - [Google doc](https://docs.google.com/document/d/1wF83E3B3yXIGZixEgOUJI2T2XXhT1DVCrPXS5Dbsyh8/edit)
 - [RC2020 Report Style Template](https://paperswithcode.com/static/rc2020/ML-Reproducibility-Challenge-2020-Template.zip)
@@ -28,6 +29,7 @@
 - [HuggingFace: Pretraining](https://colab.research.google.com/drive/1tzzh0i8PgDQGV3SMFUGxM7_gGae3K-uW?usp=sharing)
 
 ### Data
+
 **enwik8**
 - [enwik8.zip, raw data, 100mb](http://mattmahoney.net/dc/enwik8.zip)
 - [Tensor2Tensor enwik8 data generator code, with train/dev/test split](https://github.com/tensorflow/tensor2tensor/blob/master/tensor2tensor/data_generators/enwik8.py). File lengths:
@@ -44,12 +46,14 @@
 - Tokenizer: [Tensor2Tensor SubWordTextEncoder](https://github.com/tensorflow/tensor2tensor/blob/21dba2c1bdcc7ab582a2bfd8c0885c217963bb4f/tensor2tensor/data_generators/text_encoder.py#L448)
 
 ### Explainers
+
 - [Yannic K explainer](https://www.youtube.com/watch?v=i4H0kjxrias&t=1s)
 - [HuggingFace blog post](https://huggingface.co/blog/reformer)
 - [Illustrating the Reformer blog post](https://towardsdatascience.com/illustrating-the-reformer-393575ac6ba0)
 - [Reformer Deep Dive](https://www.pragmatic.ml/reformer-deep-dive/)
 
 ### Related
+
 - [Coursera Attention Models in NLP course, with Reformer co-author](https://www.coursera.org/learn/attention-models-in-nlp)
 - [@hallvagi Attention blogpost](https://hallvagi.github.io/dl-explorer/fastai/attention/lstm/2020/06/29/Attention.html)
 - [The Transformer Family by @lilianweng](https://lilianweng.github.io/lil-log/2020/04/07/the-transformer-family.html)

@@ -1,6 +1,8 @@
 {
   "reformer_fastai": {
     "Overview": "/",
-    "module name here": "core.html"
+    "Core": "core.html",
+    "Attention Modules ": "attention.html",
+    "Models": "transformer.html"
   }
 }

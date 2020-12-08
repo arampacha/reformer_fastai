@@ -2,9 +2,33 @@
 
 __all__ = ["index", "modules", "custom_doc_links", "git_url"]
 
-index = {}
+index = {"exists": "00_core.ipynb",
+         "default": "00_core.ipynb",
+         "expand_dim1": "00_core.ipynb",
+         "Residual": "00_core.ipynb",
+         "PostNorm": "00_core.ipynb",
+         "PreNorm": "00_core.ipynb",
+         "FeedForward": "00_core.ipynb",
+         "AbsolutePositionalEmbedding": "00_core.ipynb",
+         "FixedPositionalEmbedding": "00_core.ipynb",
+         "TransformerEmbedding": "00_core.ipynb",
+         "MASK_VAL": "01_attention.ipynb",
+         "AttnInProj": "01_attention.ipynb",
+         "ScaledDotProdAttention": "01_attention.ipynb",
+         "Attention": "01_attention.ipynb",
+         "top_p_filter": "03_transformer.ipynb",
+         "top_k_filter": "03_transformer.ipynb",
+         "TransformerEncoderBlock": "03_transformer.ipynb",
+         "TransformerEncoder": "03_transformer.ipynb",
+         "TransformerDecoderBlock": "03_transformer.ipynb",
+         "TransformerDecoderBlockV2": "03_transformer.ipynb",
+         "TransformerDecoder": "03_transformer.ipynb",
+         "TransformerLM": "03_transformer.ipynb",
+         "TransformerEncDec": "03_transformer.ipynb"}
 
-modules = []
+modules = ["core.py",
+           "attention.py",
+           "transformer.py"]
 
 doc_url = "https://arampacha.github.io/reformer_fastai/"
 
