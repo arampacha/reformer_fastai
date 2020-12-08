@@ -3,6 +3,7 @@
     "Overview": "/",
     "Core": "core.html",
     "Attention Modules ": "attention.html",
-    "Models": "transformer.html"
+    "Standard Transformer": "transformer.html",
+    "Reformer": "reformer.html"
   }
 }

@@ -60,7 +60,7 @@ nb_path: "nbs/01_attention.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="AttnInProj" class="doc_header"><code>class</code> <code>AttnInProj</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/attention.py#L31" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>AttnInProj</code>(<strong><code>d_model</code></strong>:<code>int</code>, <strong><code>bias</code></strong>:<code>bool</code>=<em><code>False</code></em>) :: <code>Module</code></p>
+<h2 id="AttnInProj" class="doc_header"><code>class</code> <code>AttnInProj</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/attention.py#L32" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>AttnInProj</code>(<strong><code>d_model</code></strong>:<code>int</code>, <strong><code>bias</code></strong>:<code>bool</code>=<em><code>False</code></em>) :: <code>Module</code></p>
 </blockquote>
 <p>Computes q, k, v from input x and [optional] context</p>
 
@@ -171,9 +171,9 @@ nb_path: "nbs/01_attention.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="ScaledDotProdAttention" class="doc_header"><code>class</code> <code>ScaledDotProdAttention</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/attention.py#L45" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ScaledDotProdAttention</code>(<strong><code>d_model</code></strong>, <strong><code>n_heads</code></strong>, <strong><code>causal</code></strong>=<em><code>False</code></em>, <strong><code>dropout</code></strong>=<em><code>0.0</code></em>, <strong><code>store_attention</code></strong>:<code>bool</code>=<em><code>False</code></em>) :: <code>Module</code></p>
+<h2 id="ScaledDotProdAttention" class="doc_header"><code>class</code> <code>ScaledDotProdAttention</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/attention.py#L46" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ScaledDotProdAttention</code>(<strong><code>d_model</code></strong>, <strong><code>n_heads</code></strong>, <strong><code>causal</code></strong>=<em><code>False</code></em>, <strong><code>dropout</code></strong>=<em><code>0.0</code></em>, <strong><code>store_attention</code></strong>:<code>bool</code>=<em><code>False</code></em>) :: <code>Module</code></p>
 </blockquote>
-<p>Same as <code>nn.Module</code>, but no need for subclasses to call <code>super().__init__</code></p>
+<p>Computes scaled dot-product attnetion given q, k, v</p>
 
 </div>
 
@@ -251,7 +251,7 @@ $$\textbf {Attention}(Q,K,V) = \textbf {softmax}({QK^T\over\sqrt d_k})V $$
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="Attention" class="doc_header"><code>class</code> <code>Attention</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/attention.py#L89" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Attention</code>(<strong><code>d_model</code></strong>:<code>int</code>, <strong><code>n_heads</code></strong>:<code>int</code>=<em><code>8</code></em>, <strong><code>causal</code></strong>:<code>bool</code>=<em><code>False</code></em>, <strong><code>mask</code></strong>:<code>Tensor</code>=<em><code>None</code></em>, <strong><code>dropout</code></strong>:<code>float</code>=<em><code>0.1</code></em>, <strong><code>out_dropout</code></strong>:<code>float</code>=<em><code>None</code></em>, <strong><code>bias</code></strong>:<code>bool</code>=<em><code>True</code></em>, <strong><code>store_attention</code></strong>:<code>bool</code>=<em><code>False</code></em>) :: <code>Module</code></p>
+<h2 id="Attention" class="doc_header"><code>class</code> <code>Attention</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/attention.py#L92" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Attention</code>(<strong><code>d_model</code></strong>:<code>int</code>, <strong><code>n_heads</code></strong>:<code>int</code>=<em><code>8</code></em>, <strong><code>causal</code></strong>:<code>bool</code>=<em><code>False</code></em>, <strong><code>mask</code></strong>:<code>Tensor</code>=<em><code>None</code></em>, <strong><code>dropout</code></strong>:<code>float</code>=<em><code>0.1</code></em>, <strong><code>out_dropout</code></strong>:<code>float</code>=<em><code>None</code></em>, <strong><code>bias</code></strong>:<code>bool</code>=<em><code>True</code></em>, <strong><code>store_attention</code></strong>:<code>bool</code>=<em><code>False</code></em>) :: <code>Module</code></p>
 </blockquote>
 <p>Standard attention module using scaled dot-product attention</p>
 
@@ -274,6 +274,12 @@ $$\textbf {Attention}(Q,K,V) = \textbf {softmax}({QK^T\over\sqrt d_k})V $$
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Additive-Attention">Additive Attention<a class="anchor-link" href="#Additive-Attention"> </a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Shared-QK-Attention">Shared QK Attention<a class="anchor-link" href="#Shared-QK-Attention"> </a></h2>
 </div>
 </div>
@@ -284,6 +290,45 @@ $$\textbf {Attention}(Q,K,V) = \textbf {softmax}({QK^T\over\sqrt d_k})V $$
 </div>
 </div>
 </div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Reformer-Attention">Reformer Attention<a class="anchor-link" href="#Reformer-Attention"> </a></h2>
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h2 id="ReformerAttention" class="doc_header"><code>class</code> <code>ReformerAttention</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/attention.py#L129" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ReformerAttention</code>(<strong><code>d_model</code></strong>:<code>int</code>, <strong><code>n_heads</code></strong>:<code>int</code>=<em><code>8</code></em>, <strong><code>causal</code></strong>:<code>bool</code>=<em><code>False</code></em>, <strong><code>mask</code></strong>:<code>Tensor</code>=<em><code>None</code></em>, <strong><code>dropout</code></strong>:<code>float</code>=<em><code>0.1</code></em>, <strong><code>out_dropout</code></strong>:<code>float</code>=<em><code>None</code></em>, <strong><code>bias</code></strong>:<code>bool</code>=<em><code>True</code></em>, <strong><code>store_attention</code></strong>:<code>bool</code>=<em><code>False</code></em>) :: <code>Module</code></p>
+</blockquote>
+<p>Reformer attnetion container</p>
+<p>Switch between FullSharedQKAttention and LSHAttention</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    {% endraw %}
+
 </div>
  
 

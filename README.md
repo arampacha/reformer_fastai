@@ -2,8 +2,9 @@
 > Fastai community entry to <a href='https://paperswithcode.com/rc2020'>2020 Reproducibility Challenge</a>
 
 
-### Project Links
+## Project Links
 
+- [Repo docs](https://arampacha.github.io/reformer_fastai/)
 - [Fastai forums thread](https://forums.fast.ai/t/reproducibility-challenge-2020-fastai-folks-interested/80336/39)
 - [Google doc](https://docs.google.com/document/d/1wF83E3B3yXIGZixEgOUJI2T2XXhT1DVCrPXS5Dbsyh8/edit)
 - [RC2020 Report Style Template](https://paperswithcode.com/static/rc2020/ML-Reproducibility-Challenge-2020-Template.zip)
