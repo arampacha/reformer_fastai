@@ -4,6 +4,7 @@
 
 ## Project Links
 
+- [Older repo](https://github.com/morganmcg1/reformer-fastai-old)
 - [Repo docs](https://arampacha.github.io/reformer_fastai/)
 - [Fastai forums thread](https://forums.fast.ai/t/reproducibility-challenge-2020-fastai-folks-interested/80336/39)
 - [Google doc](https://docs.google.com/document/d/1wF83E3B3yXIGZixEgOUJI2T2XXhT1DVCrPXS5Dbsyh8/edit)
