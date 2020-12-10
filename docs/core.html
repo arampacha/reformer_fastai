@@ -6,8 +6,8 @@ title: Core
 keywords: fastai
 sidebar: home_sidebar
 
-summary: "Basic healpers and layers"
-description: "Basic healpers and layers"
+summary: "Basic healper functions"
+description: "Basic healper functions"
 nb_path: "nbs/00_core.ipynb"
 ---
 <!--
@@ -59,7 +59,7 @@ nb_path: "nbs/00_core.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="exists" class="doc_header"><code>exists</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/core.py#L31" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>exists</code>(<strong><code>val</code></strong>)</p>
+<h4 id="exists" class="doc_header"><code>exists</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/core.py#L26" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>exists</code>(<strong><code>val</code></strong>)</p>
 </blockquote>
 
 </div>
@@ -83,7 +83,7 @@ nb_path: "nbs/00_core.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="default" class="doc_header"><code>default</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/core.py#L34" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>default</code>(<strong><code>val</code></strong>, <strong><code>d</code></strong>)</p>
+<h4 id="default" class="doc_header"><code>default</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/core.py#L29" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>default</code>(<strong><code>val</code></strong>, <strong><code>d</code></strong>)</p>
 </blockquote>
 
 </div>
@@ -107,7 +107,7 @@ nb_path: "nbs/00_core.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="expand_dim1" class="doc_header"><code>expand_dim1</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/core.py#L39" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>expand_dim1</code>(<strong><code>x</code></strong>)</p>
+<h4 id="expand_dim1" class="doc_header"><code>expand_dim1</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/core.py#L34" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>expand_dim1</code>(<strong><code>x</code></strong>)</p>
 </blockquote>
 
 </div>
@@ -131,7 +131,7 @@ nb_path: "nbs/00_core.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="max_neg_value" class="doc_header"><code>max_neg_value</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/core.py#L44" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>max_neg_value</code>(<strong><code>tensor</code></strong>)</p>
+<h4 id="max_neg_value" class="doc_header"><code>max_neg_value</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/core.py#L39" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>max_neg_value</code>(<strong><code>tensor</code></strong>)</p>
 </blockquote>
 
 </div>
@@ -168,7 +168,7 @@ nb_path: "nbs/00_core.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="top_p_filter" class="doc_header"><code>top_p_filter</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/core.py#L50" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>top_p_filter</code>(<strong><code>logits</code></strong>, <strong><code>top_p</code></strong>=<em><code>0.9</code></em>)</p>
+<h4 id="top_p_filter" class="doc_header"><code>top_p_filter</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/core.py#L45" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>top_p_filter</code>(<strong><code>logits</code></strong>, <strong><code>top_p</code></strong>=<em><code>0.9</code></em>)</p>
 </blockquote>
 
 </div>
@@ -192,7 +192,7 @@ nb_path: "nbs/00_core.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="top_k_filter" class="doc_header"><code>top_k_filter</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/core.py#L64" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>top_k_filter</code>(<strong><code>logits</code></strong>, <strong><code>top_k</code></strong>=<em><code>20</code></em>)</p>
+<h4 id="top_k_filter" class="doc_header"><code>top_k_filter</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/core.py#L59" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>top_k_filter</code>(<strong><code>logits</code></strong>, <strong><code>top_k</code></strong>=<em><code>20</code></em>)</p>
 </blockquote>
 
 </div>
@@ -236,7 +236,7 @@ nb_path: "nbs/00_core.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="cache_method_decorator" class="doc_header"><code>cache_method_decorator</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/core.py#L76" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>cache_method_decorator</code>(<strong><code>cache_attr</code></strong>, <strong><code>cache_namespace</code></strong>, <strong><code>reexecute</code></strong>=<em><code>False</code></em>)</p>
+<h4 id="cache_method_decorator" class="doc_header"><code>cache_method_decorator</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/core.py#L71" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>cache_method_decorator</code>(<strong><code>cache_attr</code></strong>, <strong><code>cache_namespace</code></strong>, <strong><code>reexecute</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 
 </div>
@@ -295,7 +295,7 @@ nb_path: "nbs/00_core.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="look_one_back" class="doc_header"><code>look_one_back</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/core.py#L97" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>look_one_back</code>(<strong><code>x</code></strong>)</p>
+<h4 id="look_one_back" class="doc_header"><code>look_one_back</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/core.py#L92" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>look_one_back</code>(<strong><code>x</code></strong>)</p>
 </blockquote>
 
 </div>
@@ -338,7 +338,7 @@ nb_path: "nbs/00_core.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="chunked_sum" class="doc_header"><code>chunked_sum</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/core.py#L102" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>chunked_sum</code>(<strong><code>tensor</code></strong>, <strong><code>chunks</code></strong>=<em><code>1</code></em>)</p>
+<h4 id="chunked_sum" class="doc_header"><code>chunked_sum</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/core.py#L97" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>chunked_sum</code>(<strong><code>tensor</code></strong>, <strong><code>chunks</code></strong>=<em><code>1</code></em>)</p>
 </blockquote>
 
 </div>
@@ -383,7 +383,7 @@ nb_path: "nbs/00_core.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="sort_key_val" class="doc_header"><code>sort_key_val</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/core.py#L109" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>sort_key_val</code>(<strong><code>t1</code></strong>, <strong><code>t2</code></strong>, <strong><code>dim</code></strong>=<em><code>-1</code></em>)</p>
+<h4 id="sort_key_val" class="doc_header"><code>sort_key_val</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/core.py#L104" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>sort_key_val</code>(<strong><code>t1</code></strong>, <strong><code>t2</code></strong>, <strong><code>dim</code></strong>=<em><code>-1</code></em>)</p>
 </blockquote>
 
 </div>
@@ -427,7 +427,7 @@ nb_path: "nbs/00_core.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="batched_index_select" class="doc_header"><code>batched_index_select</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/core.py#L115" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>batched_index_select</code>(<strong><code>values</code></strong>, <strong><code>indices</code></strong>)</p>
+<h4 id="batched_index_select" class="doc_header"><code>batched_index_select</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/core.py#L110" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>batched_index_select</code>(<strong><code>values</code></strong>, <strong><code>indices</code></strong>)</p>
 </blockquote>
 
 </div>
@@ -455,297 +455,6 @@ nb_path: "nbs/00_core.ipynb"
     </div>
 </div>
 </div>
-
-</div>
-    {% endraw %}
-
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Layer-Wrappers">Layer Wrappers<a class="anchor-link" href="#Layer-Wrappers"> </a></h2>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>based on <a href="https://github.com/lucidrains/all-normalization-transformer/blob/master/all_normalization_transformer/all_normalization_transformer.py">https://github.com/lucidrains/all-normalization-transformer/blob/master/all_normalization_transformer/all_normalization_transformer.py</a></p>
-
-</div>
-</div>
-</div>
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h2 id="Residual" class="doc_header"><code>class</code> <code>Residual</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/core.py#L120" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Residual</code>(<strong><code>sublayer</code></strong>:<code>Module</code>) :: <code>Module</code></p>
-</blockquote>
-<p>Add skip-connection: out = x + sublayer(x)</p>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h2 id="PostNorm" class="doc_header"><code>class</code> <code>PostNorm</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/core.py#L127" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>PostNorm</code>(<strong><code>d_model</code></strong>:<code>int</code>, <strong><code>sublayer</code></strong>:<code>Module</code>) :: <code>Module</code></p>
-</blockquote>
-<p>Adds LayerNorm after sublayer</p>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h2 id="PreNorm" class="doc_header"><code>class</code> <code>PreNorm</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/core.py#L138" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>PreNorm</code>(<strong><code>d_model</code></strong>:<code>int</code>, <strong><code>sublayer</code></strong>:<code>Module</code>) :: <code>Module</code></p>
-</blockquote>
-<p>Adds LayerNorm before sublayer</p>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-</div>
-    {% endraw %}
-
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Positional-FeedForward">Positional FeedForward<a class="anchor-link" href="#Positional-FeedForward"> </a></h2>
-</div>
-</div>
-</div>
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h2 id="FeedForward" class="doc_header"><code>class</code> <code>FeedForward</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/core.py#L149" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>FeedForward</code>(<strong><code>d_model</code></strong>:<code>int</code>, <strong><code>d_ff</code></strong>:<code>int</code>=<em><code>None</code></em>, <strong><code>dropout</code></strong>:<code>float</code>=<em><code>0.0</code></em>) :: <code>Module</code></p>
-</blockquote>
-<p>Simple positional feed-forward module with GELU activation function.
-If d_ff is None defaults to 4*d_model</p>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">bs</span> <span class="o">=</span> <span class="mi">4</span>
-<span class="n">sl</span> <span class="o">=</span> <span class="mi">128</span>
-<span class="n">d</span> <span class="o">=</span> <span class="mi">64</span>
-<span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="n">sl</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
-<span class="n">ff</span>  <span class="o">=</span> <span class="n">Residual</span><span class="p">(</span><span class="n">PreNorm</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">FeedForward</span><span class="p">(</span><span class="n">d</span><span class="p">)))</span>
-<span class="n">out</span> <span class="o">=</span> <span class="n">ff</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-<span class="k">assert</span> <span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="n">sl</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span> <span class="o">==</span> <span class="n">out</span><span class="o">.</span><span class="n">size</span><span class="p">()</span>
-<span class="n">out</span><span class="o">.</span><span class="n">shape</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>torch.Size([4, 128, 64])</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Embedding-Layer">Embedding Layer<a class="anchor-link" href="#Embedding-Layer"> </a></h2>
-</div>
-</div>
-</div>
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h2 id="AbsolutePositionalEmbedding" class="doc_header"><code>class</code> <code>AbsolutePositionalEmbedding</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/core.py#L168" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>AbsolutePositionalEmbedding</code>(<strong><code>d_emb</code></strong>:<code>int</code>, <strong><code>max_seq_len</code></strong>:<code>int</code>) :: <code>Module</code></p>
-</blockquote>
-<p>Learnable absolute positional encodings</p>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h2 id="FixedPositionalEmbedding" class="doc_header"><code>class</code> <code>FixedPositionalEmbedding</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/core.py#L178" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>FixedPositionalEmbedding</code>(<strong><code>d_emb</code></strong>:<code>int</code>) :: <code>Module</code></p>
-</blockquote>
-<p>Fixed positional encodings</p>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h2 id="TransformerEmbedding" class="doc_header"><code>class</code> <code>TransformerEmbedding</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/core.py#L191" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TransformerEmbedding</code>(<strong><code>emb_sz</code></strong>:<code>int</code>, <strong><code>d_emb</code></strong>:<code>int</code>, <strong><code>max_seq_len</code></strong>:<code>int</code>=<em><code>512</code></em>, <strong><code>dropout</code></strong>:<code>float</code>=<em><code>0.0</code></em>, <strong><code>pos_enc</code></strong>:<code>str</code>=<em><code>'absolute'</code></em>, <strong><code>axial_shape</code></strong>:<code>Tuple</code>=<em><code>None</code></em>, <strong><code>axial_emb_dims</code></strong>:<code>Tuple</code>=<em><code>None</code></em>) :: <code>Module</code></p>
-</blockquote>
-<p>Combines token embedings with positional encodings
-pos_enc: str from {'absolute', 'fixed', 'axial'}</p>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
 
 </div>
     {% endraw %}
@@ -792,7 +501,7 @@ pos_enc: str from {'absolute', 'fixed', 'axial'}</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="do_cuda_timing" class="doc_header"><code>do_cuda_timing</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/core.py#L230" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>do_cuda_timing</code>(<strong><code>f</code></strong>, <strong><code>inp</code></strong>, <strong><code>context</code></strong>=<em><code>None</code></em>, <strong><code>n_loops</code></strong>=<em><code>100</code></em>)</p>
+<h4 id="do_cuda_timing" class="doc_header"><code>do_cuda_timing</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/core.py#L115" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>do_cuda_timing</code>(<strong><code>f</code></strong>, <strong><code>inp</code></strong>, <strong><code>context</code></strong>=<em><code>None</code></em>, <strong><code>n_loops</code></strong>=<em><code>100</code></em>)</p>
 </blockquote>
 <p>Get timings of cuda modules. Note <code>self_cpu_time_total</code> is returned, but
 from experiments this appears to be similar/same to the total CUDA time</p>
@@ -828,7 +537,7 @@ context : optional additional input into f, used for Decoder-style modules</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="model_performance" class="doc_header"><code>model_performance</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/core.py#L255" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>model_performance</code>(<strong><code>n_loops</code></strong>=<em><code>5</code></em>, <strong><code>model</code></strong>=<em><code>'arto'</code></em>, <strong><code>dls</code></strong>=<em><code>None</code></em>, <strong><code>n_epochs</code></strong>=<em><code>1</code></em>, <strong><code>lr</code></strong>=<em><code>0.0005</code></em>)</p>
+<h4 id="model_performance" class="doc_header"><code>model_performance</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/core.py#L140" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>model_performance</code>(<strong><code>n_loops</code></strong>=<em><code>5</code></em>, <strong><code>model</code></strong>=<em><code>'arto'</code></em>, <strong><code>dls</code></strong>=<em><code>None</code></em>, <strong><code>n_epochs</code></strong>=<em><code>1</code></em>, <strong><code>lr</code></strong>=<em><code>0.0005</code></em>)</p>
 </blockquote>
 <p>DEMO CODE ONLY!
 Run training loop to measure timings. Note that the models internally
