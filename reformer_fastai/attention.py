@@ -23,8 +23,8 @@ from .core import *
 from .layers import *
 
 # Cell
-MASK_VAL = 5e-4
-SELF_ATTN_MASK_VAL = 1e-4
+MASK_VAL = -5e4
+SELF_ATTN_MASK_VAL = -1e4
 
 # Cell
 class AttnInProj(Module):
