@@ -137,7 +137,7 @@ class Attention(Module):
         q, k, v = self.in_proj(x, context)
         if self.shared_qk: k = F.normalize(k, 2, dim=-1).type_as(k)
 
-        input_mask = self._make_input_mask(mask, context_mask, context, x.device)
+        input_mask = self._make_input_mask(mask, context_mask, x, context)
         out = self.attn(q, k, v, input_mask)
 
         out = self.out_proj(out)
@@ -148,11 +148,12 @@ class Attention(Module):
         if self.bias:
             [nn.init.constant_(b, 0) for b in self.parameters() if b.dim()==1]
 
-    def _make_input_mask(self, mask, context_mask, context, device):
+    def _make_input_mask(self, mask, context_mask, x, context):
         if any(map(exists, (mask, context_mask))):
+            b, n, _, device = *x.size(), x.device
             q_mask = default(mask, lambda: torch.ones((b, n), device = device).bool())
             k_mask = q_mask if not exists(context) else context_mask
-            k_mask = default(k_mask, lambda: torch.ones((b, k.shape[-2]), device = device).bool())
+            k_mask = default(k_mask, lambda: torch.ones((b, context.shape[-2]), device = device).bool())
 
             q_mask = rearrange(q_mask, 'b i -> b () i ()')
             k_mask = rearrange(k_mask, 'b j -> b () () j')
@@ -198,7 +199,8 @@ class AdditiveAttention(Attention):
         self.dropout = nn.Dropout(out_dropout)
         self._init()
 
-    def _make_input_mask(self, mask, context_mask, context, device):
+    def _make_input_mask(self, mask, context_mask, x, context):
+        b, n, _, device = *x.size(), x.device
         if any(map(exists, (mask, context_mask))):
             q_mask = default(mask, lambda: torch.ones((b, n), device = device).bool())
             self_mask = q_mask[:, None, :, None] * q_mask[:, None, None, :]
