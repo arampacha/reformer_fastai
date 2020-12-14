@@ -176,10 +176,10 @@ class AdditiveInProj(Module):
         return q, k, v
 
 # Cell
-#TODO: test shared_qk for additive attn
+#TODO: add support for shared_qk for additive attn
 class AdditiveAttention(Attention):
     """
-    Additive attention module:
+    Additive attention module
     """
     def __init__(self,
                  d_model:int,
@@ -202,10 +202,10 @@ class AdditiveAttention(Attention):
     def _make_input_mask(self, mask, context_mask, x, context):
         b, n, _, device = *x.size(), x.device
         if any(map(exists, (mask, context_mask))):
-            q_mask = default(mask, lambda: torch.ones((b, n), device = device).bool())
+            q_mask = default(mask, lambda: torch.ones((b, n), device=device).bool())
             self_mask = q_mask[:, None, :, None] * q_mask[:, None, None, :]
-            if context.size(-2) != 0:
-                k_mask = default(context_mask, lambda: torch.ones((b, context.shape[-2]), device = device).bool())
+            if exists(context):
+                k_mask = default(context_mask, lambda: torch.ones((b, context.shape[-2]), device=device).bool())
                 cross_mask = q_mask[:, None, :, None] * k_mask[:, None, None, :]
             else: cross_mask = torch.empty(0, dtype=self_mask.dtype, device=device)
             return torch.cat([self_mask, cross_mask], dim=-1)
