@@ -175,6 +175,7 @@ class AdditiveInProj(Module):
         return q, k, v
 
 # Cell
+#TODO: test shared_qk for additive attn
 class AdditiveAttention(Attention):
     """
     Additive attention module:
@@ -186,8 +187,9 @@ class AdditiveAttention(Attention):
                  dropout:float=0.1,
                  out_dropout:float=None,
                  bias:bool=True,
+                 shared_qk:bool = False,
                  store_attention:bool=False):
-        store_attr('causal, n_heads, bias')
+        store_attr('causal, n_heads, bias, shared_qk')
         out_dropout = ifnone(out_dropout, dropout)
         self.in_proj = AdditiveInProj(d_model, bias=bias)
         self.attn = ScaledDotProdAttention(d_model, n_heads, causal=causal,
