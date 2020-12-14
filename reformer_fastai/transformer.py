@@ -32,11 +32,9 @@ class TransformerEncoderBlock(Module):
         else:
             self.attn = PostNorm(d_model, Residual(Attention(d_model, n_heads=n_heads, causal=causal, dropout=attn_dropout, bias=attn_bias)))
             self.ff = PostNorm(d_model, Residual(FeedForward(d_model, d_ff=d_ff, dropout=ff_dropout)))
-        self.dropout = nn.Dropout(attn_dropout)
 
     def forward(self, x, mask=None): #? more args
         out = self.attn(x, mask=mask)
-        out = self.dropout(out)
         return self.ff(out)
 
 # Cell
@@ -85,22 +83,23 @@ class TransformerDecoderBlock(Module):
             self.attn = PostNorm(d_model, Residual(Attention(d_model, n_heads=n_heads, causal=True, dropout=attn_dropout, bias=attn_bias)))
             self.cross = PostNorm(d_model, Residual(Attention(d_model, n_heads=n_heads, causal=False, dropout=attn_dropout, bias=attn_bias)))
             self.ff = PostNorm(d_model, Residual(FeedForward(d_model, d_ff=d_ff, dropout=ff_dropout)))
-        self.dropout = nn.Dropout(attn_dropout)
 
     def forward(self, x, context, mask=None, context_mask=None):
         out = self.attn(x, mask=mask)
-        out = self.dropout(out)
         out = self.cross(out, context, mask=mask, context_mask=context_mask)
-        out = self.dropout(out)
         return self.ff(out)
 
 # Cell
-class TransformerDecoderBlockV2(nn.Module):
-    def __init__(self, d_model, n_heads = 8, mask = None, d_ff=None,
-                 attn_dropout=0.1, ff_dropout=0.1, attn_bias=True,
+class TransformerDecoderBlockV2(Module):
+    def __init__(self,
+                 d_model,
+                 n_heads = 8,
+                 mask = None,
+                 d_ff=None,
+                 attn_dropout=0.1,
+                 ff_dropout=0.1,
+                 attn_bias=True,
                  prenorm=False):
-        super().__init__()
-        self.attn_dropout = attn_dropout # mb separate argument attn_post_dropout
         if prenorm:
             self.attn = Residual(PreNorm(d_model, AdditiveAttention(d_model, n_heads=n_heads, causal=True, dropout=attn_dropout, bias=attn_bias)))
             self.ff = Residual(PreNorm(d_model, FeedForward(d_model, d_ff=d_ff, dropout=ff_dropout)))
@@ -110,7 +109,6 @@ class TransformerDecoderBlockV2(nn.Module):
 
     def forward(self, x, context, mask=None, context_mask=None):
         out = self.attn(x, context, mask=mask, context_mask=context_mask)
-        out = F.dropout(out, p=self.attn_dropout)
         out = self.ff(out)
         return out
 
