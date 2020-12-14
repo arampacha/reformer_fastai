@@ -24,6 +24,9 @@ entries:
     - output: web,pdf
       title: Reformer
       url: reformer.html
+    - output: web,pdf
+      title: Tokenizers
+      url: tokenizers.html
     output: web
     title: reformer_fastai
   output: web

@@ -5,6 +5,7 @@
     "Layers": "layers.html",
     "Attention Modules ": "attention.html",
     "Standard Transformer": "transformer.html",
-    "Reformer": "reformer.html"
+    "Reformer": "reformer.html",
+    "Tokenizers": "tokenizers.html"
   }
 }

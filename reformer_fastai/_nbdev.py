@@ -49,7 +49,8 @@ index = {"exists": "00_core.ipynb",
          "ReformerEncoder": "04_reformer.ipynb",
          "ReformerDecoder": "04_reformer.ipynb",
          "ReformerLM": "04_reformer.ipynb",
-         "ReformerEncDec": "04_reformer.ipynb"}
+         "ReformerEncDec": "04_reformer.ipynb",
+         "ByteTextTokenizer": "05_tokenizers.ipynb"}
 
 modules = ["core.py",
            "layers.py",
