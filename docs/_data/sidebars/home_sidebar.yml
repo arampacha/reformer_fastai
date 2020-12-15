@@ -28,11 +28,15 @@ entries:
       title: Tokenizers
       url: tokenizers.html
     - output: web,pdf
-      title: Title
+      title: Data
       url: data.html
-    - output: web,pdf
-      title: Create dataset
-      url: experiment.synthetic-task.html
+      subfolders:
+      - output: web
+        subfolderitems:
+        - output: web,pdf
+          title: Synthetic task
+          url: /experiment.synthetic-task.html
+        title: Experiments
     output: web
     title: reformer_fastai
   output: web
