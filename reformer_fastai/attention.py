@@ -298,10 +298,10 @@ class LSHAttention(Module):
         sticker = sticker.detach()
         undo_sort = undo_sort.detach()
 
-        st = (sticker % seqlen)             # index of [0..seqlen-1] for each hash round
-        sq = batched_index_select(q, st)  # get the sorted q, [bs, seqlen*n_hashes, dim]
-        sk = batched_index_select(k, st)  # get the sorted k, [bs, seqlen*n_hashes, dim]
-        sv = batched_index_select(v, st)    # get the sorted v, [bs, seqlen*n_hashes, dim]
+        st = (sticker % seqlen)            # index of [0..seqlen-1] for each hash round
+        sq = batched_index_select(q, st)   # get the sorted q, [bs, seqlen*n_hashes, dim]
+        sk = batched_index_select(k, st)   # get the sorted k, [bs, seqlen*n_hashes, dim]
+        sv = batched_index_select(v, st)   # get the sorted v, [bs, seqlen*n_hashes, dim]
 
         # Reshape to include a n_chunks axis.
         n_chunks = self.n_hashes * n_buckets
@@ -440,7 +440,6 @@ class LSHSelfAttention(Module):
                  bucket_size = 64,                    # reccomended default from paper/lucid
                  n_hashes = 8,                        # reccomended default from paper/lucid
                  causal = False,
-                 dim_head = None,
                  bias:bool=True,
                  attend_across_buckets = False,
                  allow_duplicate_attention = False,   # Penalize multiple qk-v pairs in same attention chunk or not
@@ -449,18 +448,11 @@ class LSHSelfAttention(Module):
                  post_attn_dropout = 0.,              # a final dropout on output (not standard)
                  **kwargs):
 
-        assert dim_head or (d_model % n_heads) == 0, 'dimensions must be divisible by number of heads'
+        assert (d_model % n_heads) == 0, 'dimensions must be divisible by number of heads'
 
-        dim_head = default(dim_head, d_model // n_heads)  # dim single head
-        dim_heads = dim_head * n_heads                # dim all heads
         self.n_heads = n_heads
-
-        #self.in_proj = SharedQKAttnInProj(d_model, bias=bias)
-
-        self.toqk = nn.Linear(d_model, dim_heads, bias = False)
-        self.tov = nn.Linear(d_model, dim_heads, bias = False)
-        self.to_out = nn.Linear(dim_heads, d_model)
-
+        self.in_proj = SharedQKAttnInProj(d_model, bias=bias)
+        self.out_proj = nn.Linear(d_model, d_model, bias=bias)
 
         self.lsh_attn = LSHAttention(bucket_size=bucket_size, n_hashes=n_hashes, causal=causal,
                                      attend_across_buckets = attend_across_buckets,
@@ -470,20 +462,16 @@ class LSHSelfAttention(Module):
 
     def forward(self, x, keys = None, input_mask = None, input_attn_mask = None, context_mask = None, **kwargs):
         device, dtype = x.device, x.dtype
-        bs, sl, emb_dim = x.shape
+        bs, sl, d_model = x.shape
 
-        keys = default(keys, torch.empty(bs, 0, emb_dim, dtype=dtype, device=device))
+        # to be refactored
+        keys = default(keys, torch.empty(bs, 0, d_model, dtype=dtype, device=device))
         c = keys.shape[1]
 
-        # project q, k and v
-        x = torch.cat((x, keys), dim=1)  # [bs, sl+keys.shape[1], dim]
-#         q, k, v = self.in_proj(x, context)
-        q = self.toqk(x)                # [bs, sl, dim_heads (dim_head * heads)]
-        k = self.toqk(x)                # [bs, sl, dim_heads (dim_head * heads)]
-        v = self.tov(x)                  # [bs, sl, dim_heads]
-#         q, k, v = self.in_proj(x, context)
+        # project keys, queries and values
+        q, k, v = self.in_proj(x)     # [bs, sl, d_model]
 
-        # split off head dimension for qk and v. Resulting shapes are: [nh, bs, sl, dim_head]
+        # split off head dimension for q, k and v. Resulting shapes are: [nh, bs, sl, dim_head]
         q, k, v = map(lambda t: rearrange(t, 'bs sl (nh dh) -> nh bs sl dh', nh=self.n_heads), (q, k, v))
 
         # masks have shape [bs, sl] and are maybe concatenated [bs, sl*2]
@@ -502,5 +490,5 @@ class LSHSelfAttention(Module):
         out = rearrange(out, '(nh bs) sl dh -> bs sl (nh dh)', bs=bs)  # [bs, sl, dim_heads] (dim_heads = head_dim * n_heads)
 
         # pass through final feed forward and maybe dropout
-        out = self.to_out(out)                                            # [bs, sl, dim]
+        out = self.out_proj(out)                                            # [bs, sl, dim]
         return self.post_attn_dropout(out)
