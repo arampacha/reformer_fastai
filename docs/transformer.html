@@ -26,26 +26,6 @@ nb_path: "nbs/03_transformer.ipynb"
     
 <div class="cell border-box-sizing code_cell rendered">
 
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-<<<<<<< HEAD
-<div class="output_subarea output_stream output_stderr output_text">
-<pre>/home/arto/anaconda3/envs/torchenv/lib/python3.8/site-packages/torch/cuda/__init__.py:52: UserWarning: CUDA initialization: Unexpected error from cudaGetDeviceCount(). Did you run some cuda functions before calling NumCudaDevices() that might have already set an error? Error 804: forward compatibility was attempted on non supported HW (Triggered internally at  /opt/conda/conda-bld/pytorch_1607369981906/work/c10/cuda/CUDAFunctions.cpp:100.)
-  return torch._C._cuda_getDeviceCount() &gt; 0
-=======
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>No module named &#39;axial_positional_embedding&#39;
->>>>>>> shared_qk
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
 </div>
     {% endraw %}
 
@@ -151,7 +131,7 @@ feedforward layers</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="TransformerEncoder" class="doc_header"><code>class</code> <code>TransformerEncoder</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/transformer.py#L43" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TransformerEncoder</code>(<strong><code>d_model</code></strong>, <strong><code>n_layers</code></strong>=<em><code>6</code></em>, <strong><code>n_heads</code></strong>=<em><code>8</code></em>, <strong><code>d_ff</code></strong>=<em><code>None</code></em>, <strong><code>ff_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>attn_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>attn_bias</code></strong>=<em><code>True</code></em>, <strong><code>causal</code></strong>=<em><code>False</code></em>, <strong><code>prenorm</code></strong>=<em><code>False</code></em>, <strong><code>final_norm</code></strong>=<em><code>None</code></em>) :: <code>Module</code></p>
+<h2 id="TransformerEncoder" class="doc_header"><code>class</code> <code>TransformerEncoder</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/transformer.py#L41" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TransformerEncoder</code>(<strong><code>d_model</code></strong>, <strong><code>n_layers</code></strong>=<em><code>6</code></em>, <strong><code>n_heads</code></strong>=<em><code>8</code></em>, <strong><code>d_ff</code></strong>=<em><code>None</code></em>, <strong><code>ff_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>attn_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>attn_bias</code></strong>=<em><code>True</code></em>, <strong><code>causal</code></strong>=<em><code>False</code></em>, <strong><code>prenorm</code></strong>=<em><code>False</code></em>, <strong><code>final_norm</code></strong>=<em><code>None</code></em>) :: <code>Module</code></p>
 </blockquote>
 <p>Same as <code>nn.Module</code>, but no need for subclasses to call <code>super().__init__</code></p>
 
@@ -225,7 +205,7 @@ feedforward layers</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="TransformerDecoderBlock" class="doc_header"><code>class</code> <code>TransformerDecoderBlock</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/transformer.py#L69" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TransformerDecoderBlock</code>(<strong><code>d_model</code></strong>, <strong><code>n_heads</code></strong>=<em><code>8</code></em>, <strong><code>d_ff</code></strong>=<em><code>None</code></em>, <strong><code>attn_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>ff_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>mask</code></strong>=<em><code>None</code></em>, <strong><code>attn_bias</code></strong>=<em><code>True</code></em>, <strong><code>prenorm</code></strong>=<em><code>False</code></em>) :: <code>Module</code></p>
+<h2 id="TransformerDecoderBlock" class="doc_header"><code>class</code> <code>TransformerDecoderBlock</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/transformer.py#L67" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TransformerDecoderBlock</code>(<strong><code>d_model</code></strong>, <strong><code>n_heads</code></strong>=<em><code>8</code></em>, <strong><code>d_ff</code></strong>=<em><code>None</code></em>, <strong><code>attn_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>ff_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>mask</code></strong>=<em><code>None</code></em>, <strong><code>attn_bias</code></strong>=<em><code>True</code></em>, <strong><code>prenorm</code></strong>=<em><code>False</code></em>) :: <code>Module</code></p>
 </blockquote>
 <p>Same as <code>nn.Module</code>, but no need for subclasses to call <code>super().__init__</code></p>
 
@@ -257,32 +237,9 @@ feedforward layers</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="TransformerDecoderBlockV2" class="doc_header"><code>class</code> <code>TransformerDecoderBlockV2</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/transformer.py#L98" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TransformerDecoderBlockV2</code>(<strong><code>d_model</code></strong>, <strong><code>n_heads</code></strong>=<em><code>8</code></em>, <strong><code>mask</code></strong>=<em><code>None</code></em>, <strong><code>d_ff</code></strong>=<em><code>None</code></em>, <strong><code>attn_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>ff_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>attn_bias</code></strong>=<em><code>True</code></em>, <strong><code>prenorm</code></strong>=<em><code>False</code></em>) :: <code>Module</code></p>
+<h2 id="TransformerDecoderBlockV2" class="doc_header"><code>class</code> <code>TransformerDecoderBlockV2</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/transformer.py#L93" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TransformerDecoderBlockV2</code>(<strong><code>d_model</code></strong>, <strong><code>n_heads</code></strong>=<em><code>8</code></em>, <strong><code>mask</code></strong>=<em><code>None</code></em>, <strong><code>d_ff</code></strong>=<em><code>None</code></em>, <strong><code>attn_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>ff_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>attn_bias</code></strong>=<em><code>True</code></em>, <strong><code>prenorm</code></strong>=<em><code>False</code></em>) :: <code>Module</code></p>
 </blockquote>
-<p>Base class for all neural network modules.</p>
-<p>Your models should also subclass this class.</p>
-<p>Modules can also contain other Modules, allowing to nest them in
-a tree structure. You can assign the submodules as regular attributes::</p>
-
-<pre><code>import torch.nn as nn
-import torch.nn.functional as F
-
-class Model(nn.Module):
-    def __init__(self):
-        super(Model, self).__init__()
-        self.conv1 = nn.Conv2d(1, 20, 5)
-        self.conv2 = nn.Conv2d(20, 20, 5)
-
-    def forward(self, x):
-        x = F.relu(self.conv1(x))
-        return F.relu(self.conv2(x))
-
-</code></pre>
-<p>Submodules assigned in this way will be registered, and will have their
-parameters converted too when you call :meth:<code>to</code>, etc.</p>
-<p>:ivar training: Boolean represents whether this module is in training or
-                evaluation mode.
-:vartype training: bool</p>
+<p>Same as <code>nn.Module</code>, but no need for subclasses to call <code>super().__init__</code></p>
 
 </div>
 
@@ -312,7 +269,7 @@ parameters converted too when you call :meth:<code>to</code>, etc.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="TransformerDecoder" class="doc_header"><code>class</code> <code>TransformerDecoder</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/transformer.py#L118" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TransformerDecoder</code>(<strong><code>d_model</code></strong>, <strong><code>n_layers</code></strong>=<em><code>6</code></em>, <strong><code>n_heads</code></strong>=<em><code>8</code></em>, <strong><code>d_ff</code></strong>=<em><code>None</code></em>, <strong><code>attn_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>ff_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>prenorm</code></strong>=<em><code>False</code></em>, <strong><code>comb_attn</code></strong>=<em><code>False</code></em>, <strong><code>attn_bias</code></strong>=<em><code>True</code></em>, <strong><code>final_norm</code></strong>=<em><code>None</code></em>) :: <code>Module</code></p>
+<h2 id="TransformerDecoder" class="doc_header"><code>class</code> <code>TransformerDecoder</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/transformer.py#L116" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TransformerDecoder</code>(<strong><code>d_model</code></strong>, <strong><code>n_layers</code></strong>=<em><code>6</code></em>, <strong><code>n_heads</code></strong>=<em><code>8</code></em>, <strong><code>d_ff</code></strong>=<em><code>None</code></em>, <strong><code>attn_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>ff_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>prenorm</code></strong>=<em><code>False</code></em>, <strong><code>comb_attn</code></strong>=<em><code>False</code></em>, <strong><code>attn_bias</code></strong>=<em><code>True</code></em>, <strong><code>final_norm</code></strong>=<em><code>None</code></em>) :: <code>Module</code></p>
 </blockquote>
 <p>Same as <code>nn.Module</code>, but no need for subclasses to call <code>super().__init__</code></p>
 
@@ -350,7 +307,7 @@ parameters converted too when you call :meth:<code>to</code>, etc.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="TransformerLM" class="doc_header"><code>class</code> <code>TransformerLM</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/transformer.py#L145" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TransformerLM</code>(<strong><code>vocab_sz</code></strong>, <strong><code>d_model</code></strong>, <strong><code>n_layers</code></strong>=<em><code>6</code></em>, <strong><code>n_heads</code></strong>=<em><code>8</code></em>, <strong><code>d_ff</code></strong>=<em><code>None</code></em>, <strong><code>attn_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>ff_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>emb_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>tie_weights</code></strong>=<em><code>True</code></em>, <strong><code>causal</code></strong>=<em><code>True</code></em>, <strong><code>pos_enc</code></strong>=<em><code>'absolute'</code></em>, <strong><code>max_seq_len</code></strong>=<em><code>512</code></em>, <strong><code>axial_shape</code></strong>=<em><code>None</code></em>, <strong><code>axial_emb_dims</code></strong>=<em><code>None</code></em>, <strong><code>pad_idx</code></strong>=<em><code>None</code></em>, <strong><code>prenorm</code></strong>=<em><code>False</code></em>, <strong><code>attn_bias</code></strong>=<em><code>True</code></em>) :: <code>Module</code></p>
+<h2 id="TransformerLM" class="doc_header"><code>class</code> <code>TransformerLM</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/transformer.py#L143" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TransformerLM</code>(<strong><code>vocab_sz</code></strong>, <strong><code>d_model</code></strong>, <strong><code>n_layers</code></strong>=<em><code>6</code></em>, <strong><code>n_heads</code></strong>=<em><code>8</code></em>, <strong><code>d_ff</code></strong>=<em><code>None</code></em>, <strong><code>attn_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>ff_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>emb_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>tie_weights</code></strong>=<em><code>True</code></em>, <strong><code>causal</code></strong>=<em><code>True</code></em>, <strong><code>pos_enc</code></strong>=<em><code>'absolute'</code></em>, <strong><code>max_seq_len</code></strong>=<em><code>512</code></em>, <strong><code>axial_shape</code></strong>=<em><code>None</code></em>, <strong><code>axial_emb_dims</code></strong>=<em><code>None</code></em>, <strong><code>pad_idx</code></strong>=<em><code>None</code></em>, <strong><code>prenorm</code></strong>=<em><code>False</code></em>, <strong><code>attn_bias</code></strong>=<em><code>True</code></em>) :: <code>Module</code></p>
 </blockquote>
 <p>Basic Transformer for language modelling</p>
 <p>Parameters:</p>
@@ -456,7 +413,7 @@ parameters converted too when you call :meth:<code>to</code>, etc.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="TransformerEncDec" class="doc_header"><code>class</code> <code>TransformerEncDec</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/transformer.py#L270" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TransformerEncDec</code>(<strong><code>enc_vocab_sz</code></strong>, <strong><code>dec_vocab_sz</code></strong>, <strong><code>d_model</code></strong>, <strong><code>n_enc_layers</code></strong>=<em><code>6</code></em>, <strong><code>n_dec_layers</code></strong>=<em><code>6</code></em>, <strong><code>heads</code></strong>=<em><code>8</code></em>, <strong><code>d_ff</code></strong>=<em><code>None</code></em>, <strong><code>pad_idx</code></strong>=<em><code>None</code></em>, <strong><code>tie_weights</code></strong>=<em><code>True</code></em>, <strong><code>shared_emb</code></strong>=<em><code>False</code></em>, <strong><code>attn_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>ff_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>emb_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>prenorm</code></strong>=<em><code>False</code></em>, <strong><code>attn_bias</code></strong>=<em><code>True</code></em>, <strong><code>comb_attn</code></strong>=<em><code>False</code></em>, <strong><code>pos_enc</code></strong>=<em><code>'absolute'</code></em>, <strong><code>max_seq_len</code></strong>=<em><code>512</code></em>, <strong><code>axial_shape</code></strong>=<em><code>None</code></em>, <strong><code>axial_emb_dims</code></strong>=<em><code>None</code></em>) :: <code>Module</code></p>
+<h2 id="TransformerEncDec" class="doc_header"><code>class</code> <code>TransformerEncDec</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/transformer.py#L268" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TransformerEncDec</code>(<strong><code>enc_vocab_sz</code></strong>, <strong><code>dec_vocab_sz</code></strong>, <strong><code>d_model</code></strong>, <strong><code>n_enc_layers</code></strong>=<em><code>6</code></em>, <strong><code>n_dec_layers</code></strong>=<em><code>6</code></em>, <strong><code>heads</code></strong>=<em><code>8</code></em>, <strong><code>d_ff</code></strong>=<em><code>None</code></em>, <strong><code>pad_idx</code></strong>=<em><code>None</code></em>, <strong><code>tie_weights</code></strong>=<em><code>True</code></em>, <strong><code>shared_emb</code></strong>=<em><code>False</code></em>, <strong><code>attn_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>ff_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>emb_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>prenorm</code></strong>=<em><code>False</code></em>, <strong><code>attn_bias</code></strong>=<em><code>True</code></em>, <strong><code>comb_attn</code></strong>=<em><code>False</code></em>, <strong><code>pos_enc</code></strong>=<em><code>'absolute'</code></em>, <strong><code>max_seq_len</code></strong>=<em><code>512</code></em>, <strong><code>axial_shape</code></strong>=<em><code>None</code></em>, <strong><code>axial_emb_dims</code></strong>=<em><code>None</code></em>) :: <code>Module</code></p>
 </blockquote>
 <p>Basic Transformer Encoder-Decoder model
 Parameters:</p>
