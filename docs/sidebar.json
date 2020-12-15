@@ -10,7 +10,7 @@
     "Data": "data.html",
     "": {
       "Experiments": {
-        "Synthetic task": "/experiment.synthetic-task.html",
+        "Synthetic task": "/experiment.synthetic-task.html"
       }
     }
   }
