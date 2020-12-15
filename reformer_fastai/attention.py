@@ -90,7 +90,7 @@ class ScaledDotProdAttention(Module):
             m = torch.arange(i)
             self_mask = torch.zeros(b, h, i, j).bool()
             self_mask[:, :, m, m] = True
-            dots.masked_fill_(self_mask, MASK_VAL)
+            dots.masked_fill_(self_mask, SELF_ATTN_MASK_VAL)
             del self_mask
 
         if self.causal:
