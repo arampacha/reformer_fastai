@@ -266,8 +266,8 @@ class LSHAttention(Module):
         buckets = rearrange(buckets+offsets, 'bs nh sl -> bs (nh sl)')  # [bs, (n_hashes*sl)]
         return buckets
 
-    def forward(self, qk, v, input_mask = None, **kwargs):
-        batch_size, seqlen, dim, device = *qk.shape, qk.device
+    def forward(self, q, k, v, input_mask = None, **kwargs):
+        batch_size, seqlen, dim, device = *q.shape, q.device
 
         # caching
         is_reverse = kwargs.pop('_reverse', False)
@@ -276,14 +276,14 @@ class LSHAttention(Module):
         # We will have an even number of buckets, and our attention chunks needs to fit completely within a seqlen
         assert seqlen % (self.bucket_size * 2) == 0, f'Sequence length ({seqlen}) needs to be divisible by target bucket size  x 2 - {self.bucket_size * 2}'
 
-        # get the hash buckets for our qk input vectors
+        # get the hash buckets for our q,k input vectors
         n_buckets = seqlen // self.bucket_size
-        buckets = self.hash_vectors(n_buckets, qk, key_namespace=depth, fetch=is_reverse, set_cache=self.training)
+        buckets = self.hash_vectors(n_buckets, q, key_namespace=depth, fetch=is_reverse, set_cache=self.training)
 
         # We use the same vector as both a query and a key.
         assert int(buckets.shape[1]) == self.n_hashes * seqlen
 
-        # Create an index that reflexts both bucket id and sequence id. This let's us sort qk according
+        # Create an index that reflexts both bucket id and sequence id. This let's us sort q, k according
         # to both simultaneously. Repeated across the batch dimension.
         ticker = repeat(torch.arange((self.n_hashes * seqlen),device=device), 'l -> bs l', bs=batch_size)
         buckets_and_t = seqlen * buckets + (ticker % seqlen)
@@ -299,21 +299,22 @@ class LSHAttention(Module):
         undo_sort = undo_sort.detach()
 
         st = (sticker % seqlen)             # index of [0..seqlen-1] for each hash round
-        sqk = batched_index_select(qk, st)  # get the sorted qk, [bs, seqlen*n_hashes, dim]
+        sq = batched_index_select(q, st)  # get the sorted q, [bs, seqlen*n_hashes, dim]
+        sk = batched_index_select(k, st)  # get the sorted k, [bs, seqlen*n_hashes, dim]
         sv = batched_index_select(v, st)    # get the sorted v, [bs, seqlen*n_hashes, dim]
 
         # Reshape to include a n_chunks axis.
         n_chunks = self.n_hashes * n_buckets
         bq_t = bkv_t = rearrange(st, 'bs (n s) -> bs n s', n=n_chunks) # [bs, n_chunks, chunk_size]
-        bqk = rearrange(sqk, 'bs (n s) d -> bs n s d', n=n_chunks)     # [bs, n_chunks, chunk_size, dim]
+        bq = rearrange(sq, 'bs (n s) d -> bs n s d', n=n_chunks)       # [bs, n_chunks, chunk_size, dim]
+        bk = rearrange(sk, 'bs (n s) d -> bs n s d', n=n_chunks)       # [bs, n_chunks, chunk_size, dim]
         bv = rearrange(sv, 'bs (n s) d -> bs n s d', n=n_chunks)       # [bs, n_chunks, chunk_size, dim]
 
         # Hashing operates on unit-length vectors. Unnormalized query vectors are
         # fine because they effectively provide a learnable temperature for the
         # attention softmax, but normalizing keys is needed so that similarity for
         # the purposes of attention correctly corresponds to hash locality.
-        bq = bqk
-        bk = F.normalize(bqk, p=2, dim=-1).type_as(bq)
+        bk = F.normalize(bk, p=2, dim=-1)
 
         # Allow each chunk to attend within itself, and also one chunk back. Chunk
         # boundaries might occur in the middle of a sequence of items from the
@@ -434,12 +435,13 @@ class LSHAttention(Module):
 # Cell
 class LSHSelfAttention(Module):
     def __init__(self,
-                 dim,                                 # Note: dim refers to model dim/similar to embedding dim for input
+                 d_model,
                  n_heads = 8,
                  bucket_size = 64,                    # reccomended default from paper/lucid
                  n_hashes = 8,                        # reccomended default from paper/lucid
                  causal = False,
                  dim_head = None,
+                 bias:bool=True,
                  attend_across_buckets = False,
                  allow_duplicate_attention = False,   # Penalize multiple qk-v pairs in same attention chunk or not
                  return_attn = False,                 # Not implemented yet
@@ -447,15 +449,18 @@ class LSHSelfAttention(Module):
                  post_attn_dropout = 0.,              # a final dropout on output (not standard)
                  **kwargs):
 
-        assert dim_head or (dim % n_heads) == 0, 'dimensions must be divisible by number of heads'
+        assert dim_head or (d_model % n_heads) == 0, 'dimensions must be divisible by number of heads'
 
-        dim_head = default(dim_head, dim // n_heads)  # dim single head
+        dim_head = default(dim_head, d_model // n_heads)  # dim single head
         dim_heads = dim_head * n_heads                # dim all heads
         self.n_heads = n_heads
 
-        self.toqk = nn.Linear(dim, dim_heads, bias = False)
-        self.tov = nn.Linear(dim, dim_heads, bias = False)
-        self.to_out = nn.Linear(dim_heads, dim)
+        #self.in_proj = SharedQKAttnInProj(d_model, bias=bias)
+
+        self.toqk = nn.Linear(d_model, dim_heads, bias = False)
+        self.tov = nn.Linear(d_model, dim_heads, bias = False)
+        self.to_out = nn.Linear(dim_heads, d_model)
+
 
         self.lsh_attn = LSHAttention(bucket_size=bucket_size, n_hashes=n_hashes, causal=causal,
                                      attend_across_buckets = attend_across_buckets,
@@ -470,13 +475,16 @@ class LSHSelfAttention(Module):
         keys = default(keys, torch.empty(bs, 0, emb_dim, dtype=dtype, device=device))
         c = keys.shape[1]
 
-        # project qk and v
+        # project q, k and v
         x = torch.cat((x, keys), dim=1)  # [bs, sl+keys.shape[1], dim]
-        qk = self.toqk(x)                # [bs, sl, dim_heads (dim_head * heads)]
+#         q, k, v = self.in_proj(x, context)
+        q = self.toqk(x)                # [bs, sl, dim_heads (dim_head * heads)]
+        k = self.toqk(x)                # [bs, sl, dim_heads (dim_head * heads)]
         v = self.tov(x)                  # [bs, sl, dim_heads]
+#         q, k, v = self.in_proj(x, context)
 
         # split off head dimension for qk and v. Resulting shapes are: [nh, bs, sl, dim_head]
-        qk, v = map(lambda t: rearrange(t, 'bs sl (nh dh) -> nh bs sl dh', nh=self.n_heads), (qk, v))
+        q, k, v = map(lambda t: rearrange(t, 'bs sl (nh dh) -> nh bs sl dh', nh=self.n_heads), (q, k, v))
 
         # masks have shape [bs, sl] and are maybe concatenated [bs, sl*2]
         mask = None
@@ -488,7 +496,7 @@ class LSHSelfAttention(Module):
 
         # run lsh per head (iterate through 0th dim i.e. the n_head dim), concatenate and rearrange
         # Note: masks are reused per head
-        lsh_results = L([self.lsh_attn(qk_h, v_h, mask) for qk_h, v_h in zip(qk, v)])
+        lsh_results = L([self.lsh_attn(q_h, k_h, v_h, mask) for q_h, k_h, v_h in zip(q, k, v)])
         out = lsh_results.itemgot(0)                                   # split tuple (output, attn, buckets)
         out = torch.cat([head for head in out], dim=0)                 # concatenate [n_heads*bs, sl, dh]
         out = rearrange(out, '(nh bs) sl dh -> bs sl (nh dh)', bs=bs)  # [bs, sl, dim_heads] (dim_heads = head_dim * n_heads)
