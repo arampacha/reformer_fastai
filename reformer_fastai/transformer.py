@@ -39,6 +39,7 @@ class TransformerEncoderBlock(Module):
 
 # Cell
 class TransformerEncoder(Module):
+    """Stack of TransformerEncoderBlocks"""
     def __init__(self,
                  d_model,
                  n_layers=6,
@@ -65,6 +66,10 @@ class TransformerEncoder(Module):
 
 # Cell
 class TransformerDecoderBlock(Module):
+    """
+    Standart transformer decoder block. Consist of self-attention, encoder-decoder attention
+    and positiona feed-forward alyers
+    """
     def __init__(self,
                  d_model,
                  n_heads = 8,
@@ -74,7 +79,7 @@ class TransformerDecoderBlock(Module):
                  mask = None ,
                  attn_bias = True,
                  prenorm=False):
-        store_attr('attn_dropout')     # mb separate argument attn_post_dropout
+        # mb separate argument attn_post_dropout
         if prenorm:
             self.attn = Residual(PreNorm(d_model, Attention(d_model, n_heads=n_heads, causal=True, dropout=attn_dropout, bias=attn_bias)))
             self.cross = Residual(PreNorm(d_model, Attention(d_model, n_heads=n_heads, causal=False, dropout=attn_dropout, bias=attn_bias)))
@@ -91,6 +96,8 @@ class TransformerDecoderBlock(Module):
 
 # Cell
 class TransformerDecoderBlockV2(Module):
+    """Transformer decoder block using additive attention layer instead of self-attention
+    followed by cross-attention"""
     def __init__(self,
                  d_model,
                  n_heads = 8,
@@ -114,6 +121,7 @@ class TransformerDecoderBlockV2(Module):
 
 # Cell
 class TransformerDecoder(Module):
+    """Stack of TransformerDecoder layers"""
     def __init__(self,
                  d_model,
                  n_layers=6,
@@ -242,11 +250,11 @@ class TransformerLM(Module):
         #defaults to storing attention for all layers
         layer_ids = default(layer_ids, list(range(self.n_layers)))
         for module in self.children():
-            if issubclass(type(module), (TransformerEncoder, TransformerDecoder)):
+            if isinstance(module, (TransformerEncoder, TransformerDecoder)):
                 for i, l in enumerate(module.layers):
                     if i in layer_ids:
                         for m in l.modules():
-                            if issubclass(type(m), (Attention)):
+                            if issubclass(type(m), (scaledDotProdAttention)):
                                 m.store_attention = True
     def get_attention_matrix(self):
         res = []
@@ -282,8 +290,8 @@ class TransformerEncDec(Module):
         * max_seq_len: int (default: 512)
         * prenorm: bool - whether to use PreNorm or PostNorm
         * attn_bias: bool - whether to allow biases in attention projection layers
-        * pad_idx: int - padding token id, if pad_idx is provided, and no mask/context_mask are passed to
-                forward method will be used to generate padding masks
+        * pad_idx: int - padding token id, if pad_idx is provided, and no mask/context_mask are
+                passed to forward method will be used to generate padding masks
         * tie_weights: bool - if True target embedding weights are used for computation output projection
         * shared_emb: bool - if True encoder and decoder will use shared embedding layer
         * pos_enc: str from {'absolute', 'fixed', 'axial'} - type of positional encoding to use
@@ -393,24 +401,24 @@ class TransformerEncDec(Module):
         #defaults to storing attention for all layers
         layer_ids = default(layer_ids, list(range(self.n_enc_layers)))
         for module in self.children():
-            if issubclass(type(module), TransformerEncoder) and store_encoder:
+            if isinstance(module, TransformerEncoder) and store_encoder:
                 for i, l in enumerate(module.layers):
                     if i in layer_ids:
                         for m in l.modules():
-                            if issubclass(type(m), (Attention)):
+                            if isinstance(m, (ScaledDotProdAttention)):
                                 m.store_attention = True
-            elif issubclass(type(module), TransformerDecoder) and store_decoder:
+            elif isinstance(module, TransformerDecoder) and store_encoder:
                 for i, l in enumerate(module.layers):
                     if i in layer_ids:
                         for m in l.modules():
-                            if issubclass(type(m), (Attention)):
+                            if isinstance(m, (ScaledDotProdAttention)):
                                 m.store_attention = True
     #TODO mb separate encoder and decoder attention
     def get_attention_matrix(self, get_encoder=False, get_decoder=True):
         res = []
         if get_encoder:
             for m in self.encoder.modules():
-                if issubclass(type(m), (Attention)):
+                if isinstance(m, (ScaledDotProdAttention)):
                     attention = getattr(m, 'attention', None)
                     if attention is not None:
                         res.append(attention)
@@ -419,7 +427,7 @@ class TransformerEncDec(Module):
                     m.store_attention = False
         if get_decoder:
             for m in self.decoder.modules():
-                if issubclass(type(m), (Attention)):
+                if isinstance(m, (ScaledDotProdAttention)):
                     attention = getattr(m, 'attention', None)
                     if attention is not None:
                         res.append(attention)
