@@ -26,21 +26,6 @@ nb_path: "nbs/02_attention.ipynb"
     
 <div class="cell border-box-sizing code_cell rendered">
 
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stderr output_text">
-<pre>/home/arto/anaconda3/envs/torchenv/lib/python3.8/site-packages/torch/cuda/__init__.py:52: UserWarning: CUDA initialization: Unexpected error from cudaGetDeviceCount(). Did you run some cuda functions before calling NumCudaDevices() that might have already set an error? Error 804: forward compatibility was attempted on non supported HW (Triggered internally at  /opt/conda/conda-bld/pytorch_1607369981906/work/c10/cuda/CUDAFunctions.cpp:100.)
-  return torch._C._cuda_getDeviceCount() &gt; 0
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
 </div>
     {% endraw %}
 
@@ -228,6 +213,7 @@ nb_path: "nbs/02_attention.ipynb"
 <span class="n">shared_proj</span> <span class="o">=</span> <span class="n">SharedQKAttnInProj</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
 <span class="n">q1</span><span class="p">,</span> <span class="n">k1</span><span class="p">,</span> <span class="n">v1</span> <span class="o">=</span> <span class="n">shared_proj</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 <span class="k">assert</span> <span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="n">sl</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span> <span class="o">==</span> <span class="n">q1</span><span class="o">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="n">k1</span><span class="o">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="n">v1</span><span class="o">.</span><span class="n">size</span><span class="p">()</span>
+<span class="k">assert</span> <span class="n">q1</span> <span class="ow">is</span> <span class="n">k1</span>
 <span class="n">q1</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">k1</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">v1</span><span class="o">.</span><span class="n">shape</span>
 </pre></div>
 
@@ -375,6 +361,12 @@ $$\textbf {Attention}(Q,K,V) = \textbf {softmax}({QK^T\over\sqrt d_k})V $$
 </div>
     {% endraw %}
 
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Attention-container">Attention container<a class="anchor-link" href="#Attention-container"> </a></h2>
+</div>
+</div>
+</div>
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
@@ -455,6 +447,41 @@ $$\textbf {Attention}(Q,K,V) = \textbf {softmax}({QK^T\over\sqrt d_k})V $$
 
 <div class="inner_cell">
     <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">out</span> <span class="o">=</span> <span class="n">attn</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+<span class="k">assert</span> <span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="n">sl</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span> <span class="o">==</span> <span class="n">out</span><span class="o">.</span><span class="n">size</span><span class="p">()</span>
+<span class="n">out</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>torch.Size([4, 128, 64])</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">bs</span> <span class="o">=</span> <span class="mi">4</span>
 <span class="n">sl</span> <span class="o">=</span> <span class="mi">128</span>
 <span class="n">d</span> <span class="o">=</span> <span class="mi">64</span>
@@ -489,6 +516,98 @@ $$\textbf {Attention}(Q,K,V) = \textbf {softmax}({QK^T\over\sqrt d_k})V $$
 </div>
     {% endraw %}
 
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">e_msg</span> <span class="o">=</span> <span class="s2">&quot;Causal masking error&quot;</span>
+<span class="n">attn</span> <span class="o">=</span> <span class="n">Attention</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">causal</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">dropout</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">x1</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="n">sl</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+<span class="n">out1</span> <span class="o">=</span> <span class="n">attn</span><span class="p">(</span><span class="n">x1</span><span class="p">)</span>
+<span class="n">x2</span> <span class="o">=</span> <span class="n">x1</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
+<span class="n">x2</span><span class="p">[:,</span> <span class="n">sl</span><span class="o">//</span><span class="mi">2</span><span class="p">:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="n">sl</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+<span class="n">out2</span> <span class="o">=</span> <span class="n">attn</span><span class="p">(</span><span class="n">x2</span><span class="p">)</span>
+<span class="c1"># all elements in first half are equal despite second half is defferent</span>
+<span class="k">assert</span> <span class="n">all_equal</span><span class="p">(</span><span class="n">out1</span><span class="p">[:,</span> <span class="p">:</span><span class="n">sl</span><span class="o">//</span><span class="mi">2</span><span class="p">],</span> <span class="n">out2</span><span class="p">[:,</span> <span class="p">:</span><span class="n">sl</span><span class="o">//</span><span class="mi">2</span><span class="p">]),</span> <span class="n">e_msg</span>
+<span class="k">assert</span> <span class="ow">not</span> <span class="p">(</span><span class="n">out1</span><span class="p">[:,</span> <span class="n">sl</span><span class="o">//</span><span class="mi">2</span><span class="p">:]</span> <span class="o">==</span> <span class="n">out2</span><span class="p">[:,</span> <span class="n">sl</span><span class="o">//</span><span class="mi">2</span><span class="p">:])</span><span class="o">.</span><span class="n">any</span><span class="p">(),</span> <span class="n">e_msg</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">e_msg</span> <span class="o">=</span> <span class="s2">&quot;Masking error&quot;</span>
+<span class="n">attn</span> <span class="o">=</span> <span class="n">Attention</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">causal</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">dropout</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">x1</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="n">sl</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+<span class="n">mask</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="n">sl</span><span class="p">)</span>
+<span class="c1"># mask out second half of input</span>
+<span class="n">mask</span><span class="p">[:,</span> <span class="n">sl</span><span class="o">//</span><span class="mi">2</span><span class="p">:]</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">mask</span> <span class="o">=</span> <span class="n">mask</span><span class="o">.</span><span class="n">bool</span><span class="p">()</span>
+<span class="n">out1</span> <span class="o">=</span> <span class="n">attn</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="n">mask</span><span class="p">)</span>
+<span class="n">x2</span> <span class="o">=</span> <span class="n">x1</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
+<span class="n">x2</span><span class="p">[:,</span> <span class="n">sl</span><span class="o">//</span><span class="mi">2</span><span class="p">:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="n">sl</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+<span class="n">out2</span> <span class="o">=</span> <span class="n">attn</span><span class="p">(</span><span class="n">x2</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="n">mask</span><span class="p">)</span>
+<span class="c1"># all elements are equal, masked values do not effect result</span>
+<span class="k">assert</span> <span class="n">all_equal</span><span class="p">(</span><span class="n">out1</span><span class="p">[:,</span> <span class="p">:</span><span class="n">sl</span><span class="o">//</span><span class="mi">2</span><span class="p">],</span> <span class="n">out2</span><span class="p">[:,</span> <span class="p">:</span><span class="n">sl</span><span class="o">//</span><span class="mi">2</span><span class="p">]),</span> <span class="n">e_msg</span>
+<span class="n">out1</span> <span class="o">=</span> <span class="n">attn</span><span class="p">(</span><span class="n">x1</span><span class="p">)</span>
+<span class="n">out2</span> <span class="o">=</span> <span class="n">attn</span><span class="p">(</span><span class="n">x2</span><span class="p">)</span>
+<span class="k">assert</span> <span class="ow">not</span> <span class="p">(</span><span class="n">out1</span><span class="p">[:,</span> <span class="p">:</span><span class="n">sl</span><span class="o">//</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="n">out2</span><span class="p">[:,</span> <span class="p">:</span><span class="n">sl</span><span class="o">//</span><span class="mi">2</span><span class="p">])</span><span class="o">.</span><span class="n">any</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">e_msg</span> <span class="o">=</span> <span class="s2">&quot;Context masking error&quot;</span>
+<span class="n">attn</span> <span class="o">=</span> <span class="n">Attention</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">causal</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">dropout</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="n">sl</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+<span class="n">context</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="n">sl</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+<span class="n">context_mask</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="n">sl</span><span class="p">)</span>
+<span class="c1"># mask out second half of context</span>
+<span class="n">context_mask</span><span class="p">[:,</span> <span class="n">sl</span><span class="o">//</span><span class="mi">2</span><span class="p">:]</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">context_mask</span> <span class="o">=</span> <span class="n">context_mask</span><span class="o">.</span><span class="n">bool</span><span class="p">()</span>
+<span class="n">out1</span> <span class="o">=</span> <span class="n">attn</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">context_mask</span><span class="o">=</span><span class="n">context_mask</span><span class="p">)</span>
+<span class="n">context2</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
+<span class="n">context2</span><span class="p">[:,</span> <span class="n">sl</span><span class="o">//</span><span class="mi">2</span><span class="p">:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="n">sl</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+<span class="n">out2</span> <span class="o">=</span> <span class="n">attn</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">context2</span><span class="p">,</span> <span class="n">context_mask</span><span class="o">=</span><span class="n">context_mask</span><span class="p">)</span>
+<span class="c1"># all elements are equal, masked values do not effect result</span>
+<span class="k">assert</span> <span class="n">all_equal</span><span class="p">(</span><span class="n">out1</span><span class="p">,</span> <span class="n">out2</span><span class="p">),</span> <span class="n">e_msg</span>
+<span class="c1"># all output values are different for different context</span>
+<span class="n">out1</span> <span class="o">=</span> <span class="n">attn</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+<span class="n">out2</span> <span class="o">=</span> <span class="n">attn</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">context2</span><span class="p">)</span>
+<span class="k">assert</span> <span class="ow">not</span> <span class="p">(</span><span class="n">out1</span> <span class="o">==</span> <span class="n">out2</span><span class="p">)</span><span class="o">.</span><span class="n">any</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Additive-Attention">Additive Attention<a class="anchor-link" href="#Additive-Attention"> </a></h2>
@@ -506,7 +625,7 @@ $$\textbf {Attention}(Q,K,V) = \textbf {softmax}({QK^T\over\sqrt d_k})V $$
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="AdditiveInProj" class="doc_header"><code>class</code> <code>AdditiveInProj</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/attention.py#L163" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>AdditiveInProj</code>(<strong><code>d_model</code></strong>:<code>int</code>, <strong><code>bias</code></strong>:<code>bool</code>=<em><code>False</code></em>) :: <code>Module</code></p>
+<h2 id="AdditiveInProj" class="doc_header"><code>class</code> <code>AdditiveInProj</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/attention.py#L164" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>AdditiveInProj</code>(<strong><code>d_model</code></strong>:<code>int</code>, <strong><code>bias</code></strong>:<code>bool</code>=<em><code>False</code></em>) :: <code>Module</code></p>
 </blockquote>
 <p>Computes q, k, v from input x and [optional] context</p>
 
@@ -617,9 +736,9 @@ $$\textbf {Attention}(Q,K,V) = \textbf {softmax}({QK^T\over\sqrt d_k})V $$
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="AdditiveAttention" class="doc_header"><code>class</code> <code>AdditiveAttention</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/attention.py#L179" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>AdditiveAttention</code>(<strong><code>d_model</code></strong>:<code>int</code>, <strong><code>n_heads</code></strong>:<code>int</code>=<em><code>8</code></em>, <strong><code>causal</code></strong>:<code>bool</code>=<em><code>False</code></em>, <strong><code>dropout</code></strong>:<code>float</code>=<em><code>0.1</code></em>, <strong><code>out_dropout</code></strong>:<code>float</code>=<em><code>None</code></em>, <strong><code>bias</code></strong>:<code>bool</code>=<em><code>True</code></em>, <strong><code>shared_qk</code></strong>:<code>bool</code>=<em><code>False</code></em>, <strong><code>store_attention</code></strong>:<code>bool</code>=<em><code>False</code></em>) :: <a href="/reformer_fastai/attention.html#Attention"><code>Attention</code></a></p>
+<h2 id="AdditiveAttention" class="doc_header"><code>class</code> <code>AdditiveAttention</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/attention.py#L180" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>AdditiveAttention</code>(<strong><code>d_model</code></strong>:<code>int</code>, <strong><code>n_heads</code></strong>:<code>int</code>=<em><code>8</code></em>, <strong><code>causal</code></strong>:<code>bool</code>=<em><code>False</code></em>, <strong><code>dropout</code></strong>:<code>float</code>=<em><code>0.1</code></em>, <strong><code>out_dropout</code></strong>:<code>float</code>=<em><code>None</code></em>, <strong><code>bias</code></strong>:<code>bool</code>=<em><code>True</code></em>, <strong><code>shared_qk</code></strong>:<code>bool</code>=<em><code>False</code></em>, <strong><code>store_attention</code></strong>:<code>bool</code>=<em><code>False</code></em>) :: <a href="/reformer_fastai/attention.html#Attention"><code>Attention</code></a></p>
 </blockquote>
-<p>Additive attention module:</p>
+<p>Additive attention module</p>
 
 </div>
 
@@ -686,14 +805,117 @@ $$\textbf {Attention}(Q,K,V) = \textbf {softmax}({QK^T\over\sqrt d_k})V $$
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># sl = 128</span>
-<span class="c1"># d = 64</span>
-<span class="c1"># x = torch.randn(bs, sl, d)</span>
-<span class="c1"># context = torch.randn(bs, sl-16, d)</span>
-<span class="c1"># attn = SharedQKAttention(d)</span>
-<span class="c1"># out = attn(x)</span>
-<span class="c1"># assert (bs, sl, d) == out.size()</span>
-<span class="c1"># out.shape</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">out</span> <span class="o">=</span> <span class="n">attn</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+<span class="k">assert</span> <span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="n">sl</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span> <span class="o">==</span> <span class="n">out</span><span class="o">.</span><span class="n">size</span><span class="p">()</span>
+<span class="n">out</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>torch.Size([4, 128, 64])</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">e_msg</span> <span class="o">=</span> <span class="s2">&quot;Causal masking error&quot;</span>
+<span class="n">attn</span> <span class="o">=</span> <span class="n">AdditiveAttention</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">causal</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">dropout</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">x1</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="n">sl</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+<span class="n">out1</span> <span class="o">=</span> <span class="n">attn</span><span class="p">(</span><span class="n">x1</span><span class="p">)</span>
+<span class="n">x2</span> <span class="o">=</span> <span class="n">x1</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
+<span class="n">x2</span><span class="p">[:,</span> <span class="n">sl</span><span class="o">//</span><span class="mi">2</span><span class="p">:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="n">sl</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+<span class="n">out2</span> <span class="o">=</span> <span class="n">attn</span><span class="p">(</span><span class="n">x2</span><span class="p">)</span>
+<span class="c1"># all elements in first half are equal despite second half is defferent</span>
+<span class="k">assert</span> <span class="n">all_equal</span><span class="p">(</span><span class="n">out1</span><span class="p">[:,</span> <span class="p">:</span><span class="n">sl</span><span class="o">//</span><span class="mi">2</span><span class="p">],</span> <span class="n">out2</span><span class="p">[:,</span> <span class="p">:</span><span class="n">sl</span><span class="o">//</span><span class="mi">2</span><span class="p">]),</span> <span class="n">e_msg</span>
+<span class="k">assert</span> <span class="ow">not</span> <span class="p">(</span><span class="n">out1</span><span class="p">[:,</span> <span class="n">sl</span><span class="o">//</span><span class="mi">2</span><span class="p">:]</span> <span class="o">==</span> <span class="n">out2</span><span class="p">[:,</span> <span class="n">sl</span><span class="o">//</span><span class="mi">2</span><span class="p">:])</span><span class="o">.</span><span class="n">any</span><span class="p">(),</span> <span class="n">e_msg</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">e_msg</span> <span class="o">=</span> <span class="s2">&quot;Masking error&quot;</span>
+<span class="n">attn</span> <span class="o">=</span> <span class="n">AdditiveAttention</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">causal</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">dropout</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">x1</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="n">sl</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+<span class="n">mask</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="n">sl</span><span class="p">)</span>
+<span class="c1"># mask out second half of input</span>
+<span class="n">mask</span><span class="p">[:,</span> <span class="n">sl</span><span class="o">//</span><span class="mi">2</span><span class="p">:]</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">mask</span> <span class="o">=</span> <span class="n">mask</span><span class="o">.</span><span class="n">bool</span><span class="p">()</span>
+<span class="n">out1</span> <span class="o">=</span> <span class="n">attn</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="n">mask</span><span class="p">)</span>
+<span class="n">x2</span> <span class="o">=</span> <span class="n">x1</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
+<span class="n">x2</span><span class="p">[:,</span> <span class="n">sl</span><span class="o">//</span><span class="mi">2</span><span class="p">:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="n">sl</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+<span class="n">out2</span> <span class="o">=</span> <span class="n">attn</span><span class="p">(</span><span class="n">x2</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="n">mask</span><span class="p">)</span>
+<span class="c1"># all elements are equal, masked values do not effect result</span>
+<span class="k">assert</span> <span class="n">all_equal</span><span class="p">(</span><span class="n">out1</span><span class="p">[:,</span> <span class="p">:</span><span class="n">sl</span><span class="o">//</span><span class="mi">2</span><span class="p">],</span> <span class="n">out2</span><span class="p">[:,</span> <span class="p">:</span><span class="n">sl</span><span class="o">//</span><span class="mi">2</span><span class="p">]),</span> <span class="n">e_msg</span>
+<span class="n">out1</span> <span class="o">=</span> <span class="n">attn</span><span class="p">(</span><span class="n">x1</span><span class="p">)</span>
+<span class="n">out2</span> <span class="o">=</span> <span class="n">attn</span><span class="p">(</span><span class="n">x2</span><span class="p">)</span>
+<span class="k">assert</span> <span class="ow">not</span> <span class="p">(</span><span class="n">out1</span><span class="p">[:,</span> <span class="p">:</span><span class="n">sl</span><span class="o">//</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="n">out2</span><span class="p">[:,</span> <span class="p">:</span><span class="n">sl</span><span class="o">//</span><span class="mi">2</span><span class="p">])</span><span class="o">.</span><span class="n">any</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">e_msg</span> <span class="o">=</span> <span class="s2">&quot;Context masking error&quot;</span>
+<span class="n">attn</span> <span class="o">=</span> <span class="n">Attention</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">causal</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">dropout</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="n">sl</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+<span class="n">context</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="n">sl</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+<span class="n">context_mask</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="n">sl</span><span class="p">)</span>
+<span class="c1"># mask out second half of context</span>
+<span class="n">context_mask</span><span class="p">[:,</span> <span class="n">sl</span><span class="o">//</span><span class="mi">2</span><span class="p">:]</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">context_mask</span> <span class="o">=</span> <span class="n">context_mask</span><span class="o">.</span><span class="n">bool</span><span class="p">()</span>
+<span class="n">out1</span> <span class="o">=</span> <span class="n">attn</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">context_mask</span><span class="o">=</span><span class="n">context_mask</span><span class="p">)</span>
+<span class="n">context2</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
+<span class="n">context2</span><span class="p">[:,</span> <span class="n">sl</span><span class="o">//</span><span class="mi">2</span><span class="p">:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="n">sl</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+<span class="n">out2</span> <span class="o">=</span> <span class="n">attn</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">context2</span><span class="p">,</span> <span class="n">context_mask</span><span class="o">=</span><span class="n">context_mask</span><span class="p">)</span>
+<span class="c1"># all elements are equal, masked values do not effect result</span>
+<span class="k">assert</span> <span class="n">all_equal</span><span class="p">(</span><span class="n">out1</span><span class="p">,</span> <span class="n">out2</span><span class="p">),</span> <span class="n">e_msg</span>
+<span class="c1"># all output values are different for different context</span>
+<span class="n">out1</span> <span class="o">=</span> <span class="n">attn</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+<span class="n">out2</span> <span class="o">=</span> <span class="n">attn</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">context2</span><span class="p">)</span>
+<span class="k">assert</span> <span class="ow">not</span> <span class="p">(</span><span class="n">out1</span> <span class="o">==</span> <span class="n">out2</span><span class="p">)</span><span class="o">.</span><span class="n">any</span><span class="p">()</span>
 </pre></div>
 
     </div>
@@ -711,7 +933,7 @@ $$\textbf {Attention}(Q,K,V) = \textbf {softmax}({QK^T\over\sqrt d_k})V $$
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>LSH attention from Reformer: <a href="https://arxiv.org/abs/2001.04451">The Efficient Transformer</a>. Based on <a href="https://github.com/lucidrains/reformer-pytorch/">lucidrains/reformer-pytorch</a>, but simpliefied and refactored.</p>
+<p>LSH attention from Reformer: <a href="https://arxiv.org/abs/2001.04451">The Efficient Transformer</a>. Based on <a href="https://github.com/lucidrains/reformer-pytorch/">lucidrains/reformer-pytorch</a>, but simpliefied and refactored. Uses shared keys and queries, but requires both to be passed as input (even though they are identical).</p>
 
 </div>
 </div>
@@ -727,9 +949,9 @@ $$\textbf {Attention}(Q,K,V) = \textbf {softmax}({QK^T\over\sqrt d_k})V $$
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="LSHAttention" class="doc_header"><code>class</code> <code>LSHAttention</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/attention.py#L213" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>LSHAttention</code>(<strong><code>dropout</code></strong>=<em><code>0.0</code></em>, <strong><code>bucket_size</code></strong>=<em><code>64</code></em>, <strong><code>n_hashes</code></strong>=<em><code>8</code></em>, <strong><code>causal</code></strong>=<em><code>False</code></em>, <strong><code>allow_duplicate_attention</code></strong>=<em><code>False</code></em>, <strong><code>attend_across_buckets</code></strong>=<em><code>False</code></em>, <strong><code>drop_for_hash_rate</code></strong>=<em><code>0.0</code></em>, <strong><code>return_attn</code></strong>=<em><code>False</code></em>, <strong>**<code>kwargs</code></strong>) :: <code>Module</code></p>
+<h2 id="LSHAttention" class="doc_header"><code>class</code> <code>LSHAttention</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/attention.py#L215" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>LSHAttention</code>(<strong><code>dropout</code></strong>=<em><code>0.0</code></em>, <strong><code>bucket_size</code></strong>=<em><code>64</code></em>, <strong><code>n_hashes</code></strong>=<em><code>8</code></em>, <strong><code>causal</code></strong>=<em><code>False</code></em>, <strong><code>allow_duplicate_attention</code></strong>=<em><code>False</code></em>, <strong><code>attend_across_buckets</code></strong>=<em><code>False</code></em>, <strong><code>drop_for_hash_rate</code></strong>=<em><code>0.0</code></em>, <strong><code>return_attn</code></strong>=<em><code>False</code></em>, <strong>**<code>kwargs</code></strong>) :: <code>Module</code></p>
 </blockquote>
-<p>Additive attention module:</p>
+<p>LSH attention module:</p>
 
 </div>
 
@@ -750,7 +972,7 @@ $$\textbf {Attention}(Q,K,V) = \textbf {softmax}({QK^T\over\sqrt d_k})V $$
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Test attention layer. Note: <code>d_model</code> is infered from input. Assumes shared key and query.</p>
+<p>Test LSH-attention layer. Note: <code>d_model</code> is infered from input. Assumes shared key and query, but accepts both as input.</p>
 
 </div>
 </div>
@@ -762,13 +984,153 @@ $$\textbf {Attention}(Q,K,V) = \textbf {softmax}({QK^T\over\sqrt d_k})V $$
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">qk</span><span class="p">,</span> <span class="n">v</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="n">sl</span><span class="p">,</span> <span class="n">d</span><span class="p">),</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="n">sl</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">bs</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">sl</span> <span class="o">=</span> <span class="mi">128</span>
+<span class="n">d</span> <span class="o">=</span> <span class="mi">64</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="n">sl</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+<span class="n">shared_proj</span> <span class="o">=</span> <span class="n">SharedQKAttnInProj</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+<span class="n">q</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="o">=</span> <span class="n">shared_proj</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 <span class="n">lsh_attn</span> <span class="o">=</span> <span class="n">LSHAttention</span><span class="p">()</span>
-<span class="n">out</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">lsh_attn</span><span class="p">(</span><span class="n">qk</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+<span class="n">out</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">lsh_attn</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
 <span class="k">assert</span> <span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="n">sl</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span> <span class="o">==</span> <span class="n">out</span><span class="o">.</span><span class="n">size</span><span class="p">()</span>
+<span class="n">out</span><span class="o">.</span><span class="n">shape</span>
 </pre></div>
 
     </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>torch.Size([4, 128, 64])</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">q</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>torch.Size([4, 128, 64])</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="LSH-self-attention">LSH-self-attention<a class="anchor-link" href="#LSH-self-attention"> </a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Performs multihead <a href="/reformer_fastai/attention.html#LSHAttention"><code>LSHAttention</code></a></p>
+
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h2 id="LSHSelfAttention" class="doc_header"><code>class</code> <code>LSHSelfAttention</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/attention.py#L436" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>LSHSelfAttention</code>(<strong><code>d_model</code></strong>, <strong><code>n_heads</code></strong>=<em><code>8</code></em>, <strong><code>bucket_size</code></strong>=<em><code>64</code></em>, <strong><code>n_hashes</code></strong>=<em><code>8</code></em>, <strong><code>causal</code></strong>=<em><code>False</code></em>, <strong><code>bias</code></strong>:<code>bool</code>=<em><code>True</code></em>, <strong><code>attend_across_buckets</code></strong>=<em><code>False</code></em>, <strong><code>allow_duplicate_attention</code></strong>=<em><code>False</code></em>, <strong><code>return_attn</code></strong>=<em><code>False</code></em>, <strong><code>dropout</code></strong>=<em><code>0.0</code></em>, <strong><code>post_attn_dropout</code></strong>=<em><code>0.0</code></em>) :: <code>Module</code></p>
+</blockquote>
+<p>Same as <code>nn.Module</code>, but no need for subclasses to call <code>super().__init__</code></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">bs</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">sl</span> <span class="o">=</span> <span class="mi">128</span>
+<span class="n">d</span> <span class="o">=</span> <span class="mi">512</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="n">sl</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+<span class="n">attn</span> <span class="o">=</span> <span class="n">LSHSelfAttention</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+<span class="n">out</span> <span class="o">=</span> <span class="n">attn</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="k">assert</span> <span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="n">sl</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span> <span class="o">==</span> <span class="n">out</span><span class="o">.</span><span class="n">size</span><span class="p">()</span>
+<span class="n">out</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>torch.Size([4, 128, 512])</pre>
+</div>
+
+</div>
+
 </div>
 </div>
 
@@ -781,6 +1143,13 @@ $$\textbf {Attention}(Q,K,V) = \textbf {softmax}({QK^T\over\sqrt d_k})V $$
 </div>
 </div>
 </div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Reformer attention calculates multihead attention with shared keys and queries, and allows switching between full <a href="/reformer_fastai/attention.html#Attention"><code>Attention</code></a> or <a href="/reformer_fastai/attention.html#LSHAttention"><code>LSHAttention</code></a> at creation, but not during inference or training.</p>
+
+</div>
+</div>
+</div>
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
@@ -792,10 +1161,10 @@ $$\textbf {Attention}(Q,K,V) = \textbf {softmax}({QK^T\over\sqrt d_k})V $$
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="ReformerAttention" class="doc_header"><code>class</code> <code>ReformerAttention</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/attention.py#L436" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ReformerAttention</code>(<strong><code>d_model</code></strong>:<code>int</code>, <strong><code>n_heads</code></strong>:<code>int</code>=<em><code>8</code></em>, <strong><code>causal</code></strong>:<code>bool</code>=<em><code>False</code></em>, <strong><code>mask</code></strong>:<code>Tensor</code>=<em><code>None</code></em>, <strong><code>dropout</code></strong>:<code>float</code>=<em><code>0.1</code></em>, <strong><code>out_dropout</code></strong>:<code>float</code>=<em><code>None</code></em>, <strong><code>bias</code></strong>:<code>bool</code>=<em><code>True</code></em>, <strong><code>store_attention</code></strong>:<code>bool</code>=<em><code>False</code></em>) :: <code>Module</code></p>
+<h2 id="ReformerAttention" class="doc_header"><code>class</code> <code>ReformerAttention</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/attention.py#L496" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ReformerAttention</code>(<strong><code>d_model</code></strong>:<code>int</code>, <strong><code>n_heads</code></strong>:<code>int</code>=<em><code>8</code></em>, <strong><code>causal</code></strong>:<code>bool</code>=<em><code>False</code></em>, <strong><code>mask</code></strong>:<code>Tensor</code>=<em><code>None</code></em>, <strong><code>dropout</code></strong>:<code>float</code>=<em><code>0.1</code></em>, <strong><code>out_dropout</code></strong>:<code>float</code>=<em><code>None</code></em>, <strong><code>bias</code></strong>:<code>bool</code>=<em><code>True</code></em>, <strong><code>store_attention</code></strong>:<code>bool</code>=<em><code>False</code></em>, <strong><code>lsh_attention</code></strong>:<code>bool</code>=<em><code>True</code></em>, <strong><code>n_hashes</code></strong>:<code>int</code>=<em><code>8</code></em>, <strong><code>bucket_size</code></strong>:<code>int</code>=<em><code>64</code></em>) :: <code>Module</code></p>
 </blockquote>
-<p>Reformer attnetion container</p>
-<p>Switch between FullSharedQKAttention and LSHAttention</p>
+<p>Reformer attention container.</p>
+<p>Switch between FullSharedQKAttention and LSHAttention.</p>
 
 </div>
 
@@ -810,6 +1179,165 @@ $$\textbf {Attention}(Q,K,V) = \textbf {softmax}({QK^T\over\sqrt d_k})V $$
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">bs</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">sl</span> <span class="o">=</span> <span class="mi">128</span>
+<span class="n">d</span> <span class="o">=</span> <span class="mi">512</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="n">sl</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+<span class="n">attn_lsh</span> <span class="o">=</span> <span class="n">ReformerAttention</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">lsh_attention</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">out</span> <span class="o">=</span> <span class="n">attn_lsh</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="k">assert</span> <span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="n">sl</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span> <span class="o">==</span> <span class="n">out</span><span class="o">.</span><span class="n">size</span><span class="p">()</span>
+<span class="n">out</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>torch.Size([4, 128, 512])</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">attn_full</span> <span class="o">=</span> <span class="n">ReformerAttention</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">lsh_attention</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">out</span> <span class="o">=</span> <span class="n">attn_full</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="k">assert</span> <span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="n">sl</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span> <span class="o">==</span> <span class="n">out</span><span class="o">.</span><span class="n">size</span><span class="p">()</span>
+<span class="n">out</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>torch.Size([4, 128, 512])</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The state dicts of full and lsh attention are identical:</p>
+
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="p">[(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">attn_lsh</span><span class="o">.</span><span class="n">state_dict</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">()]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>[(&#39;attn.in_proj.to_qk.weight&#39;, torch.Size([512, 512])),
+ (&#39;attn.in_proj.to_qk.bias&#39;, torch.Size([512])),
+ (&#39;attn.in_proj.to_v.weight&#39;, torch.Size([512, 512])),
+ (&#39;attn.in_proj.to_v.bias&#39;, torch.Size([512])),
+ (&#39;attn.out_proj.weight&#39;, torch.Size([512, 512])),
+ (&#39;attn.out_proj.bias&#39;, torch.Size([512]))]</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="p">[(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">attn_full</span><span class="o">.</span><span class="n">state_dict</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">()]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>[(&#39;attn.in_proj.to_qk.weight&#39;, torch.Size([512, 512])),
+ (&#39;attn.in_proj.to_qk.bias&#39;, torch.Size([512])),
+ (&#39;attn.in_proj.to_v.weight&#39;, torch.Size([512, 512])),
+ (&#39;attn.in_proj.to_v.bias&#39;, torch.Size([512])),
+ (&#39;attn.out_proj.weight&#39;, torch.Size([512, 512])),
+ (&#39;attn.out_proj.bias&#39;, torch.Size([512]))]</pre>
+</div>
+
+</div>
+
+</div>
+</div>
 
 </div>
     {% endraw %}
