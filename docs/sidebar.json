@@ -7,7 +7,10 @@
     "Standard Transformer": "transformer.html",
     "Reformer": "reformer.html",
     "Tokenizers": "tokenizers.html",
-    "Title": "data.html",
-    "Create dataset": "experiment.synthetic-task.html"
+    "Data": "data.html",
+    "": {
+      "Experiments": {
+        "Synthetic task": "/experiment.synthetic-task.html"
+      }
   }
 }
