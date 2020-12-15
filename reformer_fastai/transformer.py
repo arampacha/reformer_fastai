@@ -254,12 +254,12 @@ class TransformerLM(Module):
                 for i, l in enumerate(module.layers):
                     if i in layer_ids:
                         for m in l.modules():
-                            if issubclass(type(m), (scaledDotProdAttention)):
+                            if isinstance(m, (ScaledDotProdAttention)):
                                 m.store_attention = True
     def get_attention_matrix(self):
         res = []
         for m in self.modules():
-            if issubclass(type(m), (Attention)):
+            if isinstance(m, (ScaledDotProdAttention)):
                 attention = getattr(m, 'attention', None)
                 if attention is not None:
                     res.append(attention)
