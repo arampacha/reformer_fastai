@@ -5,17 +5,20 @@ __all__ = ['ByteTextTokenizer', 'SubwordTextEncoder']
 # Cell
 
 import six
+from six.moves import range
 import collections
-import math
-import numpy as np
+
 import re
 import sys
 import tempfile
 import time
 import unicodedata
 from itertools import chain
-from pathlib import Path
-from six.moves import range
+# from pathlib import Path
+
+import math
+import numpy as np
+from fastai.basics import *
 from fastai.text.all import *
 
 # Cell
