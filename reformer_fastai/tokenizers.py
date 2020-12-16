@@ -5,17 +5,14 @@ __all__ = ['ByteTextTokenizer', 'SubwordTextEncoder']
 # Cell
 
 import six
+from six import int2byte, unichr, PY2, iterkeys, iteritems, text_type
+from six.moves import range as six_range
 import collections
-import math
-import numpy as np
-import re
-import sys
-import tempfile
-import time
+
 import unicodedata
 from itertools import chain
-from pathlib import Path
-from six.moves import range
+
+from fastai.basics import *
 from fastai.text.all import *
 
 # Cell
@@ -23,7 +20,7 @@ from fastai.text.all import *
 class ByteTextTokenizer(Transform):
     """
         Encodes each byte to an id. For 8-bit strings only.
-        Credit: https://github.com/tensorflow/tensor2tensor/blob/5f9dd2db6d7797162e53adf152310ed13e9fc711/tensor2tensor/data_generators/text_encoder.py#L176
+        Credit to `tensor2tensor` library: https://github.com/tensorflow/tensor2tensor/blob/5f9dd2db6d7797162e53adf152310ed13e9fc711/tensor2tensor/data_generators/text_encoder.py#L176
     """
     def __init__(self, is_lm=True, add_bos=False, add_eos=False):
         self.ls_lm = is_lm
@@ -33,7 +30,7 @@ class ByteTextTokenizer(Transform):
         self.reserved_toks = [self.pad_token, self.eos_token, self.bos_token]  ## self.bos_token_id
         self.reserved_tokens_bytes = [bytes(rtok, 'ascii') for rtok in self.reserved_toks]
         self.numres = len(self.reserved_toks)
-        self.int2byte = six.int2byte
+        self.int2byte = int2byte
 
     @typedispatch
     def __call__(self, o:list, **kwargs):
@@ -122,8 +119,8 @@ class SubwordTextEncoder(Transform):
       filename: filename from which to read vocab. If None, do not load a
         vocab
     """
-    self.native_to_unicode = (lambda s: s.decode("utf-8")) if six.PY2 else (lambda s: s)
-    self._ALPHANUMERIC_CHAR_SET = set(six.unichr(i) for i in range(sys.maxunicode) if (unicodedata.category(six.unichr(i)).startswith("L") or unicodedata.category(six.unichr(i)).startswith("N")))
+    self.native_to_unicode = (lambda s: s.decode("utf-8")) if PY2 else (lambda s: s)
+    self._ALPHANUMERIC_CHAR_SET = set(unichr(i) for i in six_range(sys.maxunicode) if (unicodedata.category(unichr(i)).startswith("L") or unicodedata.category(unichr(i)).startswith("N")))
     self.PAD = "<pad>"
     self.EOS = "<EOS>"
     self.RESERVED_TOKENS = [self.PAD, self.EOS]
@@ -184,7 +181,7 @@ class SubwordTextEncoder(Transform):
       a native string
     """
     if strip_extraneous:
-      ids = strip_ids(ids, list(range(self._num_reserved_ids or 0)))
+      ids = strip_ids(ids, list(six_range(self._num_reserved_ids or 0)))
     return self.unicode_to_native(
         self._decode(self._subtoken_ids_to_tokens(ids)))
 
@@ -265,7 +262,7 @@ class SubwordTextEncoder(Transform):
     start = 0
     token_len = len(escaped_token)
     while start < token_len:
-      for end in range(
+      for end in six_range(
           min(token_len, start + self._max_subtoken_len), start, -1):
         subtoken = escaped_token[start:end]
         if subtoken in self._subtoken_string_to_id:
@@ -436,7 +433,7 @@ class SubwordTextEncoder(Transform):
 
     # Initialize the alphabet. Note, this must include reserved tokens or it can
     # result in encoding failures.
-    alphabet_tokens = chain(six.iterkeys(token_counts),
+    alphabet_tokens = chain(iterkeys(token_counts),
                             [self.native_to_unicode(t) for t in reserved_tokens])
 
     self._init_alphabet_from_tokens(alphabet_tokens)
@@ -451,13 +448,13 @@ class SubwordTextEncoder(Transform):
     # with high enough counts for our new vocabulary.
     if min_count < 1:
       min_count = 1
-    for i in range(num_iterations):
+    for i in six_range(num_iterations):
       #tf.logging.info("Iteration {0}".format(i))
 
       # Collect all substrings of the encoded token that break along current
       # subtoken boundaries.
       subtoken_counts = collections.defaultdict(int)
-      for token, count in six.iteritems(token_counts):
+      for token, count in iteritems(token_counts):
         iter_start_time = time.time()
         escaped_token = self._escape_token(token, self._alphabet)
         subtokens = self._escaped_token_to_subtoken_strings(escaped_token)
@@ -467,7 +464,7 @@ class SubwordTextEncoder(Transform):
           if max_subtoken_length is not None:
             last_position = min(last_position, start + max_subtoken_length)
 
-          for end in range(start + 1, last_position):
+          for end in six_range(start + 1, last_position):
             new_subtoken = escaped_token[start:end]
             subtoken_counts[new_subtoken] += count
           start += len(subtoken)
@@ -479,7 +476,7 @@ class SubwordTextEncoder(Transform):
 
       # Array of sets of candidate subtoken strings, by length.
       len_to_subtoken_strings = []
-      for subtoken_string, count in six.iteritems(subtoken_counts):
+      for subtoken_string, count in iteritems(subtoken_counts):
         lsub = len(subtoken_string)
         if count >= min_count:
           while len(len_to_subtoken_strings) <= lsub:
@@ -489,7 +486,7 @@ class SubwordTextEncoder(Transform):
       # Consider the candidates longest to shortest, so that if we accept
       # a longer subtoken string, we can decrement the counts of its prefixes.
       new_subtoken_strings = []
-      for lsub in range(len(len_to_subtoken_strings) - 1, 0, -1):
+      for lsub in six_range(len(len_to_subtoken_strings) - 1, 0, -1):
         subtoken_strings = len_to_subtoken_strings[lsub]
         for subtoken_string in subtoken_strings:
           count = subtoken_counts[subtoken_string]
@@ -498,7 +495,7 @@ class SubwordTextEncoder(Transform):
             # explicitly, regardless of count.
             if subtoken_string not in self._alphabet:
               new_subtoken_strings.append((count, subtoken_string))
-            for l in range(1, lsub):
+            for l in six_range(1, lsub):
               subtoken_counts[subtoken_string[:l]] -= count
 
       # Include the alphabet explicitly to guarantee all strings are encodable.
@@ -525,7 +522,7 @@ class SubwordTextEncoder(Transform):
   def dump(self):
     """Debugging dump of the current subtoken vocabulary."""
     subtoken_strings = [(i, s)
-                        for s, i in six.iteritems(self._subtoken_string_to_id)]
+                        for s, i in iteritems(self._subtoken_string_to_id)]
     print(u", ".join(u"{0} : '{1}'".format(i, s)
                      for i, s in sorted(subtoken_strings)))
 
@@ -602,13 +599,13 @@ class SubwordTextEncoder(Transform):
           f.write(self.unicode_to_native(subtoken_string) + "\n")
 		
   def unicode_to_native(self,s):
-    if six.PY2:
+    if PY2:
       return s.encode("utf-8") if is_unicode(s) else s
     else:
       return s
 
   def _escape_token(self,token, alphabet):
-    if not isinstance(token, six.text_type):
+    if not isinstance(token, text_type):
       raise ValueError("Expected string type for token, got %s" % type(token))
 
     token = token.replace(u"\\", u"\\\\").replace(u"_", u"\\u")
@@ -622,7 +619,7 @@ class SubwordTextEncoder(Transform):
         return u"_" if m.group(0) == u"\\u" else u"\\"
 
       try:
-        return six.unichr(int(m.group(1)))
+        return unichr(int(m.group(1)))
       except (ValueError, OverflowError) as _:
         return u"\u3013"  # Unicode for undefined character.
 
@@ -636,7 +633,7 @@ class SubwordTextEncoder(Transform):
     token_start = 0
     # Classify each character in the input string
     is_alnum = [c in self._ALPHANUMERIC_CHAR_SET for c in text]
-    for pos in range(1, len(text)):
+    for pos in six_range(1, len(text)):
       if is_alnum[pos] != is_alnum[pos - 1]:
         token = text[token_start:pos]
         if token != u" " or token_start == 0:
