@@ -132,4 +132,4 @@ class TransformerEmbedding(Module):
 
     def _init(self):
         nn.init.trunc_normal_(self.emb.weight, std = self.std)
-        if hasattr(self.pos_enc, 'weight'): nn.init.trunc_normal_(self.pos_enc.weight, std = self.std)
+        #if hasattr(self.pos_enc, 'emb'): nn.init.trunc_normal_(self.pos_enc.emb.weight, std=self.std)
