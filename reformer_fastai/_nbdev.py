@@ -52,6 +52,7 @@ index = {"exists": "00_core.ipynb",
          "ReformerLM": "04_reformer.ipynb",
          "ReformerEncDec": "04_reformer.ipynb",
          "ByteTextTokenizer": "05_tokenizers.ipynb",
+         "SubwordTextEncoder": "05_tokenizers.ipynb",
          "read_lines": "06_data.ipynb",
          "convert_data_to_seq_length": "06_data.ipynb",
          "read_and_prepare_data": "06_data.ipynb"}
