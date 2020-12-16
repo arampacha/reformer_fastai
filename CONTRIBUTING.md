@@ -7,6 +7,51 @@ Before anything else, please install the git hooks that run automatic scripts du
 nbdev_install_git_hooks
 ```
 
+## nbdev Workflow:
+
+Please follow the below guidelines for creating and submitting PRs to this repo
+
+### Do once after cloning the repo
+    - [optional] `pip install -e .` - do this if your nbs are not located in the project's root folder, e.g. if they are in reformer_fastai/nbs
+    - [optional `gh repo fork --remote` - for the repo if you are not a collaborator
+    - `nbdev_install_git_hooks`
+
+### Do for every change you want to make
+    - `git checkout -b add-my-feature` - create a new branch
+    - **Make your changes to notebook**
+    - `nbdev_build_lib` - Build the library
+    - `nbdev_build_docs` - Build the docs (see note below on docs)
+    - [optional] To run the same checks that the Continuous Integration on Github will run:
+        - `nbdev_read_nbs`
+        - `nbdev_clean_nbs`
+        - `nbdev_diff_nbs`
+        - `nbdev_test_nbs`
+    - `git commit -am "just testing"` - commit your changes
+    - `git push -u origin HEAD` if its your first push from this repo/fork, `git push` after that
+    - `gh pr create -f` - Create your PR
+
+### After creating your PR
+    - `git pull upstream master` - Keep up to date with the master branch
+    - `git checkout master`
+    - `git branch -d add-my-feature` - Once PR merged, delete your branch
+
+### Writing Tests
+    - Make sure tests don't take too long, testing time quickly adds up!
+    - Make sure your tests don't produce new notebooks
+    - For experiments and other similar notebooks use the ``#slow` flag for a cell or `#all_slow flag` for the remainder of the notebook to not test those cells.
+
+### Building Docs
+    - Note that if you add a new notebook it won't be added to the docs automatically any longer. The .html file has to be added to our custom docs/sidebar.json
+    - This is because we are using a custom sidebar, see here for more: https://nbdev.fast.ai/export2html.html#Sidebar
+
+### Other tips
+    - Edit index.ipynb to edit the README.md and your project's homepage
+    - To checkout an existing PR locally: gh pr checkout pr_number.  If one adds commits to the branch and pushes those, the PR is also updated.
+
+### Taken from:
+- [nbdev tutorial](https://nbdev.fast.ai/tutorial.html#Edit-index.ipynb)
+- [fastai guide to creating a PR](https://docs.fast.ai/dev-setup.html#Creating-your-PR)
+
 ## Did you find a bug?
 
 * Ensure the bug was not already reported by searching on GitHub under Issues.

@@ -32,6 +32,53 @@ nb_path: "nbs/05_tokenizers.ipynb"
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">IN_COLAB</span> <span class="o">=</span> <span class="s1">&#39;google.colab&#39;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">get_ipython</span><span class="p">())</span>
+<span class="k">if</span> <span class="n">IN_COLAB</span><span class="p">:</span>
+  <span class="o">!</span>pip install -Uqq fastai einops datasets wandb yappi gprof2dot pyinstrument nbdev fastcore  
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">if</span> <span class="n">IN_COLAB</span><span class="p">:</span>
+  <span class="kn">from</span> <span class="nn">google.colab</span> <span class="kn">import</span> <span class="n">drive</span>
+  <span class="n">drive</span><span class="o">.</span><span class="n">mount</span><span class="p">(</span><span class="s1">&#39;/content/drive&#39;</span><span class="p">)</span>
+  <span class="kn">import</span> <span class="nn">os</span>
+  <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="s1">&#39;/content/drive/My Drive/Colab Notebooks/github/reformer_fastai&#39;</span><span class="p">)</span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
 
 <div class="output_wrapper">
 <div class="output">
@@ -40,7 +87,7 @@ nb_path: "nbs/05_tokenizers.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="ByteTextTokenizer" class="doc_header"><code>class</code> <code>ByteTextTokenizer</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/tokenizers.py#L10" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ByteTextTokenizer</code>(<strong><code>is_lm</code></strong>=<em><code>True</code></em>, <strong><code>add_bos</code></strong>=<em><code>False</code></em>, <strong><code>add_eos</code></strong>=<em><code>False</code></em>) :: <code>Transform</code></p>
+<h2 id="ByteTextTokenizer" class="doc_header"><code>class</code> <code>ByteTextTokenizer</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/tokenizers.py#L26" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ByteTextTokenizer</code>(<strong><code>is_lm</code></strong>=<em><code>True</code></em>, <strong><code>add_bos</code></strong>=<em><code>False</code></em>, <strong><code>add_eos</code></strong>=<em><code>False</code></em>) :: <code>Transform</code></p>
 </blockquote>
 <p>Encodes each byte to an id. For 8-bit strings only.
 Credit: <a href="https://github.com/tensorflow/tensor2tensor/blob/5f9dd2db6d7797162e53adf152310ed13e9fc711/tensor2tensor/data_generators/text_encoder.py#L176">https://github.com/tensorflow/tensor2tensor/blob/5f9dd2db6d7797162e53adf152310ed13e9fc711/tensor2tensor/data_generators/text_encoder.py#L176</a></p>
@@ -58,6 +105,202 @@ Credit: <a href="https://github.com/tensorflow/tensor2tensor/blob/5f9dd2db6d7797
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h2 id="SubwordTextEncoder" class="doc_header"><code>class</code> <code>SubwordTextEncoder</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/tokenizers.py#L88" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>SubwordTextEncoder</code>(<strong><code>filename</code></strong>=<em><code>None</code></em>) :: <code>Transform</code></p>
+</blockquote>
+<p>Class for invertibly encoding text using a limited vocabulary.</p>
+<p>Invertibly encodes a native string as a sequence of subtokens from a limited
+vocabulary.</p>
+<p>A SubwordTextEncoder is built from a corpus (so it is tailored to the text in
+the corpus), and stored to a file. See text_encoder_build_subword.py.</p>
+<p>It can then be loaded and used to encode/decode any text.</p>
+<p>Encoding has four phases:</p>
+<ol>
+<li><p>Tokenize into a list of tokens.  Each token is a unicode string of either
+all alphanumeric characters or all non-alphanumeric characters.  We drop
+tokens consisting of a single space that are between two alphanumeric
+tokens.</p>
+</li>
+<li><p>Escape each token.  This escapes away special and out-of-vocabulary
+characters, and makes sure that each token ends with an underscore, and
+has no other underscores.</p>
+</li>
+<li><p>Represent each escaped token as a the concatenation of a list of subtokens
+from the limited vocabulary.  Subtoken selection is done greedily from
+beginning to end.  That is, we construct the list in order, always picking
+the longest subtoken in our vocabulary that matches a prefix of the
+remaining portion of the encoded token.</p>
+</li>
+<li><p>Concatenate these lists.  This concatenation is invertible due to the
+fact that the trailing underscores indicate when one list is finished.</p>
+</li>
+</ol>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Test for SubwordTokenizer</span>
+
+<span class="o">!</span>pip install -Uqq sacrebleu
+<span class="o">!</span>wget https://raw.githubusercontent.com/tensorflow/tensor2tensor/master/tensor2tensor/test_data/vocab.translate_ende_wmt32k.32768.subwords
+
+<span class="kn">import</span> <span class="nn">sacrebleu</span>
+<span class="o">!</span>sacrebleu -t wmt14/full -l en-de --echo src &gt; wmt14-en-de.src
+<span class="o">!</span>sacrebleu -t wmt14/full -l en-de --echo ref &gt; wmt14-en-de.ref
+
+<span class="c1"># Load the source text and reference translations into Python</span>
+<span class="n">refs</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">lineno</span><span class="p">,</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">sacrebleu</span><span class="o">.</span><span class="n">smart_open</span><span class="p">(</span><span class="s1">&#39;wmt14-en-de.ref&#39;</span><span class="p">),</span> <span class="mi">1</span><span class="p">):</span>
+  <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">):</span>
+    <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+  <span class="n">refs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+<span class="n">srcs</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">lineno</span><span class="p">,</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">sacrebleu</span><span class="o">.</span><span class="n">smart_open</span><span class="p">(</span><span class="s1">&#39;wmt14-en-de.src&#39;</span><span class="p">),</span> <span class="mi">1</span><span class="p">):</span>
+  <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">):</span>
+    <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+  <span class="n">srcs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>--2020-12-16 12:15:59--  https://raw.githubusercontent.com/tensorflow/tensor2tensor/master/tensor2tensor/test_data/vocab.translate_ende_wmt32k.32768.subwords
+Resolving raw.githubusercontent.com (raw.githubusercontent.com)... 151.101.64.133, 151.101.192.133, 151.101.0.133, ...
+Connecting to raw.githubusercontent.com (raw.githubusercontent.com)|151.101.64.133|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 324025 (316K) [text/plain]
+Saving to: ‘vocab.translate_ende_wmt32k.32768.subwords.1’
+
+vocab.translate_end 100%[===================&gt;] 316.43K  --.-KB/s    in 0.06s   
+
+2020-12-16 12:15:59 (4.89 MB/s) - ‘vocab.translate_ende_wmt32k.32768.subwords.1’ saved [324025/324025]
+
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Encode source sentences using the tokenizer</span>
+<span class="n">tokenizer</span> <span class="o">=</span> <span class="n">SubwordTextEncoder</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;./vocab.translate_ende_wmt32k.32768.subwords&#39;</span><span class="p">)</span>
+<span class="n">srcs</span><span class="o">=</span><span class="n">srcs</span><span class="p">[:</span><span class="mi">5</span><span class="p">]</span>
+<span class="n">input_ids</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">srcs</span><span class="p">),</span> <span class="mi">128</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">srcs</span><span class="p">):</span>
+  <span class="nb">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+  <span class="n">x</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">encodes</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+  <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">127</span>
+  <span class="n">input_ids</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)]</span> <span class="o">=</span> <span class="n">x</span>
+  <span class="n">input_ids</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">1</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Gutach: Increased safety for pedestrians
+They are not even 100 metres apart: On Tuesday, the new B 33 pedestrian lights in Dorfparkplatz in Gutach became operational - within view of the existing Town Hall traffic lights.
+Two sets of lights so close to one another: intentional or just a silly error?
+Yesterday, Gutacht&#39;s Mayor gave a clear answer to this question.
+&#34;At the time, the Town Hall traffic lights were installed because this was a school route,&#34; explained Eckert yesterday.
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Decode sample output</span>
+<span class="n">tokenizer</span><span class="o">.</span><span class="n">decodes</span><span class="p">(</span><span class="n">input_ids</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>&#39;Gutach: Increased safety for pedestrians&lt;EOS&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;&#39;</pre>
+</div>
+
+</div>
+
+</div>
+</div>
 
 </div>
     {% endraw %}
