@@ -26,6 +26,20 @@ nb_path: "nbs/03_transformer.ipynb"
     
 <div class="cell border-box-sizing code_cell rendered">
 
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>No module named &#39;axial_positional_embedding&#39;
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
 </div>
     {% endraw %}
 
@@ -94,6 +108,7 @@ feedforward layers</p>
 <span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="n">sl</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
 <span class="n">m</span> <span class="o">=</span> <span class="n">TransformerEncoderBlock</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
 <span class="n">out</span> <span class="o">=</span> <span class="n">m</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="k">assert</span> <span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="n">sl</span><span class="p">,</span> <span class="n">d</span><span class="p">))</span>
 <span class="n">out</span><span class="o">.</span><span class="n">shape</span>
 </pre></div>
 
@@ -133,7 +148,7 @@ feedforward layers</p>
 <div class="output_markdown rendered_html output_subarea ">
 <h2 id="TransformerEncoder" class="doc_header"><code>class</code> <code>TransformerEncoder</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/transformer.py#L41" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TransformerEncoder</code>(<strong><code>d_model</code></strong>, <strong><code>n_layers</code></strong>=<em><code>6</code></em>, <strong><code>n_heads</code></strong>=<em><code>8</code></em>, <strong><code>d_ff</code></strong>=<em><code>None</code></em>, <strong><code>ff_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>attn_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>attn_bias</code></strong>=<em><code>True</code></em>, <strong><code>causal</code></strong>=<em><code>False</code></em>, <strong><code>prenorm</code></strong>=<em><code>False</code></em>, <strong><code>final_norm</code></strong>=<em><code>None</code></em>) :: <code>Module</code></p>
 </blockquote>
-<p>Same as <code>nn.Module</code>, but no need for subclasses to call <code>super().__init__</code></p>
+<p>Stack of TransformerEncoderBlocks</p>
 
 </div>
 
@@ -162,6 +177,7 @@ feedforward layers</p>
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="n">sl</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
 <span class="n">m</span> <span class="o">=</span> <span class="n">TransformerEncoder</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
 <span class="n">out</span> <span class="o">=</span> <span class="n">m</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="k">assert</span> <span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="n">sl</span><span class="p">,</span> <span class="n">d</span><span class="p">))</span>
 <span class="n">out</span><span class="o">.</span><span class="n">shape</span>
 </pre></div>
 
@@ -205,9 +221,10 @@ feedforward layers</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="TransformerDecoderBlock" class="doc_header"><code>class</code> <code>TransformerDecoderBlock</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/transformer.py#L67" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TransformerDecoderBlock</code>(<strong><code>d_model</code></strong>, <strong><code>n_heads</code></strong>=<em><code>8</code></em>, <strong><code>d_ff</code></strong>=<em><code>None</code></em>, <strong><code>attn_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>ff_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>mask</code></strong>=<em><code>None</code></em>, <strong><code>attn_bias</code></strong>=<em><code>True</code></em>, <strong><code>prenorm</code></strong>=<em><code>False</code></em>) :: <code>Module</code></p>
+<h2 id="TransformerDecoderBlock" class="doc_header"><code>class</code> <code>TransformerDecoderBlock</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/transformer.py#L68" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TransformerDecoderBlock</code>(<strong><code>d_model</code></strong>, <strong><code>n_heads</code></strong>=<em><code>8</code></em>, <strong><code>d_ff</code></strong>=<em><code>None</code></em>, <strong><code>attn_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>ff_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>mask</code></strong>=<em><code>None</code></em>, <strong><code>attn_bias</code></strong>=<em><code>True</code></em>, <strong><code>prenorm</code></strong>=<em><code>False</code></em>) :: <code>Module</code></p>
 </blockquote>
-<p>Same as <code>nn.Module</code>, but no need for subclasses to call <code>super().__init__</code></p>
+<p>Standart transformer decoder block. Consist of self-attention, encoder-decoder attention
+and positiona feed-forward alyers</p>
 
 </div>
 
@@ -237,9 +254,10 @@ feedforward layers</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="TransformerDecoderBlockV2" class="doc_header"><code>class</code> <code>TransformerDecoderBlockV2</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/transformer.py#L93" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TransformerDecoderBlockV2</code>(<strong><code>d_model</code></strong>, <strong><code>n_heads</code></strong>=<em><code>8</code></em>, <strong><code>mask</code></strong>=<em><code>None</code></em>, <strong><code>d_ff</code></strong>=<em><code>None</code></em>, <strong><code>attn_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>ff_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>attn_bias</code></strong>=<em><code>True</code></em>, <strong><code>prenorm</code></strong>=<em><code>False</code></em>) :: <code>Module</code></p>
+<h2 id="TransformerDecoderBlockV2" class="doc_header"><code>class</code> <code>TransformerDecoderBlockV2</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/transformer.py#L98" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TransformerDecoderBlockV2</code>(<strong><code>d_model</code></strong>, <strong><code>n_heads</code></strong>=<em><code>8</code></em>, <strong><code>mask</code></strong>=<em><code>None</code></em>, <strong><code>d_ff</code></strong>=<em><code>None</code></em>, <strong><code>attn_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>ff_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>attn_bias</code></strong>=<em><code>True</code></em>, <strong><code>prenorm</code></strong>=<em><code>False</code></em>) :: <code>Module</code></p>
 </blockquote>
-<p>Same as <code>nn.Module</code>, but no need for subclasses to call <code>super().__init__</code></p>
+<p>Transformer decoder block using additive attention layer instead of self-attention
+followed by cross-attention</p>
 
 </div>
 
@@ -269,9 +287,9 @@ feedforward layers</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="TransformerDecoder" class="doc_header"><code>class</code> <code>TransformerDecoder</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/transformer.py#L116" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TransformerDecoder</code>(<strong><code>d_model</code></strong>, <strong><code>n_layers</code></strong>=<em><code>6</code></em>, <strong><code>n_heads</code></strong>=<em><code>8</code></em>, <strong><code>d_ff</code></strong>=<em><code>None</code></em>, <strong><code>attn_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>ff_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>prenorm</code></strong>=<em><code>False</code></em>, <strong><code>comb_attn</code></strong>=<em><code>False</code></em>, <strong><code>attn_bias</code></strong>=<em><code>True</code></em>, <strong><code>final_norm</code></strong>=<em><code>None</code></em>) :: <code>Module</code></p>
+<h2 id="TransformerDecoder" class="doc_header"><code>class</code> <code>TransformerDecoder</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/transformer.py#L123" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TransformerDecoder</code>(<strong><code>d_model</code></strong>, <strong><code>n_layers</code></strong>=<em><code>6</code></em>, <strong><code>n_heads</code></strong>=<em><code>8</code></em>, <strong><code>d_ff</code></strong>=<em><code>None</code></em>, <strong><code>attn_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>ff_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>prenorm</code></strong>=<em><code>False</code></em>, <strong><code>comb_attn</code></strong>=<em><code>False</code></em>, <strong><code>attn_bias</code></strong>=<em><code>True</code></em>, <strong><code>final_norm</code></strong>=<em><code>None</code></em>) :: <code>Module</code></p>
 </blockquote>
-<p>Same as <code>nn.Module</code>, but no need for subclasses to call <code>super().__init__</code></p>
+<p>Stack of TransformerDecoder layers</p>
 
 </div>
 
@@ -307,7 +325,7 @@ feedforward layers</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="TransformerLM" class="doc_header"><code>class</code> <code>TransformerLM</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/transformer.py#L143" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TransformerLM</code>(<strong><code>vocab_sz</code></strong>, <strong><code>d_model</code></strong>, <strong><code>n_layers</code></strong>=<em><code>6</code></em>, <strong><code>n_heads</code></strong>=<em><code>8</code></em>, <strong><code>d_ff</code></strong>=<em><code>None</code></em>, <strong><code>attn_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>ff_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>emb_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>tie_weights</code></strong>=<em><code>True</code></em>, <strong><code>causal</code></strong>=<em><code>True</code></em>, <strong><code>pos_enc</code></strong>=<em><code>'absolute'</code></em>, <strong><code>max_seq_len</code></strong>=<em><code>512</code></em>, <strong><code>axial_shape</code></strong>=<em><code>None</code></em>, <strong><code>axial_emb_dims</code></strong>=<em><code>None</code></em>, <strong><code>pad_idx</code></strong>=<em><code>None</code></em>, <strong><code>prenorm</code></strong>=<em><code>False</code></em>, <strong><code>attn_bias</code></strong>=<em><code>True</code></em>) :: <code>Module</code></p>
+<h2 id="TransformerLM" class="doc_header"><code>class</code> <code>TransformerLM</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/transformer.py#L151" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TransformerLM</code>(<strong><code>vocab_sz</code></strong>, <strong><code>d_model</code></strong>, <strong><code>n_layers</code></strong>=<em><code>6</code></em>, <strong><code>n_heads</code></strong>=<em><code>8</code></em>, <strong><code>d_ff</code></strong>=<em><code>None</code></em>, <strong><code>attn_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>ff_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>emb_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>tie_weights</code></strong>=<em><code>True</code></em>, <strong><code>causal</code></strong>=<em><code>True</code></em>, <strong><code>pos_enc</code></strong>=<em><code>'absolute'</code></em>, <strong><code>max_seq_len</code></strong>=<em><code>512</code></em>, <strong><code>axial_shape</code></strong>=<em><code>None</code></em>, <strong><code>axial_emb_dims</code></strong>=<em><code>None</code></em>, <strong><code>pad_idx</code></strong>=<em><code>None</code></em>, <strong><code>prenorm</code></strong>=<em><code>False</code></em>, <strong><code>attn_bias</code></strong>=<em><code>True</code></em>) :: <code>Module</code></p>
 </blockquote>
 <p>Basic Transformer for language modelling</p>
 <p>Parameters:</p>
@@ -367,9 +385,11 @@ feedforward layers</p>
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">bs</span> <span class="o">=</span> <span class="mi">4</span>
 <span class="n">sl</span> <span class="o">=</span> <span class="mi">128</span>
 <span class="n">d</span> <span class="o">=</span> <span class="mi">64</span>
-<span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">256</span><span class="p">,</span> <span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="n">sl</span><span class="p">))</span>
-<span class="n">model</span> <span class="o">=</span> <span class="n">TransformerLM</span><span class="p">(</span><span class="mi">256</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">n_layers</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">causal</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">vocab_sz</span> <span class="o">=</span> <span class="mi">256</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">vocab_sz</span><span class="p">,</span> <span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="n">sl</span><span class="p">))</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">TransformerLM</span><span class="p">(</span><span class="n">vocab_sz</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">n_layers</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">causal</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="n">out</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="k">assert</span> <span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="n">sl</span><span class="p">,</span> <span class="n">vocab_sz</span><span class="p">))</span>
 <span class="n">out</span><span class="o">.</span><span class="n">shape</span>
 </pre></div>
 
@@ -413,7 +433,7 @@ feedforward layers</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="TransformerEncDec" class="doc_header"><code>class</code> <code>TransformerEncDec</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/transformer.py#L268" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TransformerEncDec</code>(<strong><code>enc_vocab_sz</code></strong>, <strong><code>dec_vocab_sz</code></strong>, <strong><code>d_model</code></strong>, <strong><code>n_enc_layers</code></strong>=<em><code>6</code></em>, <strong><code>n_dec_layers</code></strong>=<em><code>6</code></em>, <strong><code>heads</code></strong>=<em><code>8</code></em>, <strong><code>d_ff</code></strong>=<em><code>None</code></em>, <strong><code>pad_idx</code></strong>=<em><code>None</code></em>, <strong><code>tie_weights</code></strong>=<em><code>True</code></em>, <strong><code>shared_emb</code></strong>=<em><code>False</code></em>, <strong><code>attn_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>ff_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>emb_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>prenorm</code></strong>=<em><code>False</code></em>, <strong><code>attn_bias</code></strong>=<em><code>True</code></em>, <strong><code>comb_attn</code></strong>=<em><code>False</code></em>, <strong><code>pos_enc</code></strong>=<em><code>'absolute'</code></em>, <strong><code>max_seq_len</code></strong>=<em><code>512</code></em>, <strong><code>axial_shape</code></strong>=<em><code>None</code></em>, <strong><code>axial_emb_dims</code></strong>=<em><code>None</code></em>) :: <code>Module</code></p>
+<h2 id="TransformerEncDec" class="doc_header"><code>class</code> <code>TransformerEncDec</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/transformer.py#L276" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TransformerEncDec</code>(<strong><code>enc_vocab_sz</code></strong>, <strong><code>dec_vocab_sz</code></strong>, <strong><code>d_model</code></strong>, <strong><code>n_enc_layers</code></strong>=<em><code>6</code></em>, <strong><code>n_dec_layers</code></strong>=<em><code>6</code></em>, <strong><code>heads</code></strong>=<em><code>8</code></em>, <strong><code>d_ff</code></strong>=<em><code>None</code></em>, <strong><code>pad_idx</code></strong>=<em><code>None</code></em>, <strong><code>tie_weights</code></strong>=<em><code>True</code></em>, <strong><code>shared_emb</code></strong>=<em><code>False</code></em>, <strong><code>attn_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>ff_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>emb_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>prenorm</code></strong>=<em><code>False</code></em>, <strong><code>attn_bias</code></strong>=<em><code>True</code></em>, <strong><code>comb_attn</code></strong>=<em><code>False</code></em>, <strong><code>pos_enc</code></strong>=<em><code>'absolute'</code></em>, <strong><code>max_seq_len</code></strong>=<em><code>512</code></em>, <strong><code>axial_shape</code></strong>=<em><code>None</code></em>, <strong><code>axial_emb_dims</code></strong>=<em><code>None</code></em>) :: <code>Module</code></p>
 </blockquote>
 <p>Basic Transformer Encoder-Decoder model
 Parameters:</p>
@@ -431,8 +451,8 @@ Parameters:</p>
 * max_seq_len: int (default: 512)
 * prenorm: bool - whether to use PreNorm or PostNorm
 * attn_bias: bool - whether to allow biases in attention projection layers
-* pad_idx: int - padding token id, if pad_idx is provided, and no mask/context_mask are passed to
-        forward method will be used to generate padding masks
+* pad_idx: int - padding token id, if pad_idx is provided, and no mask/context_mask are
+        passed to forward method will be used to generate padding masks
 * tie_weights: bool - if True target embedding weights are used for computation output projection
 * shared_emb: bool - if True encoder and decoder will use shared embedding layer
 * pos_enc: str from {'absolute', 'fixed', 'axial'} - type of positional encoding to use
@@ -485,6 +505,7 @@ Parameters:</p>
 <span class="n">tgt</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">tgt_vocab_sz</span><span class="p">,</span> <span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="n">tgt_sl</span><span class="p">))</span>
 <span class="n">model</span> <span class="o">=</span> <span class="n">TransformerEncDec</span><span class="p">(</span><span class="n">src_vocab_sz</span><span class="p">,</span> <span class="n">tgt_vocab_sz</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">n_enc_layers</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">n_dec_layers</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 <span class="n">out</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">tgt</span><span class="p">)</span>
+<span class="k">assert</span> <span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="n">tgt_sl</span><span class="p">,</span> <span class="n">tgt_vocab_sz</span><span class="p">))</span>
 <span class="n">out</span><span class="o">.</span><span class="n">shape</span>
 </pre></div>
 
