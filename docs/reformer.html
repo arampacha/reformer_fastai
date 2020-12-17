@@ -26,20 +26,6 @@ nb_path: "nbs/04_reformer.ipynb"
     
 <div class="cell border-box-sizing code_cell rendered">
 
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>No module named &#39;axial_positional_embedding&#39;
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
 </div>
     {% endraw %}
 
@@ -75,80 +61,9 @@ nb_path: "nbs/04_reformer.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="Chunk" class="doc_header"><code>class</code> <code>Chunk</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/reformer.py#L17" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Chunk</code>(<strong><code>chunks</code></strong>, <strong><code>fn</code></strong>, <strong><code>dim</code></strong>=<em><code>-1</code></em>) :: <code>Module</code></p>
+<h2 id="Chunk" class="doc_header"><code>class</code> <code>Chunk</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/reformer.py#L18" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Chunk</code>(<strong><code>chunks</code></strong>:<code>int</code>, <strong><code>fn</code></strong>:<code>Module</code>, <strong><code>dim</code></strong>:<code>int</code>=<em><code>-1</code></em>) :: <code>Module</code></p>
 </blockquote>
-<p>Base class for all neural network modules.</p>
-<p>Your models should also subclass this class.</p>
-<p>Modules can also contain other Modules, allowing to nest them in
-a tree structure. You can assign the submodules as regular attributes::</p>
-
-<pre><code>import torch.nn as nn
-import torch.nn.functional as F
-
-class Model(nn.Module):
-    def __init__(self):
-        super(Model, self).__init__()
-        self.conv1 = nn.Conv2d(1, 20, 5)
-        self.conv2 = nn.Conv2d(20, 20, 5)
-
-    def forward(self, x):
-        x = F.relu(self.conv1(x))
-        return F.relu(self.conv2(x))
-
-</code></pre>
-<p>Submodules assigned in this way will be registered, and will have their
-parameters converted too when you call :meth:<code>to</code>, etc.</p>
-<p>:ivar training: Boolean represents whether this module is in training or
-                evaluation mode.
-:vartype training: bool</p>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h2 id="ChunkedFeedForward" class="doc_header"><code>class</code> <code>ChunkedFeedForward</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/reformer.py#L30" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ChunkedFeedForward</code>(<strong><code>d</code></strong>, <strong><code>d_ff</code></strong>=<em><code>None</code></em>, <strong><code>chunks</code></strong>=<em><code>1</code></em>, <strong><code>dropout</code></strong>=<em><code>0.0</code></em>, <strong><code>dim</code></strong>=<em><code>-1</code></em>) :: <code>Module</code></p>
-</blockquote>
-<p>Base class for all neural network modules.</p>
-<p>Your models should also subclass this class.</p>
-<p>Modules can also contain other Modules, allowing to nest them in
-a tree structure. You can assign the submodules as regular attributes::</p>
-
-<pre><code>import torch.nn as nn
-import torch.nn.functional as F
-
-class Model(nn.Module):
-    def __init__(self):
-        super(Model, self).__init__()
-        self.conv1 = nn.Conv2d(1, 20, 5)
-        self.conv2 = nn.Conv2d(20, 20, 5)
-
-    def forward(self, x):
-        x = F.relu(self.conv1(x))
-        return F.relu(self.conv2(x))
-
-</code></pre>
-<p>Submodules assigned in this way will be registered, and will have their
-parameters converted too when you call :meth:<code>to</code>, etc.</p>
-<p>:ivar training: Boolean represents whether this module is in training or
-                evaluation mode.
-:vartype training: bool</p>
+<p>Applies fn to input chunked along dim</p>
 
 </div>
 
@@ -178,7 +93,62 @@ parameters converted too when you call :meth:<code>to</code>, etc.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="Deterministic" class="doc_header"><code>class</code> <code>Deterministic</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/reformer.py#L50" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Deterministic</code>(<strong><code>net</code></strong>) :: <code>Module</code></p>
+<h2 id="ChunkedFeedForward" class="doc_header"><code>class</code> <code>ChunkedFeedForward</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/reformer.py#L29" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ChunkedFeedForward</code>(<strong><code>d</code></strong>:<code>int</code>, <strong><code>d_ff</code></strong>:<code>int</code>=<em><code>None</code></em>, <strong><code>chunks</code></strong>:<code>int</code>=<em><code>1</code></em>, <strong><code>dropout</code></strong>:<code>float</code>=<em><code>0.0</code></em>, <strong><code>dim</code></strong>:<code>int</code>=<em><code>-1</code></em>) :: <code>Module</code></p>
+</blockquote>
+<p>Applies positionwise feed-forward layer to input chunced along dim</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">bs</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">sl</span> <span class="o">=</span> <span class="mi">64</span>
+<span class="n">d</span> <span class="o">=</span> <span class="mi">128</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="n">sl</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+<span class="n">ff</span>  <span class="o">=</span> <span class="n">ChunkedFeedForward</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">chunks</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">out</span> <span class="o">=</span> <span class="n">ff</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">out</span><span class="o">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="n">sl</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h2 id="Deterministic" class="doc_header"><code>class</code> <code>Deterministic</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/reformer.py#L49" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Deterministic</code>(<strong><code>net</code></strong>:<code>Module</code>) :: <code>Module</code></p>
 </blockquote>
 <p>Wrapper module to ensure determinism for backward pass
 following example for saving and setting rng here
@@ -204,6 +174,23 @@ following example for saving and setting rng here
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
 
 <div class="output_wrapper">
 <div class="output">
@@ -212,7 +199,623 @@ following example for saving and setting rng here
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="ReversibleBlock" class="doc_header"><code>class</code> <code>ReversibleBlock</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/reformer.py#L90" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ReversibleBlock</code>(<strong><code>f</code></strong>, <strong><code>g</code></strong>, <strong><code>depth</code></strong>=<em><code>None</code></em>, <strong><code>send_signal</code></strong>=<em><code>False</code></em>) :: <code>Module</code></p>
+<h2 id="ReversibleBlock" class="doc_header"><code>class</code> <code>ReversibleBlock</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/reformer.py#L88" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ReversibleBlock</code>(<strong><code>f</code></strong>:<code>Module</code>, <strong><code>g</code></strong>:<code>Module</code>, <strong><code>depth</code></strong>=<em><code>None</code></em>, <strong><code>send_signal</code></strong>=<em><code>False</code></em>) :: <code>Module</code></p>
+</blockquote>
+<p>Same as <code>nn.Module</code>, but no need for subclasses to call <code>super().__init__</code></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">bs</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">sl</span> <span class="o">=</span> <span class="mi">64</span>
+<span class="n">d</span> <span class="o">=</span> <span class="mi">128</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="n">sl</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+<span class="c1"># revblock is called on twin x</span>
+<span class="n">x2</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">],</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">attn</span> <span class="o">=</span> <span class="n">Attention</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+<span class="n">ff</span> <span class="o">=</span> <span class="n">ChunkedFeedForward</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">chunks</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">revblock</span> <span class="o">=</span> <span class="n">ReversibleBlock</span><span class="p">(</span><span class="n">attn</span><span class="p">,</span> <span class="n">ff</span><span class="p">)</span>
+<span class="n">out</span> <span class="o">=</span> <span class="n">revblock</span><span class="p">(</span><span class="n">x2</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">out</span><span class="o">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="n">sl</span><span class="p">,</span> <span class="n">d</span><span class="o">*</span><span class="mi">2</span><span class="p">)</span>
+<span class="c1"># no grads are stored</span>
+<span class="n">out</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">chunk</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="k">try</span><span class="p">:</span> <span class="n">out</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+<span class="k">except</span> <span class="ne">RuntimeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>element 0 of tensors does not require grad and does not have a grad_fn
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h2 id="IrreversibleBlock" class="doc_header"><code>class</code> <code>IrreversibleBlock</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/reformer.py#L151" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>IrreversibleBlock</code>(<strong><code>f</code></strong>, <strong><code>g</code></strong>) :: <code>Module</code></p>
+</blockquote>
+<p>Mimics ReversibleBlock computation but gradients are computed as ussual</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">attn</span> <span class="o">=</span> <span class="n">Attention</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+<span class="n">ff</span> <span class="o">=</span> <span class="n">ChunkedFeedForward</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">chunks</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">irrevblock</span> <span class="o">=</span> <span class="n">IrreversibleBlock</span><span class="p">(</span><span class="n">attn</span><span class="p">,</span> <span class="n">ff</span><span class="p">)</span>
+<span class="n">out</span> <span class="o">=</span> <span class="n">irrevblock</span><span class="p">(</span><span class="n">x2</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">out</span><span class="o">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="n">sl</span><span class="p">,</span> <span class="n">d</span><span class="o">*</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h2 id="ReversibleSequence" class="doc_header"><code>class</code> <code>ReversibleSequence</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/reformer.py#L180" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ReversibleSequence</code>(<strong><code>blocks</code></strong>, <strong><code>layer_dropout</code></strong>=<em><code>0.0</code></em>, <strong><code>rev_thres</code></strong>=<em><code>0</code></em>, <strong><code>send_signal</code></strong>=<em><code>False</code></em>) :: <code>Module</code></p>
+</blockquote>
+<p>Stack of ReversibleBlocks constructed from blocks.Applies ReversibleBlocks if
+sequence length is &gt; rev_thres or else IrreversibleBlocks.</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">bs</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">sl</span> <span class="o">=</span> <span class="mi">64</span>
+<span class="n">d</span> <span class="o">=</span> <span class="mi">128</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="n">sl</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+<span class="n">x2</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">],</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">blocks</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="n">PreNorm</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">Attention</span><span class="p">(</span><span class="n">d</span><span class="p">))</span>
+    <span class="n">g</span> <span class="o">=</span> <span class="n">PreNorm</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">FeedForward</span><span class="p">(</span><span class="n">d</span><span class="p">))</span>
+    <span class="n">blocks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">ModuleList</span><span class="p">([</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">]))</span>
+<span class="n">layers</span> <span class="o">=</span> <span class="n">ReversibleSequence</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">ModuleList</span><span class="p">(</span><span class="n">blocks</span><span class="p">))</span>
+<span class="n">out</span> <span class="o">=</span> <span class="n">layers</span><span class="p">(</span><span class="n">x2</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">out</span><span class="o">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="n">sl</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">d</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">try</span><span class="p">:</span> <span class="n">out</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+<span class="k">except</span> <span class="ne">RuntimeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>element 0 of tensors does not require grad and does not have a grad_fn
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="ReversibleTransformer">ReversibleTransformer<a class="anchor-link" href="#ReversibleTransformer"> </a></h2>
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h2 id="ReversibleEncoder" class="doc_header"><code>class</code> <code>ReversibleEncoder</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/reformer.py#L212" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ReversibleEncoder</code>(<strong><code>d_model</code></strong>:<code>int</code>, <strong><code>n_layers</code></strong>:<code>int</code>=<em><code>6</code></em>, <strong><code>n_heads</code></strong>:<code>int</code>=<em><code>8</code></em>, <strong><code>max_seq_len</code></strong>:<code>int</code>=<em><code>512</code></em>, <strong><code>ff_chunks</code></strong>:<code>int</code>=<em><code>1</code></em>, <strong><code>causal</code></strong>:<code>bool</code>=<em><code>False</code></em>, <strong><code>attn_dropout</code></strong>:<code>float</code>=<em><code>0.0</code></em>, <strong><code>post_attn_dropout</code></strong>:<code>float</code>=<em><code>None</code></em>, <strong><code>attn_bias</code></strong>:<code>bool</code>=<em><code>False</code></em>, <strong><code>ff_dropout</code></strong>:<code>float</code>=<em><code>0.0</code></em>, <strong><code>d_ff</code></strong>:<code>int</code>=<em><code>None</code></em>, <strong><code>prenorm</code></strong>:<code>bool</code>=<em><code>True</code></em>, <strong><code>final_norm</code></strong>:<code>Module</code>=<em><code>None</code></em>, <strong><code>rev_thres</code></strong>:<code>int</code>=<em><code>0</code></em>) :: <code>Module</code></p>
+</blockquote>
+<p>Same as <code>nn.Module</code>, but no need for subclasses to call <code>super().__init__</code></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="n">sl</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">ReversibleEncoder</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+<span class="n">out</span> <span class="o">=</span> <span class="n">m</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="k">assert</span> <span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="n">sl</span><span class="p">,</span> <span class="n">d</span><span class="p">))</span>
+<span class="n">out</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>torch.Size([4, 64, 128])</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h2 id="ReversibleDecoder" class="doc_header"><code>class</code> <code>ReversibleDecoder</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/reformer.py#L256" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ReversibleDecoder</code>(<strong><code>d_model</code></strong>, <strong><code>n_layers</code></strong>=<em><code>6</code></em>, <strong><code>heads</code></strong>=<em><code>8</code></em>, <strong><code>max_seq_len</code></strong>=<em><code>512</code></em>, <strong><code>d_head</code></strong>=<em><code>None</code></em>, <strong><code>bucket_size</code></strong>=<em><code>64</code></em>, <strong><code>n_hashes</code></strong>=<em><code>8</code></em>, <strong><code>ff_chunks</code></strong>=<em><code>100</code></em>, <strong><code>attn_chunks</code></strong>=<em><code>None</code></em>, <strong><code>causal</code></strong>=<em><code>False</code></em>, <strong><code>weight_tie</code></strong>=<em><code>False</code></em>, <strong><code>attn_dropout</code></strong>=<em><code>0.0</code></em>, <strong><code>post_attn_dropout</code></strong>=<em><code>None</code></em>, <strong><code>attn_bias</code></strong>:<code>bool</code>=<em><code>False</code></em>, <strong><code>ff_dropout</code></strong>=<em><code>0.0</code></em>, <strong><code>d_ff</code></strong>=<em><code>None</code></em>, <strong><code>prenorm</code></strong>=<em><code>True</code></em>, <strong><code>final_norm</code></strong>:<code>Module</code>=<em><code>None</code></em>, <strong><code>rev_thres</code></strong>=<em><code>0</code></em>) :: <code>Module</code></p>
+</blockquote>
+<p>Base class for all neural network modules.</p>
+<p>Your models should also subclass this class.</p>
+<p>Modules can also contain other Modules, allowing to nest them in
+a tree structure. You can assign the submodules as regular attributes::</p>
+
+<pre><code>import torch.nn as nn
+import torch.nn.functional as F
+
+class Model(nn.Module):
+    def __init__(self):
+        super(Model, self).__init__()
+        self.conv1 = nn.Conv2d(1, 20, 5)
+        self.conv2 = nn.Conv2d(20, 20, 5)
+
+    def forward(self, x):
+        x = F.relu(self.conv1(x))
+        return F.relu(self.conv2(x))
+
+</code></pre>
+<p>Submodules assigned in this way will be registered, and will have their
+parameters converted too when you call :meth:<code>to</code>, etc.</p>
+<p>:ivar training: Boolean represents whether this module is in training or
+                evaluation mode.
+:vartype training: bool</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="n">sl</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">ReversibleDecoder</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+<span class="n">out</span> <span class="o">=</span> <span class="n">m</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="k">assert</span> <span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="n">sl</span><span class="p">,</span> <span class="n">d</span><span class="p">))</span>
+<span class="n">out</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>torch.Size([4, 64, 128])</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h2 id="ReversibleLM" class="doc_header"><code>class</code> <code>ReversibleLM</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/reformer.py#L308" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ReversibleLM</code>(<strong><code>vocab_sz</code></strong>, <strong><code>d_model</code></strong>, <strong><code>n_layers</code></strong>=<em><code>6</code></em>, <strong><code>n_heads</code></strong>=<em><code>8</code></em>, <strong><code>d_ff</code></strong>=<em><code>None</code></em>, <strong><code>attn_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>ff_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>emb_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>tie_weights</code></strong>=<em><code>True</code></em>, <strong><code>causal</code></strong>=<em><code>True</code></em>, <strong><code>pos_enc</code></strong>=<em><code>'absolute'</code></em>, <strong><code>max_seq_len</code></strong>=<em><code>512</code></em>, <strong><code>axial_shape</code></strong>=<em><code>None</code></em>, <strong><code>axial_emb_dims</code></strong>=<em><code>None</code></em>, <strong><code>pad_idx</code></strong>=<em><code>None</code></em>, <strong><code>prenorm</code></strong>=<em><code>False</code></em>, <strong><code>attn_bias</code></strong>=<em><code>True</code></em>, <strong><code>rev_thres</code></strong>:<code>int</code>=<em><code>0</code></em>) :: <code>Module</code></p>
+</blockquote>
+<p>Reversible Transformer for language modelling</p>
+<p>Parameters:</p>
+
+<pre><code>* vocab_sz: int
+* d_model: int - inner dimension of the model
+* n_layers: int (default: 6)
+* n_heads: int (default: 8)
+* d_ff: int - inner dimension of the pointwise FeedForward net, if None defaults to 4*d_model
+* attn_dropout: float - attention dropout
+* ff_dropout: float - feed-forward dropout
+* emb_dropout: float - embedding dropout
+* causal: bool (default: True) - if True does causal masking automatically
+* max_seq_len: int (default: 512)
+* tie_weights: bool - if True target embedding weights are used for computation output projection
+* prenorm: bool - wether to use PreNorm or PostNorm
+* attn_bias: bool - wether to allow biases in attention projection layers
+* pad_idx: int - padding token id, required for autogeneration of padding mask
+* pos_enc: str from {'absolute', 'fixed', 'axial'} - type of positional encoding to use
+* axial_shape: tuple - required if 'axial' positional encoding are used, should be factors of
+        max_seq_len
+* axial_emb_dims: tuple - [optional] axial embedding components, should sum to d_model
+</code></pre>
+<p>Inputs:</p>
+
+<pre><code>* x - input ids, shape [bs, sl]
+* mask - optional boolean mask, shape [bs, sl]
+</code></pre>
+<p>Returns:</p>
+
+<pre><code>* logits - target token logits, shape [bs, sl, vocab_sz]</code></pre>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">bs</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">sl</span> <span class="o">=</span> <span class="mi">128</span>
+<span class="n">d</span> <span class="o">=</span> <span class="mi">64</span>
+<span class="n">vocab_sz</span> <span class="o">=</span> <span class="mi">256</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">vocab_sz</span><span class="p">,</span> <span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="n">sl</span><span class="p">))</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">ReversibleLM</span><span class="p">(</span><span class="n">vocab_sz</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">n_layers</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">causal</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">out</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="k">assert</span> <span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="n">sl</span><span class="p">,</span> <span class="n">vocab_sz</span><span class="p">))</span>
+<span class="n">out</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>torch.Size([4, 128, 256])</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h2 id="ReversibleTransformer" class="doc_header"><code>class</code> <code>ReversibleTransformer</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/reformer.py#L434" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ReversibleTransformer</code>(<strong><code>enc_vocab_sz</code></strong>, <strong><code>dec_vocab_sz</code></strong>, <strong><code>d_model</code></strong>, <strong><code>n_layers</code></strong>:<code>int</code>=<em><code>6</code></em>, <strong><code>n_enc_layers</code></strong>=<em><code>None</code></em>, <strong><code>n_dec_layers</code></strong>=<em><code>None</code></em>, <strong><code>heads</code></strong>=<em><code>8</code></em>, <strong><code>d_ff</code></strong>=<em><code>None</code></em>, <strong><code>pad_idx</code></strong>=<em><code>None</code></em>, <strong><code>tie_weights</code></strong>=<em><code>True</code></em>, <strong><code>shared_emb</code></strong>=<em><code>False</code></em>, <strong><code>attn_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>ff_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>emb_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>prenorm</code></strong>=<em><code>False</code></em>, <strong><code>attn_bias</code></strong>=<em><code>True</code></em>, <strong><code>comb_attn</code></strong>=<em><code>False</code></em>, <strong><code>pos_enc</code></strong>=<em><code>'absolute'</code></em>, <strong><code>max_seq_len</code></strong>=<em><code>512</code></em>, <strong><code>axial_shape</code></strong>=<em><code>None</code></em>, <strong><code>axial_emb_dims</code></strong>=<em><code>None</code></em>) :: <code>Module</code></p>
+</blockquote>
+<p>Basic Transformer Encoder-Decoder model
+Parameters:</p>
+
+<pre><code>* enc_vocab_sz: int - source vocab size
+* dec_vocab_sz: int - target vocab size
+* d_model: int - inner dimension of the model
+* n_enc_layers: int (default: 6)
+* n_dec_layers: int (default: 6)
+* heads: int (default: 8)
+* d_ff: int - inner dimension of the pointwise FeedForward net, if None defaults to 4*d_model
+* attn_dropout: float - attention dropout
+* ff_dropout: float - feed-forward dropout
+* emb_dropout: float - embedding dropout
+* max_seq_len: int (default: 512)
+* prenorm: bool - whether to use PreNorm or PostNorm
+* attn_bias: bool - whether to allow biases in attention projection layers
+* pad_idx: int - padding token id, if pad_idx is provided, and no mask/context_mask are
+        passed to forward method will be used to generate padding masks
+* tie_weights: bool - if True target embedding weights are used for computation output projection
+* shared_emb: bool - if True encoder and decoder will use shared embedding layer
+* pos_enc: str from {'absolute', 'fixed', 'axial'} - type of positional encoding to use
+* axial_shape: tuple - required if 'axial' positional encoding are used, should be factors of
+        max_seq_len
+* axial_emb_dims: tuple - [optional] axial embedding components, should sum to d_model
+</code></pre>
+<p>Inputs:</p>
+
+<pre><code>* src - source input ids, shape [bs, src_sl]
+* tgt - target input ids, shape [bs, tgt_sl]
+* src_mask - optional boolean source mask, shape [bs, src_sl]
+* tgt_mask - optional boolean target mask, shape [bs, tgt_sl]
+</code></pre>
+<p>Returns:</p>
+
+<pre><code>* logits - target token logits, shape [bs, tgt_sl, tgt_vocab_sz]</code></pre>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">bs</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">src_sl</span> <span class="o">=</span> <span class="mi">70</span>
+<span class="n">tgt_sl</span> <span class="o">=</span> <span class="mi">80</span>
+<span class="n">d</span> <span class="o">=</span> <span class="mi">64</span>
+<span class="n">src_vocab_sz</span> <span class="o">=</span> <span class="mi">256</span>
+<span class="n">tgt_vocab_sz</span> <span class="o">=</span> <span class="mi">256</span>
+<span class="n">src</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">src_vocab_sz</span><span class="p">,</span> <span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="n">src_sl</span><span class="p">))</span>
+<span class="n">tgt</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">tgt_vocab_sz</span><span class="p">,</span> <span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="n">tgt_sl</span><span class="p">))</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">ReversibleTransformer</span><span class="p">(</span><span class="n">src_vocab_sz</span><span class="p">,</span> <span class="n">tgt_vocab_sz</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">n_enc_layers</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">n_dec_layers</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">out</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">tgt</span><span class="p">)</span>
+<span class="k">assert</span> <span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="n">tgt_sl</span><span class="p">,</span> <span class="n">tgt_vocab_sz</span><span class="p">))</span>
+<span class="n">out</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>torch.Size([4, 80, 256])</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Reformer">Reformer<a class="anchor-link" href="#Reformer"> </a></h2>
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h2 id="ReformerEncoder" class="doc_header"><code>class</code> <code>ReformerEncoder</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/reformer.py#L602" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ReformerEncoder</code>(<strong><code>d_model</code></strong>, <strong><code>n_layers</code></strong>, <strong><code>heads</code></strong>=<em><code>8</code></em>, <strong><code>max_seq_len</code></strong>=<em><code>512</code></em>, <strong><code>d_head</code></strong>=<em><code>None</code></em>, <strong><code>bucket_size</code></strong>=<em><code>64</code></em>, <strong><code>n_hashes</code></strong>=<em><code>8</code></em>, <strong><code>ff_chunks</code></strong>=<em><code>100</code></em>, <strong><code>attn_chunks</code></strong>=<em><code>None</code></em>, <strong><code>causal</code></strong>=<em><code>False</code></em>, <strong><code>weight_tie</code></strong>=<em><code>False</code></em>, <strong><code>attn_dropout</code></strong>=<em><code>0.0</code></em>, <strong><code>post_attn_dropout</code></strong>=<em><code>0.0</code></em>, <strong><code>lsh_dropout</code></strong>=<em><code>0.0</code></em>, <strong><code>ff_dropout</code></strong>=<em><code>0.0</code></em>, <strong><code>d_ff</code></strong>=<em><code>None</code></em>, <strong><code>layer_dropout</code></strong>=<em><code>0.0</code></em>, <strong><code>lsh_attend_across_buckets</code></strong>=<em><code>True</code></em>, <strong><code>lsh_allow_duplicate_attention</code></strong>=<em><code>True</code></em>, <strong><code>random_rotations_per_head</code></strong>=<em><code>False</code></em>, <strong><code>use_full_attn</code></strong>=<em><code>False</code></em>, <strong><code>full_attn_thres</code></strong>=<em><code>0</code></em>, <strong><code>rev_thres</code></strong>=<em><code>0</code></em>, <strong><code>one_value_head</code></strong>=<em><code>False</code></em>, <strong><code>n_local_attn_heads</code></strong>=<em><code>0</code></em>, <strong><code>prenorm</code></strong>=<em><code>True</code></em>) :: <code>Module</code></p>
 </blockquote>
 <p>Base class for all neural network modules.</p>
 <p>Your models should also subclass this class.</p>
@@ -267,69 +870,7 @@ parameters converted too when you call :meth:<code>to</code>, etc.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="IrreversibleBlock" class="doc_header"><code>class</code> <code>IrreversibleBlock</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/reformer.py#L156" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>IrreversibleBlock</code>(<strong><code>f</code></strong>, <strong><code>g</code></strong>) :: <code>Module</code></p>
-</blockquote>
-<p>Base class for all neural network modules.</p>
-<p>Your models should also subclass this class.</p>
-<p>Modules can also contain other Modules, allowing to nest them in
-a tree structure. You can assign the submodules as regular attributes::</p>
-
-<pre><code>import torch.nn as nn
-import torch.nn.functional as F
-
-class Model(nn.Module):
-    def __init__(self):
-        super(Model, self).__init__()
-        self.conv1 = nn.Conv2d(1, 20, 5)
-        self.conv2 = nn.Conv2d(20, 20, 5)
-
-    def forward(self, x):
-        x = F.relu(self.conv1(x))
-        return F.relu(self.conv2(x))
-
-</code></pre>
-<p>Submodules assigned in this way will be registered, and will have their
-parameters converted too when you call :meth:<code>to</code>, etc.</p>
-<p>:ivar training: Boolean represents whether this module is in training or
-                evaluation mode.
-:vartype training: bool</p>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h2 id="ReversibleSequence" class="doc_header"><code>class</code> <code>ReversibleSequence</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/reformer.py#L186" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ReversibleSequence</code>(<strong><code>blocks</code></strong>, <strong><code>layer_dropout</code></strong>=<em><code>0.0</code></em>, <strong><code>reverse_thres</code></strong>=<em><code>0</code></em>, <strong><code>send_signal</code></strong>=<em><code>False</code></em>) :: <code>Module</code></p>
+<h2 id="ReformerDecoder" class="doc_header"><code>class</code> <code>ReformerDecoder</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/reformer.py#L668" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ReformerDecoder</code>(<strong><code>d_model</code></strong>, <strong><code>n_layers</code></strong>=<em><code>6</code></em>, <strong><code>heads</code></strong>=<em><code>8</code></em>, <strong><code>max_seq_len</code></strong>=<em><code>512</code></em>, <strong><code>d_head</code></strong>=<em><code>None</code></em>, <strong><code>bucket_size</code></strong>=<em><code>64</code></em>, <strong><code>n_hashes</code></strong>=<em><code>8</code></em>, <strong><code>ff_chunks</code></strong>=<em><code>100</code></em>, <strong><code>attn_chunks</code></strong>=<em><code>None</code></em>, <strong><code>causal</code></strong>=<em><code>False</code></em>, <strong><code>weight_tie</code></strong>=<em><code>False</code></em>, <strong><code>attn_dropout</code></strong>=<em><code>0.0</code></em>, <strong><code>post_attn_dropout</code></strong>=<em><code>0.0</code></em>, <strong><code>ff_dropout</code></strong>=<em><code>0.0</code></em>, <strong><code>d_ff</code></strong>=<em><code>None</code></em>, <strong><code>layer_dropout</code></strong>=<em><code>0.0</code></em>, <strong><code>prenorm</code></strong>=<em><code>True</code></em>, <strong><code>rev_thres</code></strong>=<em><code>0</code></em>) :: <code>Module</code></p>
 </blockquote>
 <p>Base class for all neural network modules.</p>
 <p>Your models should also subclass this class.</p>
@@ -384,117 +925,7 @@ parameters converted too when you call :meth:<code>to</code>, etc.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="ReformerEncoder" class="doc_header"><code>class</code> <code>ReformerEncoder</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/reformer.py#L216" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ReformerEncoder</code>(<strong><code>d_model</code></strong>, <strong><code>depth</code></strong>, <strong><code>heads</code></strong>=<em><code>8</code></em>, <strong><code>max_seq_len</code></strong>=<em><code>512</code></em>, <strong><code>d_head</code></strong>=<em><code>None</code></em>, <strong><code>bucket_size</code></strong>=<em><code>64</code></em>, <strong><code>n_hashes</code></strong>=<em><code>8</code></em>, <strong><code>ff_chunks</code></strong>=<em><code>100</code></em>, <strong><code>attn_chunks</code></strong>=<em><code>None</code></em>, <strong><code>causal</code></strong>=<em><code>False</code></em>, <strong><code>weight_tie</code></strong>=<em><code>False</code></em>, <strong><code>attn_dropout</code></strong>=<em><code>0.0</code></em>, <strong><code>post_attn_dropout</code></strong>=<em><code>0.0</code></em>, <strong><code>lsh_dropout</code></strong>=<em><code>0.0</code></em>, <strong><code>ff_dropout</code></strong>=<em><code>0.0</code></em>, <strong><code>d_ff</code></strong>=<em><code>None</code></em>, <strong><code>layer_dropout</code></strong>=<em><code>0.0</code></em>, <strong><code>lsh_attend_across_buckets</code></strong>=<em><code>True</code></em>, <strong><code>lsh_allow_duplicate_attention</code></strong>=<em><code>True</code></em>, <strong><code>random_rotations_per_head</code></strong>=<em><code>False</code></em>, <strong><code>use_full_attn</code></strong>=<em><code>False</code></em>, <strong><code>full_attn_thres</code></strong>=<em><code>0</code></em>, <strong><code>reverse_thres</code></strong>=<em><code>0</code></em>, <strong><code>one_value_head</code></strong>=<em><code>False</code></em>, <strong><code>n_local_attn_heads</code></strong>=<em><code>0</code></em>, <strong><code>prenorm</code></strong>=<em><code>True</code></em>) :: <code>Module</code></p>
-</blockquote>
-<p>Base class for all neural network modules.</p>
-<p>Your models should also subclass this class.</p>
-<p>Modules can also contain other Modules, allowing to nest them in
-a tree structure. You can assign the submodules as regular attributes::</p>
-
-<pre><code>import torch.nn as nn
-import torch.nn.functional as F
-
-class Model(nn.Module):
-    def __init__(self):
-        super(Model, self).__init__()
-        self.conv1 = nn.Conv2d(1, 20, 5)
-        self.conv2 = nn.Conv2d(20, 20, 5)
-
-    def forward(self, x):
-        x = F.relu(self.conv1(x))
-        return F.relu(self.conv2(x))
-
-</code></pre>
-<p>Submodules assigned in this way will be registered, and will have their
-parameters converted too when you call :meth:<code>to</code>, etc.</p>
-<p>:ivar training: Boolean represents whether this module is in training or
-                evaluation mode.
-:vartype training: bool</p>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h2 id="ReformerDecoder" class="doc_header"><code>class</code> <code>ReformerDecoder</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/reformer.py#L282" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ReformerDecoder</code>(<strong><code>d_model</code></strong>, <strong><code>depth</code></strong>=<em><code>6</code></em>, <strong><code>heads</code></strong>=<em><code>8</code></em>, <strong><code>max_seq_len</code></strong>=<em><code>512</code></em>, <strong><code>d_head</code></strong>=<em><code>None</code></em>, <strong><code>bucket_size</code></strong>=<em><code>64</code></em>, <strong><code>n_hashes</code></strong>=<em><code>8</code></em>, <strong><code>ff_chunks</code></strong>=<em><code>100</code></em>, <strong><code>attn_chunks</code></strong>=<em><code>None</code></em>, <strong><code>causal</code></strong>=<em><code>False</code></em>, <strong><code>weight_tie</code></strong>=<em><code>False</code></em>, <strong><code>attn_dropout</code></strong>=<em><code>0.0</code></em>, <strong><code>post_attn_dropout</code></strong>=<em><code>0.0</code></em>, <strong><code>ff_dropout</code></strong>=<em><code>0.0</code></em>, <strong><code>d_ff</code></strong>=<em><code>None</code></em>, <strong><code>layer_dropout</code></strong>=<em><code>0.0</code></em>, <strong><code>prenorm</code></strong>=<em><code>True</code></em>, <strong><code>reverse_thres</code></strong>=<em><code>0</code></em>) :: <code>Module</code></p>
-</blockquote>
-<p>Base class for all neural network modules.</p>
-<p>Your models should also subclass this class.</p>
-<p>Modules can also contain other Modules, allowing to nest them in
-a tree structure. You can assign the submodules as regular attributes::</p>
-
-<pre><code>import torch.nn as nn
-import torch.nn.functional as F
-
-class Model(nn.Module):
-    def __init__(self):
-        super(Model, self).__init__()
-        self.conv1 = nn.Conv2d(1, 20, 5)
-        self.conv2 = nn.Conv2d(20, 20, 5)
-
-    def forward(self, x):
-        x = F.relu(self.conv1(x))
-        return F.relu(self.conv2(x))
-
-</code></pre>
-<p>Submodules assigned in this way will be registered, and will have their
-parameters converted too when you call :meth:<code>to</code>, etc.</p>
-<p>:ivar training: Boolean represents whether this module is in training or
-                evaluation mode.
-:vartype training: bool</p>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h2 id="ReformerLM" class="doc_header"><code>class</code> <code>ReformerLM</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/reformer.py#L330" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ReformerLM</code>(<strong><code>vocab_sz</code></strong>, <strong><code>d_model</code></strong>, <strong><code>depth</code></strong>=<em><code>6</code></em>, <strong><code>tie_weights</code></strong>=<em><code>True</code></em>, <strong><code>max_seq_len</code></strong>=<em><code>512</code></em>, <strong><code>heads</code></strong>=<em><code>8</code></em>, <strong><code>d_head</code></strong>=<em><code>None</code></em>, <strong><code>bucket_size</code></strong>=<em><code>64</code></em>, <strong><code>n_hashes</code></strong>=<em><code>8</code></em>, <strong><code>ff_chunks</code></strong>=<em><code>100</code></em>, <strong><code>attn_chunks</code></strong>=<em><code>None</code></em>, <strong><code>causal</code></strong>=<em><code>True</code></em>, <strong><code>weight_tie</code></strong>=<em><code>False</code></em>, <strong><code>attn_dropout</code></strong>=<em><code>0.0</code></em>, <strong><code>post_attn_dropout</code></strong>=<em><code>0.0</code></em>, <strong><code>lsh_dropout</code></strong>=<em><code>0.0</code></em>, <strong><code>ff_dropout</code></strong>=<em><code>0.0</code></em>, <strong><code>d_ff</code></strong>=<em><code>None</code></em>, <strong><code>layer_dropout</code></strong>=<em><code>0.0</code></em>, <strong><code>lsh_attend_across_buckets</code></strong>=<em><code>True</code></em>, <strong><code>lsh_allow_duplicate_attention</code></strong>=<em><code>True</code></em>, <strong><code>random_rotations_per_head</code></strong>=<em><code>False</code></em>, <strong><code>use_full_attn</code></strong>=<em><code>False</code></em>, <strong><code>full_attn_thres</code></strong>=<em><code>0</code></em>, <strong><code>reverse_thres</code></strong>=<em><code>0</code></em>, <strong><code>one_value_head</code></strong>=<em><code>False</code></em>, <strong><code>n_local_attn_heads</code></strong>=<em><code>0</code></em>, <strong><code>prenorm</code></strong>=<em><code>True</code></em>) :: <code>Module</code></p>
+<h2 id="ReformerLM" class="doc_header"><code>class</code> <code>ReformerLM</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/reformer.py#L716" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ReformerLM</code>(<strong><code>vocab_sz</code></strong>, <strong><code>d_model</code></strong>, <strong><code>n_layers</code></strong>=<em><code>6</code></em>, <strong><code>tie_weights</code></strong>=<em><code>True</code></em>, <strong><code>max_seq_len</code></strong>=<em><code>512</code></em>, <strong><code>heads</code></strong>=<em><code>8</code></em>, <strong><code>d_head</code></strong>=<em><code>None</code></em>, <strong><code>bucket_size</code></strong>=<em><code>64</code></em>, <strong><code>n_hashes</code></strong>=<em><code>8</code></em>, <strong><code>ff_chunks</code></strong>=<em><code>100</code></em>, <strong><code>attn_chunks</code></strong>=<em><code>None</code></em>, <strong><code>causal</code></strong>=<em><code>True</code></em>, <strong><code>weight_tie</code></strong>=<em><code>False</code></em>, <strong><code>attn_dropout</code></strong>=<em><code>0.0</code></em>, <strong><code>post_attn_dropout</code></strong>=<em><code>0.0</code></em>, <strong><code>lsh_dropout</code></strong>=<em><code>0.0</code></em>, <strong><code>ff_dropout</code></strong>=<em><code>0.0</code></em>, <strong><code>d_ff</code></strong>=<em><code>None</code></em>, <strong><code>layer_dropout</code></strong>=<em><code>0.0</code></em>, <strong><code>lsh_attend_across_buckets</code></strong>=<em><code>True</code></em>, <strong><code>lsh_allow_duplicate_attention</code></strong>=<em><code>True</code></em>, <strong><code>random_rotations_per_head</code></strong>=<em><code>False</code></em>, <strong><code>use_full_attn</code></strong>=<em><code>False</code></em>, <strong><code>full_attn_thres</code></strong>=<em><code>0</code></em>, <strong><code>rev_thres</code></strong>=<em><code>0</code></em>, <strong><code>one_value_head</code></strong>=<em><code>False</code></em>, <strong><code>n_local_attn_heads</code></strong>=<em><code>0</code></em>, <strong><code>prenorm</code></strong>=<em><code>True</code></em>) :: <code>Module</code></p>
 </blockquote>
 <p>Reformer for language modelling
 Parameters:</p>
@@ -555,7 +986,7 @@ Parameters:</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="ReformerEncDec" class="doc_header"><code>class</code> <code>ReformerEncDec</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/reformer.py#L401" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ReformerEncDec</code>(<strong><code>enc_vocab_sz</code></strong>, <strong><code>dec_vocab_sz</code></strong>, <strong><code>d_model</code></strong>, <strong><code>depth</code></strong>=<em><code>6</code></em>, <strong><code>heads</code></strong>=<em><code>8</code></em>, <strong><code>max_seq_len</code></strong>=<em><code>512</code></em>, <strong><code>pad_idx</code></strong>=<em><code>None</code></em>, <strong><code>tie_weights</code></strong>=<em><code>True</code></em>, <strong><code>emb_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>attn_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>ff_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>pos_enc</code></strong>=<em><code>'absolute'</code></em>, <strong><code>d_ff</code></strong>=<em><code>None</code></em>, <strong><code>prenorm</code></strong>=<em><code>False</code></em>, <strong><code>axial_shape</code></strong>=<em><code>None</code></em>, <strong><code>axial_emb_dims</code></strong>=<em><code>None</code></em>, <strong><code>comb_attn</code></strong>=<em><code>False</code></em>, <strong><code>reverse_thres</code></strong>=<em><code>0</code></em>) :: <code>Module</code></p>
+<h2 id="ReformerEncDec" class="doc_header"><code>class</code> <code>ReformerEncDec</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/reformer.py#L787" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ReformerEncDec</code>(<strong><code>enc_vocab_sz</code></strong>, <strong><code>dec_vocab_sz</code></strong>, <strong><code>d_model</code></strong>, <strong><code>n_layers</code></strong>=<em><code>6</code></em>, <strong><code>heads</code></strong>=<em><code>8</code></em>, <strong><code>max_seq_len</code></strong>=<em><code>512</code></em>, <strong><code>pad_idx</code></strong>=<em><code>None</code></em>, <strong><code>tie_weights</code></strong>=<em><code>True</code></em>, <strong><code>emb_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>attn_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>ff_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>pos_enc</code></strong>=<em><code>'absolute'</code></em>, <strong><code>d_ff</code></strong>=<em><code>None</code></em>, <strong><code>prenorm</code></strong>=<em><code>False</code></em>, <strong><code>axial_shape</code></strong>=<em><code>None</code></em>, <strong><code>axial_emb_dims</code></strong>=<em><code>None</code></em>, <strong><code>comb_attn</code></strong>=<em><code>False</code></em>, <strong><code>rev_thres</code></strong>=<em><code>0</code></em>) :: <code>Module</code></p>
 </blockquote>
 <p>Basic Transformer Encoder-Decoder model
 Parameters:</p>
