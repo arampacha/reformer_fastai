@@ -239,7 +239,7 @@ class ReversibleEncoder(Module):
             g = norm_wrapper(d_model, ff)
 
             blocks.append(nn.ModuleList([f, g]))
-        self.final_norm = final_norm(d_model) if exists(final_norm) else None
+        self.norm = final_norm(d_model) if exists(final_norm) else None
         # send_signal is not implemented for now
         self.layers = ReversibleSequence(nn.ModuleList(blocks), rev_thres=rev_thres, send_signal=False)
 
@@ -249,7 +249,7 @@ class ReversibleEncoder(Module):
         # pdb.set_trace()
         x = self.layers(x, arg_route = arg_route, **kwargs)
         x = torch.stack(x.chunk(2, dim=-1)).mean(dim=0)
-        if exists(self.final_norm): x = self.final_norm(x)
+        if exists(self.norm): x = self.norm(x)
         return x
 
 # Cell
@@ -291,7 +291,7 @@ class ReversibleDecoder(nn.Module):
             g = norm_wrapper(d_model, get_ff())
 
             blocks.append(nn.ModuleList([f, g]))
-        self.final_norm = final_norm(d_model) if exists(final_norm) else None
+        self.norm = final_norm(d_model) if exists(final_norm) else None
         # send_signal is not implemented for now
         self.layers = ReversibleSequence(nn.ModuleList(blocks), rev_thres=rev_thres, send_signal=False)
 
@@ -301,7 +301,7 @@ class ReversibleDecoder(nn.Module):
         # pdb.set_trace()
         x = self.layers(x, arg_route = arg_route, **kwargs)
         x = torch.stack(x.chunk(2, dim=-1)).mean(dim=0)
-        if exists(self.final_norm): x = self.final_norm(x)
+        if exists(self.norm): x = self.norm(x)
         return x
 
 # Cell

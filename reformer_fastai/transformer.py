@@ -199,10 +199,11 @@ class TransformerLM(Module):
         self.emb = TransformerEmbedding(vocab_sz, d_model, max_seq_len, dropout=emb_dropout,
                                         pos_enc=pos_enc, axial_shape=axial_shape,
                                         axial_emb_dims=axial_emb_dims)
+        final_norm = nn.LayerNorm if prenorm else None
         self.encoder = TransformerEncoder(d_model, n_layers, n_heads, causal=causal, d_ff=d_ff,
                                           attn_dropout=attn_dropout, ff_dropout=ff_dropout,
                                           prenorm=prenorm, attn_bias=attn_bias,
-                                          final_norm=nn.LayerNorm)
+                                          final_norm=final_norm)
         self.proj = nn.Linear(d_model, vocab_sz)
         if tie_weights: self.proj.weight = self.emb.emb.weight
 
@@ -336,11 +337,11 @@ class TransformerEncDec(Module):
         else:
             self.dec_emb = TransformerEmbedding(dec_vocab_sz, d_model, max_seq_len, dropout=emb_dropout, pos_enc=pos_enc,
                                                 axial_shape=axial_shape, axial_emb_dims=axial_emb_dims)
-
+        final_norm = nn.LayerNorm if prenorm else None
         self.encoder = TransformerEncoder(d_model, n_enc_layers, heads, d_ff=d_ff, attn_dropout=attn_dropout, ff_dropout=ff_dropout,
-                                          prenorm=prenorm, attn_bias=attn_bias, final_norm=nn.LayerNorm, causal=False)
+                                          prenorm=prenorm, attn_bias=attn_bias, final_norm=final_norm, causal=False)
         self.decoder = TransformerDecoder(d_model, n_dec_layers, heads, d_ff=d_ff, attn_dropout=attn_dropout, ff_dropout=ff_dropout,
-                                          prenorm=prenorm, comb_attn=comb_attn, attn_bias=attn_bias, final_norm=nn.LayerNorm)
+                                          prenorm=prenorm, comb_attn=comb_attn, attn_bias=attn_bias, final_norm=final_norm)
         self.proj = nn.Linear(d_model, dec_vocab_sz)
         if tie_weights: self.proj.weight = self.dec_emb.emb.weight
 
