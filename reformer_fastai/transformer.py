@@ -23,7 +23,7 @@ class TransformerEncoderBlock(Module):
                  ff_dropout = 0.1,
                  causal = False,
                  mask = None,
-                 attn_bias = True,
+                 attn_bias = False,
                  prenorm=False):
         store_attr('attn_dropout') # mb separate argument attn_post_dropout
         if prenorm:
@@ -47,7 +47,7 @@ class TransformerEncoder(Module):
                  d_ff=None,
                  ff_dropout=0.1,
                  attn_dropout=0.1,
-                 attn_bias=True,
+                 attn_bias=False,
                  causal=False,
                  prenorm=False,
                  final_norm=None):
@@ -77,7 +77,7 @@ class TransformerDecoderBlock(Module):
                  attn_dropout = 0.1,
                  ff_dropout=0.1,
                  mask = None ,
-                 attn_bias = True,
+                 attn_bias=False,
                  prenorm=False):
         # mb separate argument attn_post_dropout
         if prenorm:
@@ -105,7 +105,7 @@ class TransformerDecoderBlockV2(Module):
                  d_ff=None,
                  attn_dropout=0.1,
                  ff_dropout=0.1,
-                 attn_bias=True,
+                 attn_bias=False,
                  prenorm=False):
         if prenorm:
             self.attn = Residual(PreNorm(d_model, AdditiveAttention(d_model, n_heads=n_heads, causal=True, dropout=attn_dropout, bias=attn_bias)))
@@ -131,7 +131,7 @@ class TransformerDecoder(Module):
                  ff_dropout=0.1,
                  prenorm=False,
                  comb_attn=False,
-                 attn_bias=True,
+                 attn_bias=False,
                  final_norm=None):
         store_attr('d_model')
         #TODO(Arto) refactor
@@ -194,7 +194,7 @@ class TransformerLM(Module):
                  axial_emb_dims=None,
                  pad_idx=None,
                  prenorm=False,
-                 attn_bias=True):
+                 attn_bias=False):
         store_attr('max_seq_len, n_layers, pad_idx')
         self.emb = TransformerEmbedding(vocab_sz, d_model, max_seq_len, dropout=emb_dropout,
                                         pos_enc=pos_enc, axial_shape=axial_shape,
@@ -321,7 +321,7 @@ class TransformerEncDec(Module):
                  ff_dropout=0.1,
                  emb_dropout=0.1,
                  prenorm=False,
-                 attn_bias=True,
+                 attn_bias=False,
                  comb_attn=False,
                  pos_enc='absolute',
                  max_seq_len=512,

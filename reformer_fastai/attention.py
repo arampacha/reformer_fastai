@@ -132,7 +132,7 @@ class Attention(Module):
                  mask:Tensor = None,
                  dropout:float=0.1,
                  out_dropout:float=None,
-                 bias:bool=True,
+                 bias:bool=False,
                  shared_qk:bool=False,
                  store_attention:bool=False):
         store_attr('causal, mask, n_heads, bias, shared_qk')
@@ -200,7 +200,7 @@ class AdditiveAttention(Attention):
                  causal:bool = False,
                  dropout:float=0.1,
                  out_dropout:float=None,
-                 bias:bool=True,
+                 bias:bool=False,
                  shared_qk:bool = False,
                  store_attention:bool=False):
         store_attr('causal, n_heads, bias, shared_qk')
@@ -453,7 +453,7 @@ class LSHSelfAttention(Module):
                  bucket_size = 64,                    # reccomended default from paper/lucid
                  n_hashes = 8,                        # reccomended default from paper/lucid
                  causal = False,
-                 bias:bool=True,
+                 bias:bool=False,
                  attend_across_buckets = False,
                  allow_duplicate_attention = False,   # Penalize multiple qk-v pairs in same attention chunk or not
                  return_attn = False,                 # Not implemented yet
@@ -519,7 +519,7 @@ class ReformerAttention(Module):
                  mask:Tensor = None,
                  dropout:float=0.1,
                  out_dropout:float=None,
-                 bias:bool=True,
+                 bias:bool=False,
                  store_attention:bool=False,
                  lsh_attention:bool = True,
                  n_hashes:int = 8,
@@ -572,7 +572,7 @@ class ReformerAttentionV2(Module):
                  mask:Tensor = None,
                  dropout:float=0.1,
                  out_dropout:float=None,
-                 bias:bool=True,
+                 bias:bool=False,
                  store_attention:bool=False,
                  lsh_attention:bool = True,
                  n_hashes:int = 8,
