@@ -351,7 +351,7 @@ class ReversibleLM(Module):
                  axial_emb_dims=None,
                  pad_idx=None,
                  prenorm=False,
-                 attn_bias=True,
+                 attn_bias=False,
                  rev_thres:int=0):
         store_attr('max_seq_len, n_layers, pad_idx')
         self.emb = TransformerEmbedding(vocab_sz, d_model, max_seq_len, dropout=emb_dropout,
@@ -480,7 +480,7 @@ class ReversibleTransformer(Module):
                  ff_dropout=0.1,
                  emb_dropout=0.1,
                  prenorm=False,
-                 attn_bias=True,
+                 attn_bias=False,
                  comb_attn=False,
                  pos_enc='absolute',
                  max_seq_len=512,
