@@ -60,7 +60,118 @@ nb_path: "nbs/02_attention.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="AttnInProj" class="doc_header"><code>class</code> <code>AttnInProj</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/attention.py#L30" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>AttnInProj</code>(<strong><code>d_model</code></strong>:<code>int</code>, <strong><code>bias</code></strong>:<code>bool</code>=<em><code>False</code></em>) :: <code>Module</code></p>
+<h2 id="AttnInProj" class="doc_header"><code>class</code> <code>AttnInProj</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/attention.py#L31" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>AttnInProj</code>(<strong><code>d_model</code></strong>:<code>int</code>, <strong><code>bias</code></strong>:<code>bool</code>=<em><code>False</code></em>) :: <code>Module</code></p>
+</blockquote>
+<p>Computes q, k, v from input x and [optional] context</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">bs</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">sl</span> <span class="o">=</span> <span class="mi">128</span>
+<span class="n">d</span> <span class="o">=</span> <span class="mi">64</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="n">sl</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+<span class="n">context</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="n">sl</span><span class="o">-</span><span class="mi">16</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+<span class="n">proj</span> <span class="o">=</span> <span class="n">AttnInProj</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+<span class="n">q1</span><span class="p">,</span> <span class="n">k1</span><span class="p">,</span> <span class="n">v1</span> <span class="o">=</span> <span class="n">proj</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="k">assert</span> <span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="n">sl</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span> <span class="o">==</span> <span class="n">q1</span><span class="o">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="n">k1</span><span class="o">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="n">v1</span><span class="o">.</span><span class="n">size</span><span class="p">()</span>
+<span class="n">q1</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">k1</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">v1</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(torch.Size([4, 128, 64]), torch.Size([4, 128, 64]), torch.Size([4, 128, 64]))</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">q2</span><span class="p">,</span> <span class="n">k2</span><span class="p">,</span> <span class="n">v2</span> <span class="o">=</span> <span class="n">proj</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+<span class="k">assert</span> <span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="n">sl</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span> <span class="o">==</span> <span class="n">q2</span><span class="o">.</span><span class="n">size</span><span class="p">()</span>
+<span class="k">assert</span> <span class="n">k2</span><span class="o">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="n">v2</span><span class="o">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="n">context</span><span class="o">.</span><span class="n">size</span><span class="p">()</span>
+<span class="k">assert</span> <span class="n">all_equal</span><span class="p">(</span><span class="n">q1</span><span class="p">,</span> <span class="n">q2</span><span class="p">)</span>
+<span class="k">assert</span> <span class="ow">not</span> <span class="n">all_equal</span><span class="p">(</span><span class="n">k1</span><span class="p">,</span> <span class="n">k2</span><span class="p">)</span>
+<span class="n">q2</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">k2</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">v2</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(torch.Size([4, 128, 64]), torch.Size([4, 112, 64]), torch.Size([4, 112, 64]))</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h2 id="AttnInProjV2" class="doc_header"><code>class</code> <code>AttnInProjV2</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/attention.py#L44" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>AttnInProjV2</code>(<strong><code>d_model</code></strong>:<code>int</code>, <strong><code>bias</code></strong>:<code>bool</code>=<em><code>False</code></em>) :: <code>Module</code></p>
 </blockquote>
 <p>Computes q, k, v from input x and [optional] context</p>
 
@@ -177,7 +288,7 @@ nb_path: "nbs/02_attention.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="SharedQKAttnInProj" class="doc_header"><code>class</code> <code>SharedQKAttnInProj</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/attention.py#L43" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>SharedQKAttnInProj</code>(<strong><code>d_model</code></strong>:<code>int</code>, <strong><code>bias</code></strong>:<code>bool</code>=<em><code>False</code></em>) :: <code>Module</code></p>
+<h2 id="SharedQKAttnInProj" class="doc_header"><code>class</code> <code>SharedQKAttnInProj</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/attention.py#L56" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>SharedQKAttnInProj</code>(<strong><code>d_model</code></strong>:<code>int</code>, <strong><code>bias</code></strong>:<code>bool</code>=<em><code>False</code></em>) :: <code>Module</code></p>
 </blockquote>
 <p>Computes q, k, v from input x and [optional] context</p>
 
@@ -257,7 +368,7 @@ nb_path: "nbs/02_attention.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="ScaledDotProdAttention" class="doc_header"><code>class</code> <code>ScaledDotProdAttention</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/attention.py#L56" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ScaledDotProdAttention</code>(<strong><code>d_model</code></strong>, <strong><code>n_heads</code></strong>, <strong><code>causal</code></strong>=<em><code>False</code></em>, <strong><code>dropout</code></strong>=<em><code>0.0</code></em>, <strong><code>shared_qk</code></strong>=<em><code>False</code></em>, <strong><code>store_attention</code></strong>:<code>bool</code>=<em><code>False</code></em>) :: <code>Module</code></p>
+<h2 id="ScaledDotProdAttention" class="doc_header"><code>class</code> <code>ScaledDotProdAttention</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/attention.py#L69" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ScaledDotProdAttention</code>(<strong><code>d_model</code></strong>, <strong><code>n_heads</code></strong>, <strong><code>causal</code></strong>=<em><code>False</code></em>, <strong><code>dropout</code></strong>=<em><code>0.0</code></em>, <strong><code>shared_qk</code></strong>=<em><code>False</code></em>, <strong><code>store_attention</code></strong>:<code>bool</code>=<em><code>False</code></em>) :: <code>Module</code></p>
 </blockquote>
 <p>Computes scaled dot-product attnetion given q, k, v</p>
 
@@ -378,7 +489,7 @@ $$\textbf {Attention}(Q,K,V) = \textbf {softmax}({QK^T\over\sqrt d_k})V $$
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="Attention" class="doc_header"><code>class</code> <code>Attention</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/attention.py#L111" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Attention</code>(<strong><code>d_model</code></strong>:<code>int</code>, <strong><code>n_heads</code></strong>:<code>int</code>=<em><code>8</code></em>, <strong><code>causal</code></strong>:<code>bool</code>=<em><code>False</code></em>, <strong><code>mask</code></strong>:<code>Tensor</code>=<em><code>None</code></em>, <strong><code>dropout</code></strong>:<code>float</code>=<em><code>0.1</code></em>, <strong><code>out_dropout</code></strong>:<code>float</code>=<em><code>None</code></em>, <strong><code>bias</code></strong>:<code>bool</code>=<em><code>True</code></em>, <strong><code>shared_qk</code></strong>:<code>bool</code>=<em><code>False</code></em>, <strong><code>store_attention</code></strong>:<code>bool</code>=<em><code>False</code></em>) :: <code>Module</code></p>
+<h2 id="Attention" class="doc_header"><code>class</code> <code>Attention</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/attention.py#L124" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Attention</code>(<strong><code>d_model</code></strong>:<code>int</code>, <strong><code>n_heads</code></strong>:<code>int</code>=<em><code>8</code></em>, <strong><code>causal</code></strong>:<code>bool</code>=<em><code>False</code></em>, <strong><code>mask</code></strong>:<code>Tensor</code>=<em><code>None</code></em>, <strong><code>dropout</code></strong>:<code>float</code>=<em><code>0.1</code></em>, <strong><code>out_dropout</code></strong>:<code>float</code>=<em><code>None</code></em>, <strong><code>bias</code></strong>:<code>bool</code>=<em><code>True</code></em>, <strong><code>shared_qk</code></strong>:<code>bool</code>=<em><code>False</code></em>, <strong><code>store_attention</code></strong>:<code>bool</code>=<em><code>False</code></em>) :: <code>Module</code></p>
 </blockquote>
 <p>Standard attention module using scaled dot-product attention</p>
 
@@ -647,7 +758,7 @@ $$\textbf {Attention}(Q,K,V) = \textbf {softmax}({QK^T\over\sqrt d_k})V $$
 
 
 <div class="output_png output_subarea ">
-<img src="data:image/png;base64,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
+<img src="data:image/png;base64,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
 "
 >
 </div>
@@ -677,7 +788,7 @@ $$\textbf {Attention}(Q,K,V) = \textbf {softmax}({QK^T\over\sqrt d_k})V $$
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="AdditiveInProj" class="doc_header"><code>class</code> <code>AdditiveInProj</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/attention.py#L164" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>AdditiveInProj</code>(<strong><code>d_model</code></strong>:<code>int</code>, <strong><code>bias</code></strong>:<code>bool</code>=<em><code>False</code></em>) :: <code>Module</code></p>
+<h2 id="AdditiveInProj" class="doc_header"><code>class</code> <code>AdditiveInProj</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/attention.py#L177" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>AdditiveInProj</code>(<strong><code>d_model</code></strong>:<code>int</code>, <strong><code>bias</code></strong>:<code>bool</code>=<em><code>False</code></em>) :: <code>Module</code></p>
 </blockquote>
 <p>Computes q, k, v from input x and [optional] context</p>
 
@@ -788,7 +899,7 @@ $$\textbf {Attention}(Q,K,V) = \textbf {softmax}({QK^T\over\sqrt d_k})V $$
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="AdditiveAttention" class="doc_header"><code>class</code> <code>AdditiveAttention</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/attention.py#L180" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>AdditiveAttention</code>(<strong><code>d_model</code></strong>:<code>int</code>, <strong><code>n_heads</code></strong>:<code>int</code>=<em><code>8</code></em>, <strong><code>causal</code></strong>:<code>bool</code>=<em><code>False</code></em>, <strong><code>dropout</code></strong>:<code>float</code>=<em><code>0.1</code></em>, <strong><code>out_dropout</code></strong>:<code>float</code>=<em><code>None</code></em>, <strong><code>bias</code></strong>:<code>bool</code>=<em><code>True</code></em>, <strong><code>shared_qk</code></strong>:<code>bool</code>=<em><code>False</code></em>, <strong><code>store_attention</code></strong>:<code>bool</code>=<em><code>False</code></em>) :: <a href="/reformer_fastai/attention.html#Attention"><code>Attention</code></a></p>
+<h2 id="AdditiveAttention" class="doc_header"><code>class</code> <code>AdditiveAttention</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/attention.py#L193" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>AdditiveAttention</code>(<strong><code>d_model</code></strong>:<code>int</code>, <strong><code>n_heads</code></strong>:<code>int</code>=<em><code>8</code></em>, <strong><code>causal</code></strong>:<code>bool</code>=<em><code>False</code></em>, <strong><code>dropout</code></strong>:<code>float</code>=<em><code>0.1</code></em>, <strong><code>out_dropout</code></strong>:<code>float</code>=<em><code>None</code></em>, <strong><code>bias</code></strong>:<code>bool</code>=<em><code>True</code></em>, <strong><code>shared_qk</code></strong>:<code>bool</code>=<em><code>False</code></em>, <strong><code>store_attention</code></strong>:<code>bool</code>=<em><code>False</code></em>) :: <a href="/reformer_fastai/attention.html#Attention"><code>Attention</code></a></p>
 </blockquote>
 <p>Additive attention module</p>
 
@@ -1001,7 +1112,7 @@ $$\textbf {Attention}(Q,K,V) = \textbf {softmax}({QK^T\over\sqrt d_k})V $$
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="LSHAttention" class="doc_header"><code>class</code> <code>LSHAttention</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/attention.py#L215" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>LSHAttention</code>(<strong><code>dropout</code></strong>=<em><code>0.0</code></em>, <strong><code>bucket_size</code></strong>=<em><code>64</code></em>, <strong><code>n_hashes</code></strong>=<em><code>8</code></em>, <strong><code>causal</code></strong>=<em><code>False</code></em>, <strong><code>allow_duplicate_attention</code></strong>=<em><code>False</code></em>, <strong><code>attend_across_buckets</code></strong>=<em><code>False</code></em>, <strong><code>drop_for_hash_rate</code></strong>=<em><code>0.0</code></em>, <strong><code>return_attn</code></strong>=<em><code>False</code></em>, <strong>**<code>kwargs</code></strong>) :: <code>Module</code></p>
+<h2 id="LSHAttention" class="doc_header"><code>class</code> <code>LSHAttention</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/attention.py#L228" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>LSHAttention</code>(<strong><code>dropout</code></strong>=<em><code>0.0</code></em>, <strong><code>bucket_size</code></strong>=<em><code>64</code></em>, <strong><code>n_hashes</code></strong>=<em><code>8</code></em>, <strong><code>causal</code></strong>=<em><code>False</code></em>, <strong><code>allow_duplicate_attention</code></strong>=<em><code>False</code></em>, <strong><code>attend_across_buckets</code></strong>=<em><code>False</code></em>, <strong><code>drop_for_hash_rate</code></strong>=<em><code>0.0</code></em>, <strong><code>return_attn</code></strong>=<em><code>False</code></em>, <strong>**<code>kwargs</code></strong>) :: <code>Module</code></p>
 </blockquote>
 <p>LSH attention module:</p>
 
@@ -1128,7 +1239,7 @@ $$\textbf {Attention}(Q,K,V) = \textbf {softmax}({QK^T\over\sqrt d_k})V $$
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="LSHSelfAttention" class="doc_header"><code>class</code> <code>LSHSelfAttention</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/attention.py#L436" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>LSHSelfAttention</code>(<strong><code>d_model</code></strong>, <strong><code>n_heads</code></strong>=<em><code>8</code></em>, <strong><code>bucket_size</code></strong>=<em><code>64</code></em>, <strong><code>n_hashes</code></strong>=<em><code>8</code></em>, <strong><code>causal</code></strong>=<em><code>False</code></em>, <strong><code>bias</code></strong>:<code>bool</code>=<em><code>True</code></em>, <strong><code>attend_across_buckets</code></strong>=<em><code>False</code></em>, <strong><code>allow_duplicate_attention</code></strong>=<em><code>False</code></em>, <strong><code>return_attn</code></strong>=<em><code>False</code></em>, <strong><code>dropout</code></strong>=<em><code>0.0</code></em>, <strong><code>post_attn_dropout</code></strong>=<em><code>0.0</code></em>) :: <code>Module</code></p>
+<h2 id="LSHSelfAttention" class="doc_header"><code>class</code> <code>LSHSelfAttention</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/attention.py#L449" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>LSHSelfAttention</code>(<strong><code>d_model</code></strong>, <strong><code>n_heads</code></strong>=<em><code>8</code></em>, <strong><code>bucket_size</code></strong>=<em><code>64</code></em>, <strong><code>n_hashes</code></strong>=<em><code>8</code></em>, <strong><code>causal</code></strong>=<em><code>False</code></em>, <strong><code>bias</code></strong>:<code>bool</code>=<em><code>True</code></em>, <strong><code>attend_across_buckets</code></strong>=<em><code>False</code></em>, <strong><code>allow_duplicate_attention</code></strong>=<em><code>False</code></em>, <strong><code>return_attn</code></strong>=<em><code>False</code></em>, <strong><code>dropout</code></strong>=<em><code>0.0</code></em>, <strong><code>post_attn_dropout</code></strong>=<em><code>0.0</code></em>) :: <code>Module</code></p>
 </blockquote>
 <p>Same as <code>nn.Module</code>, but no need for subclasses to call <code>super().__init__</code></p>
 
@@ -1213,7 +1324,7 @@ $$\textbf {Attention}(Q,K,V) = \textbf {softmax}({QK^T\over\sqrt d_k})V $$
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="ReformerAttention" class="doc_header"><code>class</code> <code>ReformerAttention</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/attention.py#L496" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ReformerAttention</code>(<strong><code>d_model</code></strong>:<code>int</code>, <strong><code>n_heads</code></strong>:<code>int</code>=<em><code>8</code></em>, <strong><code>causal</code></strong>:<code>bool</code>=<em><code>False</code></em>, <strong><code>mask</code></strong>:<code>Tensor</code>=<em><code>None</code></em>, <strong><code>dropout</code></strong>:<code>float</code>=<em><code>0.1</code></em>, <strong><code>out_dropout</code></strong>:<code>float</code>=<em><code>None</code></em>, <strong><code>bias</code></strong>:<code>bool</code>=<em><code>True</code></em>, <strong><code>store_attention</code></strong>:<code>bool</code>=<em><code>False</code></em>, <strong><code>lsh_attention</code></strong>:<code>bool</code>=<em><code>True</code></em>, <strong><code>n_hashes</code></strong>:<code>int</code>=<em><code>8</code></em>, <strong><code>bucket_size</code></strong>:<code>int</code>=<em><code>64</code></em>) :: <code>Module</code></p>
+<h2 id="ReformerAttention" class="doc_header"><code>class</code> <code>ReformerAttention</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/attention.py#L509" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ReformerAttention</code>(<strong><code>d_model</code></strong>:<code>int</code>, <strong><code>n_heads</code></strong>:<code>int</code>=<em><code>8</code></em>, <strong><code>causal</code></strong>:<code>bool</code>=<em><code>False</code></em>, <strong><code>mask</code></strong>:<code>Tensor</code>=<em><code>None</code></em>, <strong><code>dropout</code></strong>:<code>float</code>=<em><code>0.1</code></em>, <strong><code>out_dropout</code></strong>:<code>float</code>=<em><code>None</code></em>, <strong><code>bias</code></strong>:<code>bool</code>=<em><code>True</code></em>, <strong><code>store_attention</code></strong>:<code>bool</code>=<em><code>False</code></em>, <strong><code>lsh_attention</code></strong>:<code>bool</code>=<em><code>True</code></em>, <strong><code>n_hashes</code></strong>:<code>int</code>=<em><code>8</code></em>, <strong><code>bucket_size</code></strong>:<code>int</code>=<em><code>64</code></em>) :: <code>Module</code></p>
 </blockquote>
 <p>Reformer attention container.</p>
 <p>Switch between FullSharedQKAttention and LSHAttention.</p>
@@ -1341,11 +1452,8 @@ $$\textbf {Attention}(Q,K,V) = \textbf {softmax}({QK^T\over\sqrt d_k})V $$
 
 <div class="output_text output_subarea output_execute_result">
 <pre>[(&#39;attn.in_proj.to_qk.weight&#39;, torch.Size([512, 512])),
- (&#39;attn.in_proj.to_qk.bias&#39;, torch.Size([512])),
  (&#39;attn.in_proj.to_v.weight&#39;, torch.Size([512, 512])),
- (&#39;attn.in_proj.to_v.bias&#39;, torch.Size([512])),
- (&#39;attn.out_proj.weight&#39;, torch.Size([512, 512])),
- (&#39;attn.out_proj.bias&#39;, torch.Size([512]))]</pre>
+ (&#39;attn.out_proj.weight&#39;, torch.Size([512, 512]))]</pre>
 </div>
 
 </div>
@@ -1379,11 +1487,221 @@ $$\textbf {Attention}(Q,K,V) = \textbf {softmax}({QK^T\over\sqrt d_k})V $$
 
 <div class="output_text output_subarea output_execute_result">
 <pre>[(&#39;attn.in_proj.to_qk.weight&#39;, torch.Size([512, 512])),
- (&#39;attn.in_proj.to_qk.bias&#39;, torch.Size([512])),
  (&#39;attn.in_proj.to_v.weight&#39;, torch.Size([512, 512])),
- (&#39;attn.in_proj.to_v.bias&#39;, torch.Size([512])),
- (&#39;attn.out_proj.weight&#39;, torch.Size([512, 512])),
- (&#39;attn.out_proj.bias&#39;, torch.Size([512]))]</pre>
+ (&#39;attn.out_proj.weight&#39;, torch.Size([512, 512]))]</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h2 id="ReformerAttentionV2" class="doc_header"><code>class</code> <code>ReformerAttentionV2</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/attention.py#L562" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ReformerAttentionV2</code>(<strong><code>d_model</code></strong>:<code>int</code>, <strong><code>n_heads</code></strong>:<code>int</code>=<em><code>8</code></em>, <strong><code>causal</code></strong>:<code>bool</code>=<em><code>False</code></em>, <strong><code>mask</code></strong>:<code>Tensor</code>=<em><code>None</code></em>, <strong><code>dropout</code></strong>:<code>float</code>=<em><code>0.1</code></em>, <strong><code>out_dropout</code></strong>:<code>float</code>=<em><code>None</code></em>, <strong><code>bias</code></strong>:<code>bool</code>=<em><code>True</code></em>, <strong><code>store_attention</code></strong>:<code>bool</code>=<em><code>False</code></em>, <strong><code>lsh_attention</code></strong>:<code>bool</code>=<em><code>True</code></em>, <strong><code>n_hashes</code></strong>:<code>int</code>=<em><code>8</code></em>, <strong><code>bucket_size</code></strong>:<code>int</code>=<em><code>64</code></em>) :: <code>Module</code></p>
+</blockquote>
+<p>Reformer attention container. Take on making it switchable on the fly.</p>
+<p>Switch between FullSharedQKAttention and LSHAttention.</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    {% endraw %}
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>ReformerAttentionV2 containes both <a href="/reformer_fastai/attention.html#LSHAttention"><code>LSHAttention</code></a> and <a href="/reformer_fastai/attention.html#ScaledDotProdAttention"><code>ScaledDotProdAttention</code></a> and which one to use is determined by <code>self.lsh_attention</code> flag.</p>
+<p>Proposed TODOs:</p>
+<ul>
+<li>[ ] rename <code>self.lsh_attention</code> to <code>self.use_lsh</code> to avoid confusion with <code>self.lsh_attn</code> which is a module</li>
+<li>[ ] synchronize mask naming across all Attention modules</li>
+<li>[ ] add masking support to ReformerAttentionV2</li>
+<li>[ ] synchronize <code>store_attention</code> functionality</li>
+<li>[ ] test switchable attention module with synthetic task</li>
+</ul>
+
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">bs</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">sl</span> <span class="o">=</span> <span class="mi">128</span>
+<span class="n">d</span> <span class="o">=</span> <span class="mi">512</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="n">sl</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+<span class="n">attn</span> <span class="o">=</span> <span class="n">ReformerAttentionV2</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">lsh_attention</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">out</span> <span class="o">=</span> <span class="n">attn</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="k">assert</span> <span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="n">sl</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span> <span class="o">==</span> <span class="n">out</span><span class="o">.</span><span class="n">size</span><span class="p">()</span>
+<span class="n">out</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>torch.Size([4, 128, 512])</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">attn</span><span class="o">.</span><span class="n">lsh_attention</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="n">out</span> <span class="o">=</span> <span class="n">attn</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="k">assert</span> <span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="n">sl</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span> <span class="o">==</span> <span class="n">out</span><span class="o">.</span><span class="n">size</span><span class="p">()</span>
+<span class="n">out</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>torch.Size([4, 128, 512])</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">attn</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>ReformerAttentionV2(
+  (in_proj): SharedQKAttnInProj(
+    (to_qk): Linear(in_features=512, out_features=512, bias=False)
+    (to_v): Linear(in_features=512, out_features=512, bias=False)
+  )
+  (lsh_attn): LSHAttention(
+    (dropout): Dropout(p=0.1, inplace=False)
+    (dropout_for_hash): Dropout(p=0.0, inplace=False)
+  )
+  (full_attn): ScaledDotProdAttention(
+    (dropout): Dropout(p=0.1, inplace=False)
+  )
+  (out_proj): Linear(in_features=512, out_features=512, bias=False)
+  (dropout): Dropout(p=0.1, inplace=False)
+)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>State dict remanes unchanged</p>
+
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="p">[(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">attn</span><span class="o">.</span><span class="n">state_dict</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">()]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>[(&#39;in_proj.to_qk.weight&#39;, torch.Size([512, 512])),
+ (&#39;in_proj.to_v.weight&#39;, torch.Size([512, 512])),
+ (&#39;out_proj.weight&#39;, torch.Size([512, 512]))]</pre>
 </div>
 
 </div>

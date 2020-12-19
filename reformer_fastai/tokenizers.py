@@ -80,56 +80,26 @@ class ByteTextTokenizer(Transform):
 # Cell
 
 class SubwordTextEncoder(Transform):
-  """Class for invertibly encoding text using a limited vocabulary.
-
-  Invertibly encodes a native string as a sequence of subtokens from a limited
-  vocabulary.
-
-  A SubwordTextEncoder is built from a corpus (so it is tailored to the text in
-  the corpus), and stored to a file. See text_encoder_build_subword.py.
-
-  It can then be loaded and used to encode/decode any text.
-
-  Encoding has four phases:
-
-  1. Tokenize into a list of tokens.  Each token is a unicode string of either
-     all alphanumeric characters or all non-alphanumeric characters.  We drop
-     tokens consisting of a single space that are between two alphanumeric
-     tokens.
-
-  2. Escape each token.  This escapes away special and out-of-vocabulary
-     characters, and makes sure that each token ends with an underscore, and
-     has no other underscores.
-
-  3. Represent each escaped token as a the concatenation of a list of subtokens
-     from the limited vocabulary.  Subtoken selection is done greedily from
-     beginning to end.  That is, we construct the list in order, always picking
-     the longest subtoken in our vocabulary that matches a prefix of the
-     remaining portion of the encoded token.
-
-  4. Concatenate these lists.  This concatenation is invertible due to the
-     fact that the trailing underscores indicate when one list is finished.
+  """
+  Class for invertibly encoding text using a limited vocabulary.
 
   """
 
-  def __init__(self, filename=None):
-    """Initialize and read from a file, if provided.
-
-    Args:
-      filename: filename from which to read vocab. If None, do not load a
-        vocab
-    """
+  def __init__(self, filename=None, seq_len=256, ls_lm=True, add_bos=False, BOS_ID=None):
+    store_attr()
     self.native_to_unicode = (lambda s: s.decode("utf-8")) if PY2 else (lambda s: s)
     self._ALPHANUMERIC_CHAR_SET = set(unichr(i) for i in six_range(sys.maxunicode) if (unicodedata.category(unichr(i)).startswith("L") or unicodedata.category(unichr(i)).startswith("N")))
+
     self.PAD = "<pad>"
     self.EOS = "<EOS>"
     self.RESERVED_TOKENS = [self.PAD, self.EOS]
     self.NUM_RESERVED_TOKENS = len(self.RESERVED_TOKENS)
     self.PAD_ID = self.RESERVED_TOKENS.index(self.PAD)  # Normally 0
     self.EOS_ID = self.RESERVED_TOKENS.index(self.EOS)  # Normally 1
+    if BOS_ID is None: self.BOS_ID = self.PAD_ID
+
     self._UNESCAPE_REGEX = re.compile(r"\\u|\\\\|\\([0-9]+);")
     self._ESCAPE_CHARS = set(u"\\_u;0123456789")
-
 
     self._alphabet = set()
     self.filename = filename
@@ -149,8 +119,11 @@ class SubwordTextEncoder(Transform):
 
   @typedispatch
   def __call__(self, s:str, **kwargs):
-    return self._tokens_to_subtoken_ids(
-        self._encode(text=self.native_to_unicode(s)))
+    out = self._tokens_to_subtoken_ids(self._encode(text=self.native_to_unicode(s)))
+    if self.add_bos: out = [self.BOS_ID] + out[:self.seq_len-1]
+    else: out = out[:self.seq_len]
+    if self.ls_lm: return LMTensorText(out)
+    else: return TensorText(out)
 
   def encode_without_tokenizing(self, token_text):
     """Converts string to list of subtoken ids without calling tokenizer.
@@ -650,4 +623,4 @@ class SubwordTextEncoder(Transform):
       if i > 0 and token_is_alnum[i - 1] and token_is_alnum[i]:
         ret.append(u" ")
       ret.append(token)
-    return "".join(ret)
+    return TitledStr("".join(ret))
