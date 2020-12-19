@@ -13,6 +13,7 @@ from fastai.basics import *
 from .core import *
 from .layers import *
 from .attention import *
+from .transformer import LMMixin, EncDecMixin
 
 # Cell
 class Chunk(Module):
@@ -305,7 +306,7 @@ class ReversibleDecoder(nn.Module):
         return x
 
 # Cell
-class ReversibleLM(Module):
+class ReversibleLM(Module, LMMixin):
     """
     Reversible Transformer for language modelling
 
@@ -369,62 +370,6 @@ class ReversibleLM(Module):
         x = self.encoder(x, mask=mask)
         return self.proj(x)
 
-    #TODO maybe refactor
-    @torch.no_grad()
-    def generate(self, inp,
-                max_len=50,
-                temperature=1.,
-                method = 'top_k',
-                top_k = 20,
-                top_p = 0.9,
-                early_stopping=False, #need eos_idx to work
-                eos_idx=None):
-        self.to(inp.device) #TODO test for potential problems
-        self.eval()
-        thresh = top_k if method=='top_k' else top_p
-        sampler = _sampler[method]
-        inp = expand_dim1(inp)
-        b, t = inp.shape
-        out = inp
-        for _ in range(max_len):
-            x = out[:, -self.max_seq_len:]
-
-            logits = self(x)[:, -1, :]
-            if method == 'greedy':
-                sample = sampler(logits)
-            else:
-                filtered_logits = sampler(logits)
-                probs = F.softmax(filtered_logits / temperature, dim=-1)
-                sample = torch.multinomial(probs, 1)
-
-            out = torch.cat((out, sample), dim=-1)
-
-            if early_stopping and (sample == eos_idx).all():
-                break
-        # out = out[:, t:]
-        return out
-
-    def store_attention(self, layer_ids=None):
-        #defaults to storing attention for all layers
-        layer_ids = default(layer_ids, list(range(self.n_layers)))
-        for module in self.children():
-            if isinstance(module, (TransformerEncoder, TransformerDecoder)):
-                for i, l in enumerate(module.layers):
-                    if i in layer_ids:
-                        for m in l.modules():
-                            if isinstance(m, (ScaledDotProdAttention)):
-                                m.store_attention = True
-    def get_attention_matrix(self):
-        res = []
-        for m in self.modules():
-            if isinstance(m, (ScaledDotProdAttention)):
-                attention = getattr(m, 'attention', None)
-                if attention is not None:
-                    res.append(attention)
-                # reset stored attention
-                m.attention = None
-                m.store_attention = False
-        return res
 
 # Cell
 #TODO test weight tying
@@ -516,86 +461,6 @@ class ReversibleTransformer(Module):
         if self.pad_idx is None: return None
         return (x != self.pad_idx)
 
-    #TODO add beam search and refactor
-    @torch.no_grad()
-    def generate(self, src,
-                src_mask=None,
-                max_len=50,
-                temperature=1.,
-                method = 'top_k',
-                top_k = 20,
-                top_p = 0.9,
-                early_stopping=False,
-                bos_idx=2, # TODO change to match future usecases
-                eos_idx=None):
-        self.to(src.device) #TODO test for potential problems
-        self.eval()
-        thresh = top_k if method=='top_k' else top_p
-        sampler = _sampler[method]
-        src = expand_dim1(src)
-        bs = src.size(0)
-        inp = src.new_full((bs, 1), bos_idx) #start with bos tokens
-        src_mask = default(src_mask, self.get_padding_mask(src))
-        enc = self.encoder(self.enc_emb(src), mask = src_mask)
-        out = inp
-        for _ in range(max_len):
-            x = out[:, -self.max_seq_len:]
-            dec = self.decoder(self.dec_emb(out), context=enc)
-            logits = self.proj(dec)[:, -1, :]
-            if method == 'greedy':
-                sample = sampler(logits)
-            else:
-                filtered_logits = sampler(logits, thresh)
-                probs = F.softmax(filtered_logits / temperature, dim=-1)
-                sample = torch.multinomial(probs, 1)
-
-            out = torch.cat((out, sample), dim=-1)
-
-            if (early_stopping and
-                ((sample == eos_idx).all() or
-                (sample == self.pad_idx).all())):
-                break
-        #TODO mb output cleanup
-        return out
-
-    def store_attention(self, layer_ids=None, store_encoder=False, store_decoder=True):
-        #defaults to storing attention for all layers
-        layer_ids = default(layer_ids, list(range(self.n_enc_layers)))
-        for module in self.children():
-            if isinstance(module, TransformerEncoder) and store_encoder:
-                for i, l in enumerate(module.layers):
-                    if i in layer_ids:
-                        for m in l.modules():
-                            if isinstance(m, (ScaledDotProdAttention)):
-                                m.store_attention = True
-            elif isinstance(module, TransformerDecoder) and store_encoder:
-                for i, l in enumerate(module.layers):
-                    if i in layer_ids:
-                        for m in l.modules():
-                            if isinstance(m, (ScaledDotProdAttention)):
-                                m.store_attention = True
-    #TODO mb separate encoder and decoder attention
-    def get_attention_matrix(self, get_encoder=False, get_decoder=True):
-        res = []
-        if get_encoder:
-            for m in self.encoder.modules():
-                if isinstance(m, (ScaledDotProdAttention)):
-                    attention = getattr(m, 'attention', None)
-                    if attention is not None:
-                        res.append(attention)
-                    # reset stored attention
-                    m.attention = None
-                    m.store_attention = False
-        if get_decoder:
-            for m in self.decoder.modules():
-                if isinstance(m, (ScaledDotProdAttention)):
-                    attention = getattr(m, 'attention', None)
-                    if attention is not None:
-                        res.append(attention)
-                    # reset stored attention
-                    m.attention = None
-                    m.store_attention = False
-        return res
 
 # Cell
 # mess for now; will clean up after LSHAttention args finalized
