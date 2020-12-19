@@ -76,7 +76,7 @@ class ScaledDotProdAttention(Module):
         self.dropout = nn.Dropout(dropout)
 
     def forward(self, q, k, v, input_mask=None):
-        device = q.device
+        n, device = q.size(1), q.device
         q, k, v = map(lambda t: rearrange(t, 'b n (h d) -> b h n d', h=self.n_heads), (q, k, v))
 
         #TODO: remove after refactor confirmed working
@@ -106,11 +106,14 @@ class ScaledDotProdAttention(Module):
             dots.masked_fill_(self_mask, SELF_ATTN_MASK_VAL)
             del self_mask
 
+#         if self.causal:
+#             i, j = dots.shape[-2:]
+#             mask = torch.ones((i, j), device = device).triu_(j - i + 1).bool()
+#             dots.masked_fill_(mask, MASK_VAL)
+#             del mask
         if self.causal:
-            i, j = dots.shape[-2:]
-            mask = torch.ones((i, j), device = device).triu_(j - i + 1).bool()
-            dots.masked_fill_(mask, MASK_VAL)
-            del mask
+            i, j = torch.triu_indices(n, n, 1)
+            dots[:,:,i,j] = MASK_VAL
 
         attn = F.softmax(dots, -1)
         if self.store_attention: self.attention = attn.detach().cpu()
