@@ -2,15 +2,18 @@
 
 __all__ = ['exists', 'default', 'expand_dim1', 'max_neg_value', 'top_p_filter', 'top_k_filter',
            'cache_method_decorator', 'look_one_back', 'chunked_sum', 'sort_key_val', 'batched_index_select',
-           'do_cuda_timing', 'model_performance', 'total_params']
+           'do_cuda_timing', 'model_performance', 'total_params', 'CombineInputOutputCallback', 'RemoveEOSCallback',
+           'LossTargetShiftCallback']
 
 # Cell
 import torch
 from torch import nn, einsum
 import torch.nn.functional as F
 import torch.autograd.profiler as profiler
+
 from fastai.basics import *
 from fastai.text.all import *
+from fastai.test_utils import *
 
 from functools import partial, reduce, wraps
 from inspect import isfunction
@@ -173,3 +176,38 @@ def total_params(m):
     params = sum([p.numel() for p in m.parameters()])
     trains = [p.requires_grad for p in m.parameters()]
     return params, (False if len(trains)==0 else trains[0])
+
+# Cell
+class CombineInputOutputCallback(Callback):
+    """
+    Callback to combine the source (self.xb) and target (self.yb) into self.xb
+    """
+    def __init__(self): pass
+    def before_batch(self):
+        self.learn.xb = (self.xb[0], self.yb[0])
+
+# Cell
+class RemoveEOSCallback(Callback):
+    """
+        Shift the target presented to the model during training to remove the "eos" token as
+        we don't want the model to learn to translate EOS when it sees EOS.
+
+        In practice we actually mask the EOS token as due to batching the last token will often be a <pad> token,
+        not EOS
+    """
+    def __init__(self, eos_idx): self.eos_idx=eos_idx
+    def before_batch(self):
+        eos_mask=(self.learn.xb[1]!=self.eos_idx)
+        sz=torch.tensor(self.learn.xb[1].size())
+        sz[1]=sz[1]-1
+        self.learn.xb = (self.learn.xb[0], self.learn.xb[1][eos_mask].view((sz[0],sz[1])))
+
+# Cell
+class LossTargetShiftCallback(Callback):
+    """
+        Shift the target shown to the loss to exclude the "bos" token as the first token we want predicted
+        should be an actual word, not the "bos" token (as we have already given the model "bos" )
+    """
+    def __init__(self): pass
+    def after_pred(self):
+        self.learn.yb = (self.learn.yb[0][:,1:],)

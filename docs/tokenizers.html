@@ -164,35 +164,9 @@ Credit to <code>tensor2tensor</code> library: <a href="https://github.com/tensor
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="SubwordTextEncoder" class="doc_header"><code>class</code> <code>SubwordTextEncoder</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/tokenizers.py#L82" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>SubwordTextEncoder</code>(<strong><code>filename</code></strong>=<em><code>None</code></em>) :: <code>Transform</code></p>
+<h2 id="SubwordTextEncoder" class="doc_header"><code>class</code> <code>SubwordTextEncoder</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/tokenizers.py#L82" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>SubwordTextEncoder</code>(<strong><code>filename</code></strong>=<em><code>None</code></em>, <strong><code>seq_len</code></strong>=<em><code>256</code></em>, <strong><code>ls_lm</code></strong>=<em><code>True</code></em>, <strong><code>add_bos</code></strong>=<em><code>False</code></em>, <strong><code>BOS_ID</code></strong>=<em><code>None</code></em>) :: <code>Transform</code></p>
 </blockquote>
 <p>Class for invertibly encoding text using a limited vocabulary.</p>
-<p>Invertibly encodes a native string as a sequence of subtokens from a limited
-vocabulary.</p>
-<p>A SubwordTextEncoder is built from a corpus (so it is tailored to the text in
-the corpus), and stored to a file. See text_encoder_build_subword.py.</p>
-<p>It can then be loaded and used to encode/decode any text.</p>
-<p>Encoding has four phases:</p>
-<ol>
-<li><p>Tokenize into a list of tokens.  Each token is a unicode string of either
-all alphanumeric characters or all non-alphanumeric characters.  We drop
-tokens consisting of a single space that are between two alphanumeric
-tokens.</p>
-</li>
-<li><p>Escape each token.  This escapes away special and out-of-vocabulary
-characters, and makes sure that each token ends with an underscore, and
-has no other underscores.</p>
-</li>
-<li><p>Represent each escaped token as a the concatenation of a list of subtokens
-from the limited vocabulary.  Subtoken selection is done greedily from
-beginning to end.  That is, we construct the list in order, always picking
-the longest subtoken in our vocabulary that matches a prefix of the
-remaining portion of the encoded token.</p>
-</li>
-<li><p>Concatenate these lists.  This concatenation is invertible due to the
-fact that the trailing underscores indicate when one list is finished.</p>
-</li>
-</ol>
 
 </div>
 
