@@ -87,6 +87,7 @@ class Deterministic(Module):
 # heavily inspired by https://github.com/RobinBruegger/RevTorch/blob/master/revtorch/revtorch.py
 # once multi-GPU is confirmed working, refactor and send PR back to source
 class ReversibleBlock(Module):
+    "Applies f and g in reversible manner. Avoids storing outputs for backpropagation"
     def __init__(self, f:Module, g:Module, depth=None, send_signal=False):
         store_attr('depth, send_signal')
         self.f = Deterministic(f)
@@ -211,6 +212,7 @@ class ReversibleSequence(Module):
 
 # Cell
 class ReversibleEncoder(Module):
+    "Stack of ReversibleBlocks"
     def __init__(self,
                  d_model:int,
                  n_layers:int=6,
@@ -255,6 +257,7 @@ class ReversibleEncoder(Module):
 
 # Cell
 class ReversibleDecoder(nn.Module):
+    "Stack of ReversibleBlocks. Uses AdditiveAttention."
     def __init__(self,
                  d_model,
                  n_layers = 6,
@@ -265,8 +268,6 @@ class ReversibleDecoder(nn.Module):
                  n_hashes = 8,
                  ff_chunks = 100,
                  attn_chunks = None, # ??
-                 causal = False,
-                 weight_tie = False, # weight sharing option do we need to keep this?
                  attn_dropout = 0.,
                  post_attn_dropout = None,
                  attn_bias:bool=False,
@@ -281,7 +282,7 @@ class ReversibleDecoder(nn.Module):
         self.n_layers = n_layers
 
         # use regular attention for now
-        get_attn = lambda: AdditiveAttention(d_model, heads, causal=causal, dropout=attn_dropout, out_dropout=post_attn_dropout, bias=attn_bias)
+        get_attn = lambda: AdditiveAttention(d_model, heads, causal=True, dropout=attn_dropout, out_dropout=post_attn_dropout, bias=attn_bias)
         get_ff = lambda: ChunkedFeedForward(d_model, d_ff, chunks=ff_chunks, dropout=ff_dropout, dim=1)
         norm_wrapper = PreNorm if prenorm else PostNorm
         blocks = []
@@ -329,6 +330,7 @@ class ReversibleLM(Module, LMMixin):
         * axial_shape: tuple - required if 'axial' positional encoding are used, should be factors of
                 max_seq_len
         * axial_emb_dims: tuple - [optional] axial embedding components, should sum to d_model
+        * rev_thres: int - if (seq_len < rev_thres) applies irreversible blocks
     Inputs:
         * x - input ids, shape [bs, sl]
         * mask - optional boolean mask, shape [bs, sl]
@@ -336,23 +338,23 @@ class ReversibleLM(Module, LMMixin):
         * logits - target token logits, shape [bs, sl, vocab_sz]
     """
     def __init__(self,
-                 vocab_sz,
-                 d_model,
-                 n_layers=6,
-                 n_heads=8,
-                 d_ff=None,
-                 attn_dropout=0.1,
-                 ff_dropout=0.1,
-                 emb_dropout=0.1,
-                 tie_weights=True,
-                 causal=True,
-                 pos_enc='absolute',
-                 max_seq_len=512,
+                 vocab_sz:int,
+                 d_model:int,
+                 n_layers:int=6,
+                 n_heads:int=8,
+                 d_ff:int=None,
+                 attn_dropout:float=0.1,
+                 ff_dropout:float=0.1,
+                 emb_dropout:float=0.1,
+                 tie_weights:bool=True,
+                 causal:bool=True,
+                 pos_enc:str='absolute',
+                 max_seq_len:int=512,
                  axial_shape=None,
                  axial_emb_dims=None,
-                 pad_idx=None,
-                 prenorm=False,
-                 attn_bias=False,
+                 pad_idx:int=None,
+                 prenorm:bool=False,
+                 attn_bias:bool=False,
                  rev_thres:int=0):
         store_attr('max_seq_len, n_layers, pad_idx')
         self.emb = TransformerEmbedding(vocab_sz, d_model, max_seq_len, dropout=emb_dropout,

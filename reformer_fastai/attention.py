@@ -197,7 +197,7 @@ class AdditiveAttention(Attention):
     def __init__(self,
                  d_model:int,
                  n_heads:int = 8,
-                 causal:bool = False,
+                 causal:bool = True,
                  dropout:float=0.1,
                  out_dropout:float=None,
                  bias:bool=False,
