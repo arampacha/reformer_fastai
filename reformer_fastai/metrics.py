@@ -9,7 +9,7 @@ from functools import partial
 
 # Cell
 def _masked_accuracy(inp, targ, ignore=-100, dim=-1):
-    pred, targ = inp.argmax(dim=dim)
+    pred, targ = flatten_check(inp.argmax(dim=dim), targ)
     mask = targ != ignore
     return (pred[mask] == targ[mask]).float().mean()
 

@@ -47,7 +47,7 @@ nb_path: "nbs/07_metrics.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="MaskedAccuracy" class="doc_header"><code>class</code> <code>MaskedAccuracy</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/metrics.py#L9" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>MaskedAccuracy</code>(<strong><code>ignore</code></strong>:<code>int</code>=<em><code>-100</code></em>)</p>
+<h2 id="MaskedAccuracy" class="doc_header"><code>class</code> <code>MaskedAccuracy</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/metrics.py#L16" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>MaskedAccuracy</code>(<strong><code>ignore</code></strong>:<code>int</code>=<em><code>-100</code></em>, <strong><code>dim</code></strong>:<code>int</code>=<em><code>-1</code></em>) :: <code>AvgMetric</code></p>
 </blockquote>
 <p>Computes accuracy skipping values where targ=='ignore'</p>
 
@@ -80,7 +80,7 @@ nb_path: "nbs/07_metrics.ipynb"
                      <span class="p">[</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]])</span><span class="o">.</span><span class="n">t</span><span class="p">()</span>
 <span class="n">targ</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>
 <span class="n">acc</span> <span class="o">=</span> <span class="n">MaskedAccuracy</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
-<span class="k">assert</span> <span class="n">acc</span><span class="p">(</span><span class="n">pred</span><span class="p">[</span><span class="kc">None</span><span class="p">],</span> <span class="n">targ</span><span class="p">)</span> <span class="o">==</span> <span class="mf">0.8</span>
+<span class="k">assert</span> <span class="n">acc</span><span class="o">.</span><span class="n">func</span><span class="p">(</span><span class="n">pred</span><span class="p">[</span><span class="kc">None</span><span class="p">],</span> <span class="n">targ</span><span class="p">)</span> <span class="o">==</span> <span class="mf">0.8</span>
 </pre></div>
 
     </div>
