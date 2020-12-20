@@ -4,13 +4,18 @@ __all__ = ['MaskedAccuracy']
 
 # Cell
 import torch
+from fastai.basics import *
+from functools import partial
 
 # Cell
-class MaskedAccuracy:
+def _masked_accuracy(inp, targ, ignore=-100, dim=-1):
+    pred, targ = inp.argmax(dim=dim)
+    mask = targ != ignore
+    return (pred[mask] == targ[mask]).float().mean()
+
+class MaskedAccuracy(AvgMetric):
     "Computes accuracy skipping values where targ=='ignore'"
-    def __init__(self, ignore:int=-100):
-        self.ignore = ignore
-    def __call__(self, inp, targ):
-        pred = inp.argmax(dim=-1)
-        mask = targ != self.ignore
-        return (pred[mask] == targ[mask]).float().mean()
+    def __init__(self, ignore:int=-100, dim:int=-1):
+        self.func = partial(_masked_accuracy, ignore=ignore, dim=dim)
+    @property
+    def name(self): return 'masked_accuracy'
