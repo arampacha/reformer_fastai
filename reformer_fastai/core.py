@@ -3,7 +3,7 @@
 __all__ = ['exists', 'default', 'expand_dim1', 'max_neg_value', 'top_p_filter', 'top_k_filter',
            'cache_method_decorator', 'look_one_back', 'chunked_sum', 'sort_key_val', 'batched_index_select',
            'do_cuda_timing', 'model_performance', 'total_params', 'CombineInputOutputCallback', 'RemoveEOSCallback',
-           'LossTargetShiftCallback']
+           'LossTargetShiftCallback', 'LabelSmoothingCrossEntropy', 'LabelSmoothingCrossEntropyFlat']
 
 # Cell
 import torch
@@ -211,3 +211,37 @@ class LossTargetShiftCallback(Callback):
     def __init__(self): pass
     def after_pred(self):
         self.learn.yb = (self.learn.yb[0][:,1:],)
+
+# Cell
+class LabelSmoothingCrossEntropy(Module):
+    """Label smotthing cross entropy similar to fastai implementation
+    https://github.com/fastai/fastai/blob/89b1afb59e37e5abf7008888f6e4dd1bf1211e3e/fastai/losses.py#L79
+    with added option to provide ignore_index"""
+    y_int = True
+    def __init__(self, eps:float=0.1, reduction='mean', ignore_index=-100): store_attr()
+
+    def forward(self, output, target):
+        c = output.size()[-1]
+        log_preds = F.log_softmax(output, dim=-1)
+        nll_loss = F.nll_loss(log_preds, target.long(), reduction=self.reduction, ignore_index=self.ignore_index)
+        mask = target.eq(self.ignore_index)
+        log_preds = log_preds.masked_fill(mask.unsqueeze(-1), 0.)
+        if self.reduction=='sum': smooth_loss = -log_preds.sum()
+        else:
+            smooth_loss = -log_preds.sum(dim=-1) #We divide by that size at the return line so sum and not mean
+            if self.reduction=='mean':  smooth_loss = smooth_loss.mean()/(1-mask.float().mean())# devide by fraction of accounted values to debias mean
+        return smooth_loss*self.eps/c + (1-self.eps)*nll_loss
+
+    def activation(self, out): return F.softmax(out, dim=-1)
+    def decodes(self, out):    return out.argmax(dim=-1)
+
+
+# Cell
+@delegates()
+class LabelSmoothingCrossEntropyFlat(BaseLoss):
+    "Same as `LabelSmoothingCrossEntropy`, but flattens input and target."
+    y_int = True
+    @use_kwargs_dict(keep=True, eps=0.1, reduction='mean')
+    def __init__(self, *args, axis=-1, **kwargs): super().__init__(LabelSmoothingCrossEntropy, *args, axis=axis, **kwargs)
+    def activation(self, out): return F.softmax(out, dim=-1)
+    def decodes(self, out):    return out.argmax(dim=-1)
