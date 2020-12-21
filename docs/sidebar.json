@@ -8,6 +8,8 @@
     "Reformer": "reformer.html",
     "Tokenizers": "tokenizers.html",
     "Data": "data.html",
+    "Metrics": "metrics.html",
+    "Optimizers": "optimizers.html",
     "": {
       "Experiments": {
         "Synthetic task": "/experiment.synthetic-task.html"
