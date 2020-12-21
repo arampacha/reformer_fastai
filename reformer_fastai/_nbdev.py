@@ -67,7 +67,9 @@ index = {"exists": "00_core.ipynb",
          "read_lines": "06_data.ipynb",
          "convert_data_to_seq_length": "06_data.ipynb",
          "read_and_prepare_data": "06_data.ipynb",
-         "MaskedAccuracy": "07_metrics.ipynb"}
+         "MaskedAccuracy": "07_metrics.ipynb",
+         "Adafactor": "08_optimizers.ipynb",
+         "adafactor": "08_optimizers.ipynb"}
 
 modules = ["core.py",
            "layers.py",
@@ -76,7 +78,8 @@ modules = ["core.py",
            "reformer.py",
            "tokenizers.py",
            "data.py",
-           "metrics.py"]
+           "metrics.py",
+           "optimizers.py"]
 
 doc_url = "https://arampacha.github.io/reformer_fastai/"
 
