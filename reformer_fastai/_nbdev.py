@@ -68,6 +68,7 @@ index = {"exists": "00_core.ipynb",
          "convert_data_to_seq_length": "06_data.ipynb",
          "read_and_prepare_data": "06_data.ipynb",
          "MaskedAccuracy": "07_metrics.ipynb",
+         "BPC": "07_metrics.ipynb",
          "Adafactor": "08_optimizers.ipynb",
          "adafactor": "08_optimizers.ipynb"}
 
