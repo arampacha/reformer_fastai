@@ -419,7 +419,7 @@ class TransformerEncDec(Module, EncDecMixin):
                                             axial_shape=axial_shape, axial_emb_dims=axial_emb_dims)
         if shared_emb:
             assert (enc_vocab_sz == dec_vocab_sz), "Encoder and decoder vocab size doesn't match"
-            self.dec_emb = self.emc_emb
+            self.dec_emb = self.enc_emb
         else:
             self.dec_emb = TransformerEmbedding(dec_vocab_sz, d_model, max_seq_len, dropout=emb_dropout, pos_enc=pos_enc,
                                                 axial_shape=axial_shape, axial_emb_dims=axial_emb_dims)
