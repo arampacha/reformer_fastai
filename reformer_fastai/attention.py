@@ -577,10 +577,10 @@ class ReformerAttentionV2(Module):
                  out_dropout:float=None,
                  bias:bool=False,
                  store_attention:bool=False,
-                 lsh_attention:bool = True,
+                 use_lsh:bool = True,
                  n_hashes:int = 8,
                  bucket_size:int = 64):
-        store_attr('causal, mask, n_heads, bias, lsh_attention')
+        store_attr('causal, mask, n_heads, bias, use_lsh')
 
         out_dropout = ifnone(out_dropout, dropout)
         self.in_proj = SharedQKAttnInProj(d_model, bias=bias)
@@ -614,7 +614,7 @@ class ReformerAttentionV2(Module):
         assert context is None, "sharedQK doesn't support cross attention yet"
         q, k, v = self.in_proj(x)
         # use LSH
-        if self.lsh_attention:
+        if self.use_lsh:
             q, k, v = map(lambda t: rearrange(t, 'bs sl (nh dh) -> nh bs sl dh', nh=self.n_heads), (q, k, v))
 
             # masks have shape [bs, sl] and are maybe concatenated [bs, sl*2]
