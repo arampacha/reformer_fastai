@@ -12,7 +12,8 @@
     "Metrics":"metrics.html",
     "": {
       "Experiments": {
-        "Synthetic task": "/experiment.synthetic-task.html"
+        "Synthetic task": "/experiment.synthetic-task.html",
+        "enwik8_baseline": "/experiment.enwik8_baseline.html"
       }
     }
   }
