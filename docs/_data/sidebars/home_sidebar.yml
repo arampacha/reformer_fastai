@@ -42,6 +42,9 @@ entries:
         - output: web,pdf
           title: Synthetic task
           url: /experiment.synthetic-task.html
+        - output: web,pdf
+          title: enwik8_baseline
+          url: /experiment.enwik8_baseline.html
         title: Experiments
     output: web
     title: reformer_fastai
