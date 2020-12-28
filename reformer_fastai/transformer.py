@@ -159,21 +159,21 @@ class TransformerEncoderBlock(Module):
     feedforward layers
     """
     def __init__(self,
-                 d_model,
-                 n_heads = 8,
-                 d_ff = None,
-                 attn_dropout = 0.1,
-                 ff_dropout = 0.1,
-                 causal = False,
-                 mask = None,
-                 attn_bias = False,
-                 prenorm=False):
+                 d_model:int,
+                 n_heads:int = 8,
+                 d_ff:int = None,
+                 attn_dropout:float = 0.1,
+                 ff_dropout:float = 0.1,
+                 causal:bool = False,
+                 attn_bias:bool = False,
+                 prenorm:bool=False,
+                 shared_qk:bool=False):
         store_attr('attn_dropout') # mb separate argument attn_post_dropout
         if prenorm:
-            self.attn = Residual(PreNorm(d_model, Attention(d_model, n_heads=n_heads, causal=causal, dropout=attn_dropout, bias=attn_bias)))
+            self.attn = Residual(PreNorm(d_model, Attention(d_model, n_heads=n_heads, causal=causal, dropout=attn_dropout, bias=attn_bias, shared_qk=shared_qk)))
             self.ff = Residual(PreNorm(d_model, FeedForward(d_model, d_ff=d_ff, dropout=ff_dropout)))
         else:
-            self.attn = PostNorm(d_model, Residual(Attention(d_model, n_heads=n_heads, causal=causal, dropout=attn_dropout, bias=attn_bias)))
+            self.attn = PostNorm(d_model, Residual(Attention(d_model, n_heads=n_heads, causal=causal, dropout=attn_dropout, bias=attn_bias, shared_qk=shared_qk)))
             self.ff = PostNorm(d_model, Residual(FeedForward(d_model, d_ff=d_ff, dropout=ff_dropout)))
 
     def forward(self, x, mask=None): #? more args
@@ -193,13 +193,14 @@ class TransformerEncoder(Module):
                  attn_bias=False,
                  causal=False,
                  prenorm=False,
+                 shared_qk:bool=False,
                  final_norm=None):
         store_attr('d_model')
         self.layers = nn.ModuleList([])
         for _ in range(n_layers):
             self.layers.append(TransformerEncoderBlock(d_model, n_heads, causal=causal,
                                     d_ff=d_ff, attn_dropout=attn_dropout, ff_dropout=ff_dropout,
-                                    prenorm=prenorm, attn_bias=attn_bias))
+                                    prenorm=prenorm, attn_bias=attn_bias, shared_qk=shared_qk))
         self.norm = None if final_norm is None else final_norm(d_model)
 
     def forward(self, x, mask=None):
@@ -321,23 +322,24 @@ class TransformerLM(Module, LMMixin):
         * logits - target token logits, shape [bs, sl, vocab_sz]
     """
     def __init__(self,
-                 vocab_sz,
-                 d_model,
-                 n_layers=6,
-                 n_heads=8,
-                 d_ff=None,
-                 attn_dropout=0.1,
-                 ff_dropout=0.1,
-                 emb_dropout=0.1,
-                 tie_weights=True,
-                 causal=True,
-                 pos_enc='absolute',
-                 max_seq_len=512,
-                 axial_shape=None,
-                 axial_emb_dims=None,
-                 pad_idx=None,
-                 prenorm=False,
-                 attn_bias=False):
+                 vocab_sz:int,
+                 d_model:int,
+                 n_layers:int=6,
+                 n_heads:int=8,
+                 d_ff:int=None,
+                 attn_dropout:float=0.1,
+                 ff_dropout:float=0.1,
+                 emb_dropout:float=0.1,
+                 tie_weights:bool=True,
+                 causal:bool=True,
+                 pos_enc:str='absolute',
+                 max_seq_len:int=512,
+                 axial_shape:tuple=None,
+                 axial_emb_dims:tuple=None,
+                 pad_idx:int=None,
+                 prenorm:bool=False,
+                 attn_bias:bool=False,
+                 shared_qk:bool=False):
         store_attr('max_seq_len, n_layers, pad_idx')
         self.emb = TransformerEmbedding(vocab_sz, d_model, max_seq_len, dropout=emb_dropout,
                                         pos_enc=pos_enc, axial_shape=axial_shape,
@@ -346,7 +348,7 @@ class TransformerLM(Module, LMMixin):
         self.encoder = TransformerEncoder(d_model, n_layers, n_heads, causal=causal, d_ff=d_ff,
                                           attn_dropout=attn_dropout, ff_dropout=ff_dropout,
                                           prenorm=prenorm, attn_bias=attn_bias,
-                                          final_norm=final_norm)
+                                          shared_qk=shared_qk, final_norm=final_norm)
         self.proj = nn.Linear(d_model, vocab_sz)
         if tie_weights: self.proj.weight = self.emb.emb.weight
 
