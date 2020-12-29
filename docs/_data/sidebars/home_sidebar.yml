@@ -43,8 +43,14 @@ entries:
           title: Synthetic task
           url: /experiment.synthetic-task.html
         - output: web,pdf
-          title: enwik8_baseline
+          title: enwik8 baseline
           url: /experiment.enwik8_baseline.html
+        - output: web,pdf
+          title: enwik8 SharedQK
+          url: /experiment.enwik8_sharedQK.html
+        - output: web,pdf
+          title: enwik8 Reversible
+          url: /experiment.enwik8_reversible.html
         title: Experiments
     output: web
     title: reformer_fastai
