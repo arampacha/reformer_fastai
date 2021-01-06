@@ -446,29 +446,31 @@ class LSHSelfAttention(Module):
                  allow_duplicate_attention = False,   # Penalize multiple qk-v pairs in same attention chunk or not
                  return_attn = False,                 # Not implemented yet
                  random_state = None,                 # for reproducibility
-                 dropout = 0.,
-                 post_attn_dropout = 0.):             # a final dropout on output (not standard)
+                 dropout = 0.,                        # dropout for LSH-Attention attention matrix
+                 dropout_hash = 0.,                   # dropout for hashing algorithm
+                 out_dropout = 0.):                   # a final dropout on output
 
         assert (d_model % n_heads) == 0, 'dimensions must be divisible by number of heads'
-
         store_attr('n_heads, bias')
-
         self.in_proj = SharedQKAttnInProj(d_model, bias=bias)
         self.out_proj = nn.Linear(d_model, d_model, bias=bias)
-
-        self.lsh_attn = LSHAttention(bucket_size=bucket_size, n_hashes=n_hashes, causal=causal,
+        self.lsh_attn = LSHAttention(bucket_size=bucket_size,
+                                     n_hashes=n_hashes,
+                                     causal=causal,
                                      attend_across_buckets = attend_across_buckets,
                                      allow_duplicate_attention = allow_duplicate_attention,
-                                     return_attn = return_attn, dropout = dropout, random_state=random_state)
-        self.post_attn_dropout = nn.Dropout(post_attn_dropout)
-
+                                     return_attn = return_attn,
+                                     dropout = dropout,
+                                     dropout_hash = dropout_hash,
+                                     random_state=random_state)
+        self.out_dropout = nn.Dropout(out_dropout)
         self._init()
 
     def forward(self, x, mask = None, context_mask = None, **kwargs):
         device, dtype = x.device, x.dtype
         bs, sl, d_model = x.shape
 
-        # project keys, queries and values
+        # project keys, queries and valuess
         q, k, v = self.in_proj(x)     # [bs, sl, d_model]
 
         # split off head dimension for q, k and v. Resulting shapes are: [nh, bs, sl, dim_head]
@@ -485,7 +487,7 @@ class LSHSelfAttention(Module):
 
         # pass through final feed forward and maybe dropout
         out = self.out_proj(out)                                            # [bs, sl, dim]
-        return self.post_attn_dropout(out)
+        return self.out_dropout(out)
 
     # Note: masks are reused per head and should be of size bs, sl
     def _make_attn_mask(self, mask, context_mask, x, context):
