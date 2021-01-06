@@ -451,7 +451,8 @@ class LSHSelfAttention(Module):
 
         assert (d_model % n_heads) == 0, 'dimensions must be divisible by number of heads'
 
-        self.n_heads = n_heads
+        store_attr('n_heads, bias')
+
         self.in_proj = SharedQKAttnInProj(d_model, bias=bias)
         self.out_proj = nn.Linear(d_model, d_model, bias=bias)
 
@@ -460,6 +461,8 @@ class LSHSelfAttention(Module):
                                      allow_duplicate_attention = allow_duplicate_attention,
                                      return_attn = return_attn, dropout = dropout, random_state=random_state)
         self.post_attn_dropout = nn.Dropout(post_attn_dropout)
+
+        self._init()
 
     def forward(self, x, mask = None, context_mask = None, **kwargs):
         device, dtype = x.device, x.dtype
@@ -492,6 +495,11 @@ class LSHSelfAttention(Module):
             c_mask = default(context_mask, default_mask.expand(bs, 0))  # our context length is always 0
             attn_mask = torch.cat((i_mask, c_mask), dim=1)
         else: return None #attn_mask is None if both mask and context_mask are None
+
+    def _init(self):
+        [nn.init.xavier_uniform_(w) for w in self.parameters() if w.dim()>1]
+        if self.bias:
+            [nn.init.constant_(b, 0) for b in self.parameters() if b.dim()==1]
 
 # Cell
 class ReformerAttention(Module):
