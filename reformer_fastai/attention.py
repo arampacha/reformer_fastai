@@ -461,13 +461,9 @@ class LSHSelfAttention(Module):
                                      return_attn = return_attn, dropout = dropout, random_state=random_state)
         self.post_attn_dropout = nn.Dropout(post_attn_dropout)
 
-    def forward(self, x, keys = None, mask = None, input_attn_mask = None, context_mask = None, **kwargs):
+    def forward(self, x, mask = None, context_mask = None, **kwargs):
         device, dtype = x.device, x.dtype
         bs, sl, d_model = x.shape
-
-        # to be refactored
-        keys = default(keys, torch.empty(bs, 0, d_model, dtype=dtype, device=device))
-        c = keys.shape[1]
 
         # project keys, queries and values
         q, k, v = self.in_proj(x)     # [bs, sl, d_model]
@@ -475,16 +471,10 @@ class LSHSelfAttention(Module):
         # split off head dimension for q, k and v. Resulting shapes are: [nh, bs, sl, dim_head]
         q, k, v = map(lambda t: rearrange(t, 'bs sl (nh dh) -> nh bs sl dh', nh=self.n_heads), (q, k, v))
 
-        # masks have shape [bs, sl] and are maybe concatenated [bs, sl*2]
-        attn_mask = None
-        if mask is not None or context_mask is not None:
-            default_mask = torch.tensor([True], device=device)
-            i_mask = default(mask, default_mask.expand(bs, sl))
-            c_mask = default(context_mask, default_mask.expand(bs, c))
-            attn_mask = torch.cat((i_mask, c_mask), dim=1)
+        #create masks:
+        attn_mask = self._make_attn_mask(mask, context_mask, x, context=None) #assume no context atm
 
         # run lsh per head (iterate through 0th dim i.e. the n_head dim), concatenate and rearrange
-        # Note: masks are reused per head
         lsh_results = L([self.lsh_attn(q_h, k_h, v_h, attn_mask) for q_h, k_h, v_h in zip(q, k, v)])
         out = lsh_results.itemgot(0)                                   # split tuple (output, attn, buckets)
         out = torch.cat([head for head in out], dim=0)                 # concatenate [n_heads*bs, sl, dh]
@@ -493,6 +483,15 @@ class LSHSelfAttention(Module):
         # pass through final feed forward and maybe dropout
         out = self.out_proj(out)                                            # [bs, sl, dim]
         return self.post_attn_dropout(out)
+
+    # Note: masks are reused per head and should be of size bs, sl
+    def _make_attn_mask(self, mask, context_mask, x, context):
+        if any(map(exists, (mask, context_mask))):
+            default_mask = torch.tensor([True], device=x.device)
+            i_mask = default(mask, default_mask.expand(bs, sl))
+            c_mask = default(context_mask, default_mask.expand(bs, 0))  # our context length is always 0
+            attn_mask = torch.cat((i_mask, c_mask), dim=1)
+        else: return None #attn_mask is None if both mask and context_mask are None
 
 # Cell
 class ReformerAttention(Module):
