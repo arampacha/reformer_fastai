@@ -222,6 +222,7 @@ class LSHAttention(Module):
                   attend_across_buckets = False,      # as in the paper
                   drop_for_hash_rate = 0.0,           # unsure of default, not mentioned in paper
                   return_attn = False,
+                  random_state = None,                # for reproducibility
                   **kwargs):
 
         if dropout >= 1.0 or drop_for_hash_rate >=1.0:
@@ -244,6 +245,9 @@ class LSHAttention(Module):
 
         # 2. Calculate hash bucket id via random rotations, concatenation and argmax
         # note: we copy rotations accross batch dimension (see exploration notebook for details).
+
+        if self.random_state is not None: set_seed(self.random_state, reproducible=True)
+
         random_rotations = repeat(torch.randn(rotations_shape,device=device),
                                   'd nh nb -> bs d nh nb', bs=batch_size)
         dropped_vecs = self.dropout_for_hash(vecs)
@@ -441,6 +445,7 @@ class LSHSelfAttention(Module):
                  attend_across_buckets = False,
                  allow_duplicate_attention = False,   # Penalize multiple qk-v pairs in same attention chunk or not
                  return_attn = False,                 # Not implemented yet
+                 random_state = None,                 # for reproducibility
                  dropout = 0.,
                  post_attn_dropout = 0.):             # a final dropout on output (not standard)
 
@@ -453,7 +458,7 @@ class LSHSelfAttention(Module):
         self.lsh_attn = LSHAttention(bucket_size=bucket_size, n_hashes=n_hashes, causal=causal,
                                      attend_across_buckets = attend_across_buckets,
                                      allow_duplicate_attention = allow_duplicate_attention,
-                                     return_attn = return_attn, dropout = dropout)
+                                     return_attn = return_attn, dropout = dropout, random_state=random_state)
         self.post_attn_dropout = nn.Dropout(post_attn_dropout)
 
     def forward(self, x, keys = None, mask = None, input_attn_mask = None, context_mask = None, **kwargs):
