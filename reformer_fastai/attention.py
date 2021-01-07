@@ -75,29 +75,16 @@ class ScaledDotProdAttention(Module):
         self.scale = (d_model//n_heads)**-0.5
         self.dropout = nn.Dropout(dropout)
 
-    def forward(self, q, k, v, input_mask=None):
+    def forward(self, q, k, v, attn_mask=None):
         n, device = q.size(1), q.device
         q, k, v = map(lambda t: rearrange(t, 'b n (h d) -> b h n d', h=self.n_heads), (q, k, v))
-
-        #TODO: remove after refactor confirmed working
-        # boolean input_mask is False at positions not to attend to
-#         input_mask = None
-#         if any(map(exists, (mask, context_mask))):
-#             q_mask = default(mask, lambda: torch.ones((b, n), device = device).bool())
-#             k_mask = q_mask if not exists(context) else context_mask
-#             k_mask = default(k_mask, lambda: torch.ones((b, k.shape[-2]), device = device).bool())
-
-#             q_mask = rearrange(q_mask, 'b i -> b () i ()')
-#             k_mask = rearrange(k_mask, 'b j -> b () () j')
-#             input_mask = q_mask * k_mask
 
         # classic dot-product attention
         dots = torch.einsum('bhid,bhjd->bhij', q*self.scale, k)
 
-        if exists(input_mask):
-            dots.masked_fill_(~input_mask, MASK_VAL)
-            del input_mask
-
+        if exists(attn_mask):
+            dots.masked_fill_(~attn_mask, MASK_VAL)
+            del attn_mask
         if self.shared_qk:
             b, h, i, j = dots.shape[:]
             m = torch.arange(i)
@@ -105,12 +92,6 @@ class ScaledDotProdAttention(Module):
             self_mask[:, :, m, m] = True
             dots.masked_fill_(self_mask, SELF_ATTN_MASK_VAL)
             del self_mask
-
-#         if self.causal:
-#             i, j = dots.shape[-2:]
-#             mask = torch.ones((i, j), device = device).triu_(j - i + 1).bool()
-#             dots.masked_fill_(mask, MASK_VAL)
-#             del mask
         if self.causal:
             i, j = torch.triu_indices(n, n, 1)
             dots[:,:,i,j] = MASK_VAL
@@ -153,8 +134,8 @@ class Attention(Module):
         q, k, v = self.in_proj(x, context)
         if self.shared_qk: k = F.normalize(k, 2, dim=-1).type_as(k)
 
-        input_mask = self._make_input_mask(mask, context_mask, x, context)
-        out = self.attn(q, k, v, input_mask)
+        attn_mask = self._make_attn_mask(mask, context_mask, x, context)
+        out = self.attn(q, k, v, attn_mask)
 
         out = self.out_proj(out)
         return self.dropout(out)
@@ -164,7 +145,7 @@ class Attention(Module):
         if self.bias:
             [nn.init.constant_(b, 0) for b in self.parameters() if b.dim()==1]
 
-    def _make_input_mask(self, mask, context_mask, x, context):
+    def _make_attn_mask(self, mask, context_mask, x, context):
         if any(map(exists, (mask, context_mask))):
             b, n, _, device = *x.size(), x.device
             q_mask = default(mask, lambda: torch.ones((b, n), device = device).bool())
@@ -174,7 +155,7 @@ class Attention(Module):
             q_mask = rearrange(q_mask, 'b i -> b () i ()')
             k_mask = rearrange(k_mask, 'b j -> b () () j')
             return q_mask * k_mask
-        else: return None #input_mask is None if both mask and context_mask are None
+        else: return None #attn_mask is None if both mask and context_mask are None
 
 # Cell
 class AdditiveInProj(Module):
@@ -215,7 +196,7 @@ class AdditiveAttention(Attention):
         self.dropout = nn.Dropout(out_dropout)
         self._init()
 
-    def _make_input_mask(self, mask, context_mask, x, context):
+    def _make_attn_mask(self, mask, context_mask, x, context):
         b, n, _, device = *x.size(), x.device
         if any(map(exists, (mask, context_mask))):
             q_mask = default(mask, lambda: torch.ones((b, n), device=device).bool())
@@ -225,7 +206,7 @@ class AdditiveAttention(Attention):
                 cross_mask = q_mask[:, None, :, None] * k_mask[:, None, None, :]
             else: cross_mask = torch.empty(0, dtype=self_mask.dtype, device=device)
             return torch.cat([self_mask, cross_mask], dim=-1)
-        else: return None #input_mask is None if both mask and context_mask are None
+        else: return None #attn_mask is None if both mask and context_mask are None
 
 # Cell
 class LSHAttention(Module):
@@ -241,6 +222,7 @@ class LSHAttention(Module):
                   attend_across_buckets = False,      # as in the paper
                   drop_for_hash_rate = 0.0,           # unsure of default, not mentioned in paper
                   return_attn = False,
+                  random_state = None,                # for reproducibility
                   **kwargs):
 
         if dropout >= 1.0 or drop_for_hash_rate >=1.0:
@@ -263,6 +245,9 @@ class LSHAttention(Module):
 
         # 2. Calculate hash bucket id via random rotations, concatenation and argmax
         # note: we copy rotations accross batch dimension (see exploration notebook for details).
+
+        if self.random_state is not None: set_seed(self.random_state, reproducible=True)
+
         random_rotations = repeat(torch.randn(rotations_shape,device=device),
                                   'd nh nb -> bs d nh nb', bs=batch_size)
         dropped_vecs = self.dropout_for_hash(vecs)
@@ -282,7 +267,7 @@ class LSHAttention(Module):
         buckets = rearrange(buckets+offsets, 'bs nh sl -> bs (nh sl)')  # [bs, (n_hashes*sl)]
         return buckets
 
-    def forward(self, q, k, v, input_mask = None, **kwargs):
+    def forward(self, q, k, v, attn_mask = None, **kwargs):
         batch_size, seqlen, dim, device = *q.shape, q.device
 
         # caching
@@ -349,9 +334,9 @@ class LSHAttention(Module):
         masked_value = max_neg_value(dots)
 
         # Input mask for padding in variable lengthed sequences
-        if input_mask is not None:
-            input_mask = F.pad(input_mask, (0, seqlen - input_mask.shape[1]), value=True)
-            mq = input_mask.gather(1, st).reshape((batch_size, n_chunks, -1))
+        if attn_mask is not None:
+            attn_mask = F.pad(attn_mask, (0, seqlen - attn_mask.shape[1]), value=True)
+            mq = attn_mask.gather(1, st).reshape((batch_size, n_chunks, -1))
             mkv = look_one_back(mq)
             mask = mq[:, :, :, None] * mkv[:, :, None, :]
             dots.masked_fill_(~mask, masked_value)
@@ -460,53 +445,65 @@ class LSHSelfAttention(Module):
                  attend_across_buckets = False,
                  allow_duplicate_attention = False,   # Penalize multiple qk-v pairs in same attention chunk or not
                  return_attn = False,                 # Not implemented yet
-                 dropout = 0.,
-                 post_attn_dropout = 0.):             # a final dropout on output (not standard)
+                 random_state = None,                 # for reproducibility
+                 dropout = 0.,                        # dropout for LSH-Attention attention matrix
+                 dropout_hash = 0.,                   # dropout for hashing algorithm
+                 out_dropout = 0.):                   # a final dropout on output
 
         assert (d_model % n_heads) == 0, 'dimensions must be divisible by number of heads'
-
-        self.n_heads = n_heads
+        store_attr('n_heads, bias')
         self.in_proj = SharedQKAttnInProj(d_model, bias=bias)
         self.out_proj = nn.Linear(d_model, d_model, bias=bias)
-
-        self.lsh_attn = LSHAttention(bucket_size=bucket_size, n_hashes=n_hashes, causal=causal,
+        self.lsh_attn = LSHAttention(bucket_size=bucket_size,
+                                     n_hashes=n_hashes,
+                                     causal=causal,
                                      attend_across_buckets = attend_across_buckets,
                                      allow_duplicate_attention = allow_duplicate_attention,
-                                     return_attn = return_attn, dropout = dropout)
-        self.post_attn_dropout = nn.Dropout(post_attn_dropout)
+                                     return_attn = return_attn,
+                                     dropout = dropout,
+                                     dropout_hash = dropout_hash,
+                                     random_state=random_state)
+        self.out_dropout = nn.Dropout(out_dropout)
+        self._init()
 
-    def forward(self, x, keys = None, input_mask = None, input_attn_mask = None, context_mask = None, **kwargs):
+    def forward(self, x, context = None, mask = None, context_mask = None, **kwargs):
         device, dtype = x.device, x.dtype
         bs, sl, d_model = x.shape
 
-        # to be refactored
-        keys = default(keys, torch.empty(bs, 0, d_model, dtype=dtype, device=device))
-        c = keys.shape[1]
-
-        # project keys, queries and values
-        q, k, v = self.in_proj(x)     # [bs, sl, d_model]
+        # project keys, queries and valuess
+        q, k, v = self.in_proj(x, context)     # [bs, sl(+csl), d_model]
 
         # split off head dimension for q, k and v. Resulting shapes are: [nh, bs, sl, dim_head]
         q, k, v = map(lambda t: rearrange(t, 'bs sl (nh dh) -> nh bs sl dh', nh=self.n_heads), (q, k, v))
 
-        # masks have shape [bs, sl] and are maybe concatenated [bs, sl*2]
-        mask = None
-        if input_mask is not None or context_mask is not None:
-            default_mask = torch.tensor([True], device=device)
-            i_mask = default(input_mask, default_mask.expand(bs, sl))
-            c_mask = default(context_mask, default_mask.expand(bs, c))
-            mask = torch.cat((i_mask, c_mask), dim=1)
+        #create masks:
+        attn_mask = self._make_attn_mask(mask, context_mask, x, context)
 
         # run lsh per head (iterate through 0th dim i.e. the n_head dim), concatenate and rearrange
-        # Note: masks are reused per head
-        lsh_results = L([self.lsh_attn(q_h, k_h, v_h, mask) for q_h, k_h, v_h in zip(q, k, v)])
+        lsh_results = L([self.lsh_attn(q_h, k_h, v_h, attn_mask) for q_h, k_h, v_h in zip(q, k, v)])
         out = lsh_results.itemgot(0)                                   # split tuple (output, attn, buckets)
         out = torch.cat([head for head in out], dim=0)                 # concatenate [n_heads*bs, sl, dh]
         out = rearrange(out, '(nh bs) sl dh -> bs sl (nh dh)', bs=bs)  # [bs, sl, dim_heads] (dim_heads = head_dim * n_heads)
 
         # pass through final feed forward and maybe dropout
         out = self.out_proj(out)                                            # [bs, sl, dim]
-        return self.post_attn_dropout(out)
+        return self.out_dropout(out)
+
+    # Note: masks are reused per head and should be of size bs, sl
+    def _make_attn_mask(self, mask, context_mask, x, context):
+        if any(map(exists, (mask, context_mask))):
+            context_lenght = context.shape[-2] if context is not None else 0 # context.shape[-2] is sl dim (0 if none)
+            default_mask = torch.tensor([True], device=x.device)
+            i_mask = default(mask, default_mask.expand(bs, sl))
+            c_mask = default(context_mask, default_mask.expand(bs, context_lenght))
+            attn_mask = torch.cat((i_mask, c_mask), dim=1)
+            return attn_mask
+        else: return None #attn_mask is None if both mask and context_mask are None
+
+    def _init(self):
+        [nn.init.xavier_uniform_(w) for w in self.parameters() if w.dim()>1]
+        if self.bias:
+            [nn.init.constant_(b, 0) for b in self.parameters() if b.dim()==1]
 
 # Cell
 class ReformerAttention(Module):
@@ -572,68 +569,55 @@ class ReformerAttentionV2(Module):
                  d_model:int,
                  n_heads:int = 8,
                  causal:bool = False,
-                 mask:Tensor = None,
+                 attn_mask:Tensor = None,
                  dropout:float=0.1,
                  out_dropout:float=None,
                  bias:bool=False,
                  store_attention:bool=False,
-                 lsh_attention:bool = True,
+                 use_lsh:bool = True,
                  n_hashes:int = 8,
                  bucket_size:int = 64):
-        store_attr('causal, mask, n_heads, bias, lsh_attention')
+        store_attr('causal, attn_mask, n_heads, bias, use_lsh')
 
         out_dropout = ifnone(out_dropout, dropout)
         self.in_proj = SharedQKAttnInProj(d_model, bias=bias)
 
         self.lsh_attn = LSHAttention(bucket_size=bucket_size, n_hashes=n_hashes, causal=causal,
                                      return_attn=store_attention, dropout=dropout)
-#         self.lsh_attn = LSHSelfAttention(d_model,
-#                                          n_heads = n_heads,
-#                                          bucket_size=bucket_size,
-#                                          n_hashes=n_hashes,
-#                                          causal=causal,
-#                                          dropout=dropout,
-#                                          return_attn=store_attention)
         self.full_attn = ScaledDotProdAttention(d_model, n_heads, causal=causal,
                                                 dropout=dropout, shared_qk=True,
                                                 store_attention=store_attention)
-
-#         self.full_attn = Attention(d_model,
-#                                     n_heads,
-#                                     causal=causal,
-#                                     shared_qk=True,
-#                                     dropout=dropout,
-#                                     store_attention=store_attention)
 
         self.out_proj = nn.Linear(d_model, d_model, bias=bias)
         self.dropout = nn.Dropout(out_dropout)
         self._init()
 
-    def forward(self, x, context=None, input_mask=None, context_mask=None):
+    def forward(self, x, context=None, mask=None, context_mask=None):
         #doesn't support cross attention for now?
         assert context is None, "sharedQK doesn't support cross attention yet"
         q, k, v = self.in_proj(x)
         # use LSH
-        if self.lsh_attention:
+        attn_mask = self._make_attn_mask(mask, context_mask, x, context)
+        if self.use_lsh:
             q, k, v = map(lambda t: rearrange(t, 'bs sl (nh dh) -> nh bs sl dh', nh=self.n_heads), (q, k, v))
 
             # masks have shape [bs, sl] and are maybe concatenated [bs, sl*2]
-            mask = None
-            if input_mask is not None or context_mask is not None:
-                default_mask = torch.tensor([True], device=device)
-                i_mask = default(input_mask, default_mask.expand(bs, sl))
-                c_mask = default(context_mask, default_mask.expand(bs, c))
-                mask = torch.cat((i_mask, c_mask), dim=1)
+            # attn_mask = None
+            # if mask is not None or context_mask is not None:
+            #    default_mask = torch.tensor([True], device=device)
+            #    i_mask = default(mask, default_mask.expand(bs, sl))
+            #    c_mask = default(context_mask, default_mask.expand(bs, c))
+            #    attn_mask = torch.cat((i_mask, c_mask), dim=1)
 
             # run lsh per head (iterate through 0th dim i.e. the n_head dim), concatenate and rearrange
             # Note: masks are reused per head
-            lsh_results = L([self.lsh_attn(q_h, k_h, v_h, mask) for q_h, k_h, v_h in zip(q, k, v)])
+            lsh_results = L([self.lsh_attn(q_h, k_h, v_h, attn_mask) for q_h, k_h, v_h in zip(q, k, v)])
             out = lsh_results.itemgot(0)                                   # split tuple (output, attn, buckets)
             out = torch.cat([head for head in out], dim=0)                 # concatenate [n_heads*bs, sl, dh]
             out = rearrange(out, '(nh bs) sl dh -> bs sl (nh dh)', bs=bs)  # [bs, sl, dim_heads] (dim_heads = head_dim * n_heads)
         # use full attention
         else:
-            out = self.full_attn(q, k, v)
+            out = self.full_attn(q, k, v, attn_mask)
 
         out = self.out_proj(out)
         return self.dropout(out)
@@ -642,4 +626,15 @@ class ReformerAttentionV2(Module):
         [nn.init.xavier_uniform_(w) for w in self.parameters() if w.dim()>1]
         if self.bias:
             [nn.init.constant_(b, 0) for b in self.parameters() if b.dim()==1]
-    #TODO: add mask generation
+    #TODO: add attn_mask generation
+    def _make_attn_mask(self, mask, context_mask, x, context):
+        b, n, _, device = *x.size(), x.device
+        if any(map(exists, (mask, context_mask))):
+            q_mask = default(mask, lambda: torch.ones((b, n), device=device).bool())
+            self_mask = q_mask[:, None, :, None] * q_mask[:, None, None, :]
+            if exists(context):
+                k_mask = default(context_mask, lambda: torch.ones((b, context.shape[-2]), device=device).bool())
+                cross_mask = q_mask[:, None, :, None] * k_mask[:, None, None, :]
+            else: cross_mask = torch.empty(0, dtype=self_mask.dtype, device=device)
+            return torch.cat([self_mask, cross_mask], dim=-1)
+        else: return None #attn_mask is None if both mask and context_mask are None
