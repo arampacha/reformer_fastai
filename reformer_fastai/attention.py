@@ -496,6 +496,7 @@ class LSHSelfAttention(Module):
             i_mask = default(mask, default_mask.expand(bs, sl))
             c_mask = default(context_mask, default_mask.expand(bs, 0))  # our context length is always 0
             attn_mask = torch.cat((i_mask, c_mask), dim=1)
+            return attn_mask
         else: return None #attn_mask is None if both mask and context_mask are None
 
     def _init(self):
