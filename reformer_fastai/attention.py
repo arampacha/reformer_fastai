@@ -88,7 +88,7 @@ class ScaledDotProdAttention(Module):
         if self.shared_qk:
             b, h, i, j = dots.shape[:]
             m = torch.arange(i)
-            self_mask = torch.zeros(b, h, i, j).bool()
+            self_mask = torch.zeros(b, h, i, j, device=dots.device).bool()
             self_mask[:, :, m, m] = True
             dots.masked_fill_(self_mask, SELF_ATTN_MASK_VAL)
             del self_mask

@@ -12,7 +12,10 @@
     "Metrics":"metrics.html",
     "": {
       "Experiments": {
-        "Synthetic task": "/experiment.synthetic-task.html"
+        "Synthetic task": "/experiment.synthetic-task.html",
+        "enwik8 baseline": "/experiment.enwik8_baseline.html",
+        "enwik8 SharedQK": "/experiment.enwik8_sharedQK.html",
+        "enwik8 Reversible": "/experiment.enwik8_reversible.html"
       }
     }
   }

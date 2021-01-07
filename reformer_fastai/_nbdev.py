@@ -71,6 +71,7 @@ index = {"exists": "00_core.ipynb",
          "read_and_prepare_data": "06_data.ipynb",
          "MaskedAccuracy": "07_metrics.ipynb",
          "BPC": "07_metrics.ipynb",
+         "bpc": "07_metrics.ipynb",
          "Adafactor": "08_optimizers.ipynb",
          "adafactor": "08_optimizers.ipynb"}
 
