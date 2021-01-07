@@ -466,18 +466,18 @@ class LSHSelfAttention(Module):
         self.out_dropout = nn.Dropout(out_dropout)
         self._init()
 
-    def forward(self, x, mask = None, context_mask = None, **kwargs):
+    def forward(self, x, context = None, mask = None, context_mask = None, **kwargs):
         device, dtype = x.device, x.dtype
         bs, sl, d_model = x.shape
 
         # project keys, queries and valuess
-        q, k, v = self.in_proj(x)     # [bs, sl, d_model]
+        q, k, v = self.in_proj(x, context)     # [bs, sl(+csl), d_model]
 
         # split off head dimension for q, k and v. Resulting shapes are: [nh, bs, sl, dim_head]
         q, k, v = map(lambda t: rearrange(t, 'bs sl (nh dh) -> nh bs sl dh', nh=self.n_heads), (q, k, v))
 
         #create masks:
-        attn_mask = self._make_attn_mask(mask, context_mask, x, context=None) #assume no context atm
+        attn_mask = self._make_attn_mask(mask, context_mask, x, context)
 
         # run lsh per head (iterate through 0th dim i.e. the n_head dim), concatenate and rearrange
         lsh_results = L([self.lsh_attn(q_h, k_h, v_h, attn_mask) for q_h, k_h, v_h in zip(q, k, v)])
@@ -492,9 +492,10 @@ class LSHSelfAttention(Module):
     # Note: masks are reused per head and should be of size bs, sl
     def _make_attn_mask(self, mask, context_mask, x, context):
         if any(map(exists, (mask, context_mask))):
+            context_lenght = context.shape[-2] if context is not None else 0 # context.shape[-2] is sl dim (0 if none)
             default_mask = torch.tensor([True], device=x.device)
             i_mask = default(mask, default_mask.expand(bs, sl))
-            c_mask = default(context_mask, default_mask.expand(bs, 0))  # our context length is always 0
+            c_mask = default(context_mask, default_mask.expand(bs, context_lenght))
             attn_mask = torch.cat((i_mask, c_mask), dim=1)
             return attn_mask
         else: return None #attn_mask is None if both mask and context_mask are None
