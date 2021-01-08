@@ -599,6 +599,7 @@ class ReformerAttentionV2(Module):
         # use LSH
         attn_mask = self._make_attn_mask(mask, context_mask, x, context)
         if self.use_lsh:
+            bs = x.size(0)
             q, k, v = map(lambda t: rearrange(t, 'bs sl (nh dh) -> nh bs sl dh', nh=self.n_heads), (q, k, v))
 
             # masks have shape [bs, sl] and are maybe concatenated [bs, sl*2]
