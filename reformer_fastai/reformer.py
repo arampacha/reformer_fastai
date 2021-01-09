@@ -40,7 +40,7 @@ class ChunkedFeedForward(Module):
             )
         self.chunks = chunks
         self.dim = dim
-    def forward(self, x):
+    def forward(self, x, **kwargs):
         if self.chunks == 1:
             return self.net(x)
         chunks = x.chunk(self.chunks, dim = self.dim)
@@ -184,8 +184,7 @@ class ReversibleSequence(Module):
     Stack of ReversibleBlocks constructed from blocks.Applies ReversibleBlocks if
     sequence length is > rev_thres or else IrreversibleBlocks.
     """
-    def __init__(self, blocks, layer_dropout = 0., rev_thres = 0, send_signal = False):
-        self.layer_dropout = layer_dropout
+    def __init__(self, blocks, rev_thres = 0, send_signal = False):
         self.rev_thres = rev_thres # uses revblocks if seq_len else irrev_blocks
 
         self.blocks = nn.ModuleList([ReversibleBlock(f, g, depth, send_signal) for depth, (f, g) in enumerate(blocks)])
@@ -195,12 +194,8 @@ class ReversibleSequence(Module):
         reverse = x.shape[1] > self.rev_thres
         blocks = self.blocks if reverse else self.irrev_blocks
 
-        if self.training and self.layer_dropout > 0:
-            to_drop = torch.empty(len(self.blocks)).uniform_(0, 1) < self.layer_dropout
-            blocks = [block for block, drop in zip(self.blocks, to_drop) if not drop]
-            blocks = self.blocks[:1] if len(blocks) == 0 else blocks
-
         f_args, g_args = map(lambda route: kwargs if route else {}, arg_route)
+#         print(f_args, g_args)
         block_kwargs = {'f_args': f_args, 'g_args': g_args}
 
         if not reverse:
@@ -233,8 +228,6 @@ class ReversibleEncoder(Module):
         blocks = []
         norm_wrapper = PreNorm if prenorm else PostNorm
         for ind in range(n_layers):
-            layer_num = ind + 1
-
             attn = Attention(d_model, n_heads, causal=causal, dropout=attn_dropout, out_dropout=post_attn_dropout, bias=attn_bias)
             ff = ChunkedFeedForward(d_model, d_ff, chunks=ff_chunks, dropout=ff_dropout, dim=1)
 
@@ -248,7 +241,7 @@ class ReversibleEncoder(Module):
 
     def forward(self, x, **kwargs):
         x = torch.cat([x, x], dim = -1)
-        arg_route = (True, False)
+        arg_route = (False, False)
         # pdb.set_trace()
         x = self.layers(x, arg_route = arg_route, **kwargs)
         x = torch.stack(x.chunk(2, dim=-1)).mean(dim=0)
@@ -287,8 +280,6 @@ class ReversibleDecoder(nn.Module):
         norm_wrapper = PreNorm if prenorm else PostNorm
         blocks = []
         for ind in range(n_layers):
-            layer_num = ind + 1
-
             f = norm_wrapper(d_model, get_attn())
             g = norm_wrapper(d_model, get_ff())
 
@@ -629,19 +620,15 @@ class ReformerEncoder(Module):
         blocks = []
         norm_wrapper = PreNorm if prenorm else PostNorm
         for ind in range(n_layers):
-            layer_num = ind + 1
-
             attn = ReformerAttentionV2(d_model, n_heads=n_heads, causal=causal, dropout=attn_dropout,
                                        bias=attn_bias, use_lsh=use_lsh, n_hashes=n_hashes, bucket_size=bucket_size)
             ff = ChunkedFeedForward(d_model, d_ff, chunks=ff_chunks, dropout=ff_dropout, dim=1)
 
             f = norm_wrapper(d_model, attn)
             g = norm_wrapper(d_model, ff)
-
             blocks.append(nn.ModuleList([f, g]))
         self.norm = final_norm(d_model) if exists(final_norm) else None
-        # send_signal is not implemented for now
-        self.layers = ReversibleSequence(nn.ModuleList(blocks), rev_thres=rev_thres, send_signal=False)
+        self.layers = ReversibleSequence(nn.ModuleList(blocks), rev_thres=rev_thres, send_signal=True)
 
     def forward(self, x, **kwargs):
         x = torch.cat([x, x], dim = -1)
