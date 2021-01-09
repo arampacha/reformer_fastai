@@ -52,6 +52,12 @@ entries:
           title: enwik8 Reversible
           url: /experiment.enwik8_reversible.html
         title: Experiments
+      - output: web
+        subfolderitems:
+        - output: web,pdf
+          title: LSH walkthru
+          url: /exploration.LSH.html
+        title: Exploration
     output: web
     title: reformer_fastai
   output: web

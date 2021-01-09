@@ -17,6 +17,11 @@
         "enwik8 SharedQK": "/experiment.enwik8_sharedQK.html",
         "enwik8 Reversible": "/experiment.enwik8_reversible.html"
       }
+    },
+    "empty1": {
+      "Exploration": {
+        "LSH walkthru": "/exploration.LSH.html"
+      }
     }
   }
 }
