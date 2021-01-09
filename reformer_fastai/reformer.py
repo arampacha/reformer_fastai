@@ -195,7 +195,6 @@ class ReversibleSequence(Module):
         blocks = self.blocks if reverse else self.irrev_blocks
 
         f_args, g_args = map(lambda route: kwargs if route else {}, arg_route)
-#         print(f_args, g_args)
         block_kwargs = {'f_args': f_args, 'g_args': g_args}
 
         if not reverse:
