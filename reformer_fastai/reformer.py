@@ -2,7 +2,7 @@
 
 __all__ = ['Chunk', 'ChunkedFeedForward', 'Deterministic', 'ReversibleBlock', 'IrreversibleBlock', 'ReversibleSequence',
            'ReversibleEncoder', 'ReversibleDecoder', 'ReversibleLM', 'ReversibleTransformer', 'LSHEncoderBlock',
-           'LSHEncoder', 'LSHLM', 'ReformerEncoder', 'ReformerDecoder', 'ReformerLM', 'ReformerEncDec']
+           'LSHEncoder', 'LSHLM', 'ReformerEncoder', 'ReformerLM']
 
 # Cell
 from torch.autograd.function import Function
@@ -40,7 +40,7 @@ class ChunkedFeedForward(Module):
             )
         self.chunks = chunks
         self.dim = dim
-    def forward(self, x):
+    def forward(self, x, **kwargs):
         if self.chunks == 1:
             return self.net(x)
         chunks = x.chunk(self.chunks, dim = self.dim)
@@ -184,8 +184,7 @@ class ReversibleSequence(Module):
     Stack of ReversibleBlocks constructed from blocks.Applies ReversibleBlocks if
     sequence length is > rev_thres or else IrreversibleBlocks.
     """
-    def __init__(self, blocks, layer_dropout = 0., rev_thres = 0, send_signal = False):
-        self.layer_dropout = layer_dropout
+    def __init__(self, blocks, rev_thres = 0, send_signal = False):
         self.rev_thres = rev_thres # uses revblocks if seq_len else irrev_blocks
 
         self.blocks = nn.ModuleList([ReversibleBlock(f, g, depth, send_signal) for depth, (f, g) in enumerate(blocks)])
@@ -194,11 +193,6 @@ class ReversibleSequence(Module):
     def forward(self, x, arg_route = (True, True), **kwargs):
         reverse = x.shape[1] > self.rev_thres
         blocks = self.blocks if reverse else self.irrev_blocks
-
-        if self.training and self.layer_dropout > 0:
-            to_drop = torch.empty(len(self.blocks)).uniform_(0, 1) < self.layer_dropout
-            blocks = [block for block, drop in zip(self.blocks, to_drop) if not drop]
-            blocks = self.blocks[:1] if len(blocks) == 0 else blocks
 
         f_args, g_args = map(lambda route: kwargs if route else {}, arg_route)
         block_kwargs = {'f_args': f_args, 'g_args': g_args}
@@ -233,8 +227,6 @@ class ReversibleEncoder(Module):
         blocks = []
         norm_wrapper = PreNorm if prenorm else PostNorm
         for ind in range(n_layers):
-            layer_num = ind + 1
-
             attn = Attention(d_model, n_heads, causal=causal, dropout=attn_dropout, out_dropout=post_attn_dropout, bias=attn_bias)
             ff = ChunkedFeedForward(d_model, d_ff, chunks=ff_chunks, dropout=ff_dropout, dim=1)
 
@@ -248,7 +240,7 @@ class ReversibleEncoder(Module):
 
     def forward(self, x, **kwargs):
         x = torch.cat([x, x], dim = -1)
-        arg_route = (True, False)
+        arg_route = (False, False)
         # pdb.set_trace()
         x = self.layers(x, arg_route = arg_route, **kwargs)
         x = torch.stack(x.chunk(2, dim=-1)).mean(dim=0)
@@ -287,8 +279,6 @@ class ReversibleDecoder(nn.Module):
         norm_wrapper = PreNorm if prenorm else PostNorm
         blocks = []
         for ind in range(n_layers):
-            layer_num = ind + 1
-
             f = norm_wrapper(d_model, get_attn())
             g = norm_wrapper(d_model, get_ff())
 
@@ -605,124 +595,54 @@ class LSHLM(Module, LMMixin):
             if isinstance(m, ReformerAttentionV2): m.use_lsh=val
 
 # Cell
-# mess for now; will clean up after LSHAttention args finalized
-class ReformerEncoder(nn.Module):
+class ReformerEncoder(Module):
+    "Stack of ReversibleBlocks"
     def __init__(self,
-                 d_model,
-                 n_layers,
-                 heads = 8,
-                 max_seq_len = 512,
-                 d_head = None,
-                 bucket_size = 64,
-                 n_hashes = 8,
-                 ff_chunks = 100,
-                 attn_chunks = None, # ??
-                 causal = False,
-                 weight_tie = False, # ??
-                 attn_dropout = 0.,
-                 post_attn_dropout = 0.,
-                 lsh_dropout = 0.,
-                 ff_dropout = 0.,
-                 d_ff = None,
-                 layer_dropout = 0.,
-                 lsh_attend_across_buckets = True,
-                 lsh_allow_duplicate_attention = True,
-                 random_rotations_per_head = False,
-                 use_full_attn = False,
-                 full_attn_thres = 0,
-                 rev_thres = 0,
-                 one_value_head = False,
-                 n_local_attn_heads = 0,
-                 prenorm=True):
-        super().__init__()
-        self.d_model = d_model
-        self.n_layers = n_layers
-
-        self.bucket_size = bucket_size
-        # self.full_attn_thres = full_attn_thres
-
-        # use regular attention for now
-        get_attn = lambda: Attention(d_model, heads, causal=causal, dropout=attn_dropout)
-        # get_attn = lambda: LSHSelfAttention(d_model, heads, bucket_size, n_hashes, causal = causal, d_head = d_head, dropout = lsh_dropout, post_attn_dropout = post_attn_dropout, attn_chunks = attn_chunks, allow_duplicate_attention = lsh_allow_duplicate_attention, attend_across_buckets = lsh_attend_across_buckets, random_rotations_per_head = random_rotations_per_head, num_mem_kv = num_mem_kv, use_full_attn = use_full_attn, full_attn_thres = full_attn_thres, one_value_head = one_value_head, n_local_attn_heads = n_local_attn_heads)
-        # get_ff = lambda: Chunk(ff_chunks, FeedForward(d_model, d_ff=d_ff, dropout=ff_dropout), dim = -2)
-        get_ff = lambda: ChunkedFeedForward(d_model, d_ff, chunks=ff_chunks, dropout=ff_dropout, dim=1)
-
+                 d_model:int,
+                 n_layers:int=6,
+                 n_heads:int = 8,
+                 max_seq_len:int = 512,
+                 ff_chunks:int = 1,
+                 causal:bool = False,
+                 attn_dropout:float = 0.,
+                 post_attn_dropout:float = None,
+                 attn_bias:bool=False,
+                 ff_dropout:float = 0.,
+                 d_ff:int = None,
+                 prenorm:bool=True,
+                 final_norm:Module=None,
+                 rev_thres:int=0,
+                 use_lsh:bool=True,
+                 n_hashes:int=8,
+                 bucket_size:int=64):
+        # store_attr()
         blocks = []
-        #residual_fn_wrapper = ReZero if use_rezero else partial(PreNorm, norm_type, d_model)
         norm_wrapper = PreNorm if prenorm else PostNorm
-
         for ind in range(n_layers):
-            layer_num = ind + 1
-
-            attn = get_attn()
-            ff = get_ff()
+            attn = ReformerAttentionV2(d_model, n_heads=n_heads, causal=causal, dropout=attn_dropout,
+                                       bias=attn_bias, use_lsh=use_lsh, n_hashes=n_hashes, bucket_size=bucket_size)
+            ff = ChunkedFeedForward(d_model, d_ff, chunks=ff_chunks, dropout=ff_dropout, dim=1)
 
             f = norm_wrapper(d_model, attn)
             g = norm_wrapper(d_model, ff)
-
             blocks.append(nn.ModuleList([f, g]))
-        # send_signal is not implemented for now
-        self.layers = ReversibleSequence(nn.ModuleList(blocks), layer_dropout=layer_dropout, rev_thres=rev_thres, send_signal=False)
+        self.norm = final_norm(d_model) if exists(final_norm) else None
+        self.layers = ReversibleSequence(nn.ModuleList(blocks), rev_thres=rev_thres, send_signal=True)
 
     def forward(self, x, **kwargs):
         x = torch.cat([x, x], dim = -1)
         arg_route = (True, False)
         # pdb.set_trace()
         x = self.layers(x, arg_route = arg_route, **kwargs)
-        return torch.stack(x.chunk(2, dim=-1)).mean(dim=0)
+        x = torch.stack(x.chunk(2, dim=-1)).mean(dim=0)
+        if exists(self.norm): x = self.norm(x)
+        return x
 
 # Cell
-class ReformerDecoder(nn.Module):
-    def __init__(self,
-                 d_model,
-                 n_layers = 6,
-                 heads = 8,
-                 max_seq_len = 512,
-                 d_head = None,
-                 bucket_size = 64,
-                 n_hashes = 8,
-                 ff_chunks = 100,
-                 attn_chunks = None, # ??
-                 causal = False,
-                 weight_tie = False, # weight sharing option do we need to keep this?
-                 attn_dropout = 0.,
-                 post_attn_dropout = 0.,
-                 ff_dropout = 0.,
-                 d_ff = None,
-                 layer_dropout = 0.,
-                 prenorm=True,
-                 rev_thres = 0,
-                 ):
-        super().__init__()
-        self.d_model = d_model
-        self.n_layers = n_layers
-
-        # use regular attention for now
-        get_attn = lambda: DecoderAttention(d_model, heads, causal=causal, dropout=attn_dropout)
-        get_ff = lambda: ChunkedFeedForward(d_model, d_ff, chunks=ff_chunks, dropout=ff_dropout, dim=1)
-        norm_wrapper = PreNorm if prenorm else PostNorm
-        blocks = []
-        for ind in range(n_layers):
-            layer_num = ind + 1
-
-            f = norm_wrapper(d_model, get_attn())
-            g = norm_wrapper(d_model, get_ff())
-
-            blocks.append(nn.ModuleList([f, g]))
-        # send_signal is not implemented for now
-        self.layers = ReversibleSequence(nn.ModuleList(blocks), layer_dropout=layer_dropout, rev_thres=rev_thres, send_signal=False)
-
-    def forward(self, x, **kwargs):
-        x = torch.cat([x, x], dim = -1)
-        arg_route = (True, False)
-        # pdb.set_trace()
-        x = self.layers(x, arg_route = arg_route, **kwargs)
-        return torch.stack(x.chunk(2, dim=-1)).mean(dim=0)
-
-# Cell
-class ReformerLM(nn.Module):#, TransformerLM):
+class ReformerLM(Module, LMMixin):
     """
-    Reformer for language modelling
+    Reformer for language modelling with LSH attention
+
     Parameters:
         * vocab_sz: int
         * d_model: int - inner dimension of the model
@@ -749,200 +669,53 @@ class ReformerLM(nn.Module):#, TransformerLM):
         * logits - target token logits, shape [bs, sl, vocab_sz]
     """
     def __init__(self,
-                 vocab_sz,
-                 d_model,
-                 n_layers = 6,
-                 tie_weights = True,
-                 max_seq_len = 512,
-                 heads = 8,
-                 d_head = None,
-                 bucket_size = 64,
-                 n_hashes = 8,
-                 ff_chunks = 100,
-                 attn_chunks = None, # ??
-                 causal = True,
-                 weight_tie = False, # ??
-                 attn_dropout = 0.,
-                 post_attn_dropout = 0.,
-                 lsh_dropout = 0.,
-                 ff_dropout = 0.,
-                 d_ff = None,
-                 layer_dropout = 0.,
-                 lsh_attend_across_buckets = True,
-                 lsh_allow_duplicate_attention = True,
-                 random_rotations_per_head = False,
-                 use_full_attn = False,
-                 full_attn_thres = 0,
-                 rev_thres = 0,
-                 one_value_head = False,
-                 n_local_attn_heads = 0,
-                 prenorm=True):
-        super().__init__()
-        self.emb = TransformerEmbedding(vocab_sz, d_model, max_seq_len=max_seq_len)
-        #temp line to mark we need to pass more args to encoder
-        kwargs = {}
-        self.encoder = ReformerEncoder(d_model, n_layers, max_seq_len=max_seq_len, causal=causal, rev_thres=rev_thres,
-                                        **kwargs)
+                 vocab_sz:int,
+                 d_model:int,
+                 n_layers:int=6,
+                 n_heads:int=8,
+                 d_ff:int=None,
+                 ff_chunks:int=1,
+                 attn_dropout:float=0.1,
+                 ff_dropout:float=0.1,
+                 emb_dropout:float=0.1,
+                 tie_weights:bool=True,
+                 causal:bool=True,
+                 pos_enc:str='absolute',
+                 max_seq_len:int=512,
+                 axial_shape:tuple=None,
+                 axial_emb_dims:tuple=None,
+                 pad_idx:int=None,
+                 prenorm:bool=False,
+                 attn_bias:bool=False,
+                 use_lsh:bool=True,
+                 n_hashes:int=8,
+                 bucket_size:int=64,
+                 rev_thres:int=0,
+                 ):
+        store_attr('max_seq_len, n_layers, pad_idx')
+        self._use_lsh = use_lsh
+        self.emb = TransformerEmbedding(vocab_sz, d_model, max_seq_len, dropout=emb_dropout,
+                                        pos_enc=pos_enc, axial_shape=axial_shape,
+                                        axial_emb_dims=axial_emb_dims)
+        final_norm = nn.LayerNorm if prenorm else None
+        self.encoder = ReformerEncoder(d_model, n_layers, n_heads, causal=causal, d_ff=d_ff,
+                                      attn_dropout=attn_dropout, ff_dropout=ff_dropout,
+                                      prenorm=prenorm, attn_bias=attn_bias, use_lsh=use_lsh,
+                                      final_norm=final_norm, n_hashes=n_hashes, bucket_size=bucket_size,
+                                      ff_chunks=ff_chunks, rev_thres=rev_thres)
         self.proj = nn.Linear(d_model, vocab_sz)
         if tie_weights: self.proj.weight = self.emb.emb.weight
+
     def forward(self, x, mask=None):
         x = self.emb(x)
         x = self.encoder(x, mask=mask)
         return self.proj(x)
 
-# Cell
-class ReformerEncDec(nn.Module):
-    """
-    Basic Transformer Encoder-Decoder model
-    Parameters:
-        * enc_vocab_sz: int - source vocab size
-        * dec_vocab_sz: int - target vocab size
-        * d_model: int - inner dimension of the model
-        * n_enc_layers: int (default: 6)
-        * n_dec_layers: int (default: 6)
-        * heads: int (default: 8)
-        * d_ff: int - inner dimension of the FeedForward net, if None defaults to 4*d_model
-        * attn_dropout: float - attention dropout
-        * ff_dropout: float - feed-forward dropout
-        * emb_dropout: float - embedding dropout
-        * max_seq_len: int (default: 512)
-        * prenorm: bool - whether to use PreNorm or PostNorm
-        * attn_bias: bool - whether to allow biases in attention projection layers
-        * pad_idx: int - padding token id, if pad_idx is provided, and no mask/context_mask are passed to
-                forward method will be used to generate padding masks
-        * tie_weights: bool - if True target embedding weights are used for computation output projection
-        * shared_emb: bool - if True encoder and decoder will use shared embedding layer
-        * pos_enc: str from {'absolute', 'fixed', 'axial'} - type of positional encoding to use
-        * axial_shape: tuple - required if 'axial' positional encoding are used, should be factors of
-                max_seq_len
-        * axial_emb_dims: tuple - [optional] axial embedding components, should sum to d_model
-    Inputs:
-        * src - source input ids, shape [bs, src_sl]
-        * tgt - target input ids, shape [bs, tgt_sl]
-        * src_mask - optional boolean source mask, shape [bs, src_sl]
-        * tgt_mask - optional boolean target mask, shape [bs, tgt_sl]
-    Returns:
-        * logits - target token logits, shape [bs, tgt_sl, tgt_vocab_sz]
-    """
-    def __init__(self,
-                 enc_vocab_sz,
-                 dec_vocab_sz,
-                 d_model,
-                 n_layers=6,
-                 heads=8,
-                 max_seq_len=512,
-                 pad_idx=None,
-                 tie_weights=True,
-                 emb_dropout=0.1,
-                 attn_dropout=0.1,
-                 ff_dropout=0.1,
-                 pos_enc='absolute',
-                 d_ff=None,
-                 prenorm=False,
-                 axial_shape=None,
-                 axial_emb_dims=None,
-                 comb_attn=False,
-                 rev_thres=0):
-        super().__init__()
-        self.max_seq_len = max_seq_len
-        self.n_layers = n_layers
-        self.pad_idx = pad_idx
-        self.enc_emb = TransformerEmbedding(enc_vocab_sz, d_model, max_seq_len, dropout=emb_dropout,
-                                            axial_shape=axial_shape, axial_emb_dims=axial_emb_dims)
-        self.dec_emb = TransformerEmbedding(dec_vocab_sz, d_model, max_seq_len, dropout=emb_dropout,
-                                            axial_shape=axial_shape, axial_emb_dims=axial_emb_dims)
-        self.encoder = ReformerEncoder(d_model, n_layers, heads, d_ff=d_ff, attn_dropout=attn_dropout, ff_dropout=ff_dropout, prenorm=prenorm, rev_thres=rev_thres)
-        self.decoder = ReformerDecoder(d_model, n_layers, heads, d_ff=d_ff, attn_dropout=attn_dropout, ff_dropout=ff_dropout, prenorm=prenorm, rev_thres=rev_thres)
-        self.proj = nn.Linear(d_model, dec_vocab_sz)
-        if tie_weights: self.proj.weight = self.dec_emb.emb.weight
-
-    def forward(self, src, tgt, src_mask = None, tgt_mask = None):
-        src_mask = default(src_mask, self.get_padding_mask(src))
-        tgt_mask = default(tgt_mask, self.get_padding_mask(tgt))
-        enc = self.encoder(self.enc_emb(src), mask = src_mask)
-        out = self.decoder(self.dec_emb(tgt), context=enc, mask=tgt_mask, context_mask=src_mask)
-        return self.proj(out)
-    def get_padding_mask(self, x):
-        if self.pad_idx is None: return None
-        return (x != self.pad_idx)
-    #TODO add beam search and refactor
-    @torch.no_grad()
-    def generate(self, src,
-                src_mask=None,
-                max_len=50,
-                temperature=1.,
-                method = 'top_k',
-                top_k = 20,
-                top_p = 0.9,
-                early_stopping=False,
-                bos_idx=2, # TODO change to match future usecases
-                eos_idx=None):
-        self.to(src.device) #TODO test for potential problems
-        self.eval()
-        thresh = top_k if method=='top_k' else top_p
-        sampler = _sampler[method]
-        src = expand_dim1(src)
-        bs = src.size(0)
-        inp = src.new_full((bs, 1), bos_idx) #start with bos tokens
-        pdb.set_trace()
-        src_mask = default(src_mask, self.get_padding_mask(src))
-        enc = self.encoder(self.enc_emb(src), mask = src_mask)
-        out = inp
-        for _ in range(max_len):
-            x = out[:, -self.max_seq_len:]
-            dec = self.decoder(self.dec_emb(out), context=enc)
-            logits = self.proj(dec)[:, -1, :]
-            if method == 'greedy':
-                sample = sampler(logits)
-            else:
-                filtered_logits = sampler(logits)
-                probs = F.softmax(filtered_logits / temperature, dim=-1)
-                sample = torch.multinomial(probs, 1)
-
-            out = torch.cat((out, sample), dim=-1)
-
-            if (early_stopping and
-                ((sample == eos_idx).all() or
-                (sample == self.pad_idx).all())):
-                break
-        #TODO mb output cleanup
-        return out
-
-    def store_attention(self, layer_ids=None, store_encoder=False, store_decoder=True):
-        #defaults to storing attention for all layers
-        layer_ids = default(layer_ids, list(range(self.n_layers)))
-        for module in self.children():
-            if issubclass(type(module), TransformerEncoder) and store_encoder:
-                for i, l in enumerate(module.layers):
-                    if i in layer_ids:
-                        for m in l.modules():
-                            if issubclass(type(m), (Attention)):
-                                m.store_attention = True
-            elif issubclass(type(module), TransformerDecoder) and store_decoder:
-                for i, l in enumerate(module.layers):
-                    if i in layer_ids:
-                        for m in l.modules():
-                            if issubclass(type(m), (Attention)):
-                                m.store_attention = True
-    #TODO mb separate encoder and decoder attention
-    def get_attention_matrix(self, get_encoder=False, get_decoder=True):
-        res = []
-        if get_encoder:
-            for m in self.encoder.modules():
-                if issubclass(type(m), (Attention)):
-                    attention = getattr(m, 'attention', None)
-                    if attention is not None:
-                        res.append(attention)
-                    # reset stored attention
-                    m.attention = None
-                    m.store_attention = False
-        if get_decoder:
-            for m in self.decoder.modules():
-                if issubclass(type(m), (Attention)):
-                    attention = getattr(m, 'attention', None)
-                    if attention is not None:
-                        res.append(attention)
-                    # reset stored attention
-                    m.attention = None
-                    m.store_attention = False
-        return res
+    @property
+    def use_lsh(self):
+        return self._use_lsh
+    @use_lsh.setter
+    def use_lsh(self, val):
+        self._use_lsh = val
+        for m in self.modules():
+            if isinstance(m, ReformerAttentionV2): m.use_lsh=val

@@ -480,7 +480,7 @@ class LSHSelfAttention(Module):
         attn_mask = self._make_attn_mask(mask, context_mask, x, context)
 
         # run lsh per head (iterate through 0th dim i.e. the n_head dim), concatenate and rearrange
-        lsh_results = L([self.lsh_attn(q_h, k_h, v_h, attn_mask) for q_h, k_h, v_h in zip(q, k, v)])
+        lsh_results = L([self.lsh_attn(q_h, k_h, v_h, attn_mask, **kwargs) for q_h, k_h, v_h in zip(q, k, v)])
         out = lsh_results.itemgot(0)                                   # split tuple (output, attn, buckets)
         out = torch.cat([head for head in out], dim=0)                 # concatenate [n_heads*bs, sl, dh]
         out = rearrange(out, '(nh bs) sl dh -> bs sl (nh dh)', bs=bs)  # [bs, sl, dim_heads] (dim_heads = head_dim * n_heads)
@@ -592,7 +592,7 @@ class ReformerAttentionV2(Module):
         self.dropout = nn.Dropout(out_dropout)
         self._init()
 
-    def forward(self, x, context=None, mask=None, context_mask=None):
+    def forward(self, x, context=None, mask=None, context_mask=None, **kwargs):
         #doesn't support cross attention for now?
         assert context is None, "sharedQK doesn't support cross attention yet"
         q, k, v = self.in_proj(x)
@@ -601,18 +601,9 @@ class ReformerAttentionV2(Module):
         if self.use_lsh:
             bs = x.size(0)
             q, k, v = map(lambda t: rearrange(t, 'bs sl (nh dh) -> nh bs sl dh', nh=self.n_heads), (q, k, v))
-
-            # masks have shape [bs, sl] and are maybe concatenated [bs, sl*2]
-            # attn_mask = None
-            # if mask is not None or context_mask is not None:
-            #    default_mask = torch.tensor([True], device=device)
-            #    i_mask = default(mask, default_mask.expand(bs, sl))
-            #    c_mask = default(context_mask, default_mask.expand(bs, c))
-            #    attn_mask = torch.cat((i_mask, c_mask), dim=1)
-
             # run lsh per head (iterate through 0th dim i.e. the n_head dim), concatenate and rearrange
             # Note: masks are reused per head
-            lsh_results = L([self.lsh_attn(q_h, k_h, v_h, attn_mask) for q_h, k_h, v_h in zip(q, k, v)])
+            lsh_results = L([self.lsh_attn(q_h, k_h, v_h, attn_mask, **kwargs) for q_h, k_h, v_h in zip(q, k, v)])
             out = lsh_results.itemgot(0)                                   # split tuple (output, attn, buckets)
             out = torch.cat([head for head in out], dim=0)                 # concatenate [n_heads*bs, sl, dh]
             out = rearrange(out, '(nh bs) sl dh -> bs sl (nh dh)', bs=bs)  # [bs, sl, dim_heads] (dim_heads = head_dim * n_heads)
