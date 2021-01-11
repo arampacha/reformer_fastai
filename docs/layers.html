@@ -241,7 +241,38 @@ If d_ff is None defaults to 4*d_model</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="AbsolutePositionalEmbedding" class="doc_header"><code>class</code> <code>AbsolutePositionalEmbedding</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/layers.py#L76" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>AbsolutePositionalEmbedding</code>(<strong><code>d_emb</code></strong>:<code>int</code>, <strong><code>max_seq_len</code></strong>:<code>int</code>) :: <code>Module</code></p>
+<h4 id="get_axial_dims" class="doc_header"><code>get_axial_dims</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/layers.py#L77" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_axial_dims</code>(<strong><code>d_emb</code></strong>, <strong><code>n</code></strong>)</p>
+</blockquote>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h2 id="AbsolutePositionalEmbedding" class="doc_header"><code>class</code> <code>AbsolutePositionalEmbedding</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/layers.py#L83" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>AbsolutePositionalEmbedding</code>(<strong><code>d_emb</code></strong>:<code>int</code>, <strong><code>max_seq_len</code></strong>:<code>int</code>) :: <code>Module</code></p>
 </blockquote>
 <p>Learnable absolute positional encodings</p>
 
@@ -273,7 +304,7 @@ If d_ff is None defaults to 4*d_model</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="FixedPositionalEmbedding" class="doc_header"><code>class</code> <code>FixedPositionalEmbedding</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/layers.py#L86" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>FixedPositionalEmbedding</code>(<strong><code>d_emb</code></strong>:<code>int</code>) :: <code>Module</code></p>
+<h2 id="FixedPositionalEmbedding" class="doc_header"><code>class</code> <code>FixedPositionalEmbedding</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/layers.py#L93" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>FixedPositionalEmbedding</code>(<strong><code>d_emb</code></strong>:<code>int</code>) :: <code>Module</code></p>
 </blockquote>
 <p>Fixed positional encodings</p>
 
@@ -305,7 +336,7 @@ If d_ff is None defaults to 4*d_model</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="TransformerEmbedding" class="doc_header"><code>class</code> <code>TransformerEmbedding</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/layers.py#L99" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TransformerEmbedding</code>(<strong><code>emb_sz</code></strong>:<code>int</code>, <strong><code>d_emb</code></strong>:<code>int</code>, <strong><code>max_seq_len</code></strong>:<code>int</code>=<em><code>512</code></em>, <strong><code>dropout</code></strong>:<code>float</code>=<em><code>0.0</code></em>, <strong><code>pos_enc</code></strong>:<code>str</code>=<em><code>'absolute'</code></em>, <strong><code>axial_shape</code></strong>:<code>Tuple</code>=<em><code>None</code></em>, <strong><code>axial_emb_dims</code></strong>:<code>Tuple</code>=<em><code>None</code></em>) :: <code>Module</code></p>
+<h2 id="TransformerEmbedding" class="doc_header"><code>class</code> <code>TransformerEmbedding</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/layers.py#L106" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TransformerEmbedding</code>(<strong><code>emb_sz</code></strong>:<code>int</code>, <strong><code>d_emb</code></strong>:<code>int</code>, <strong><code>max_seq_len</code></strong>:<code>int</code>=<em><code>512</code></em>, <strong><code>dropout</code></strong>:<code>float</code>=<em><code>0.0</code></em>, <strong><code>pos_enc</code></strong>:<code>str</code>=<em><code>'absolute'</code></em>, <strong><code>axial_shape</code></strong>:<code>Tuple</code>=<em><code>None</code></em>, <strong><code>axial_emb_dims</code></strong>:<code>Tuple</code>=<em><code>None</code></em>) :: <code>Module</code></p>
 </blockquote>
 <p>Combines token embedings with positional encodings
 pos_enc: str from {'absolute', 'fixed', 'axial'}</p>
@@ -323,6 +354,46 @@ pos_enc: str from {'absolute', 'fixed', 'axial'}</p>
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">fix_emb</span> <span class="o">=</span> <span class="n">TransformerEmbedding</span><span class="p">(</span><span class="mi">256</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="n">pos_enc</span><span class="o">=</span><span class="s1">&#39;fixed&#39;</span><span class="p">)</span>
+<span class="n">abs_emb</span> <span class="o">=</span> <span class="n">TransformerEmbedding</span><span class="p">(</span><span class="mi">256</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="n">pos_enc</span><span class="o">=</span><span class="s1">&#39;absolute&#39;</span><span class="p">)</span>
+<span class="n">axl_emb</span> <span class="o">=</span> <span class="n">TransformerEmbedding</span><span class="p">(</span><span class="mi">256</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="n">pos_enc</span><span class="o">=</span><span class="s1">&#39;axial&#39;</span><span class="p">,</span> <span class="n">axial_shape</span><span class="o">=</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span><span class="mi">16</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Total number of parameters in embedding layer&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Fixed:    </span><span class="si">{</span><span class="n">total_params</span><span class="p">(</span><span class="n">fix_emb</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Absolute: </span><span class="si">{</span><span class="n">total_params</span><span class="p">(</span><span class="n">abs_emb</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Axial:    </span><span class="si">{</span><span class="n">total_params</span><span class="p">(</span><span class="n">axl_emb</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Total number of parameters in embedding layer
+Fixed:    16384
+Absolute: 49152
+Axial:    17920
+</pre>
+</div>
+</div>
+
+</div>
+</div>
 
 </div>
     {% endraw %}
