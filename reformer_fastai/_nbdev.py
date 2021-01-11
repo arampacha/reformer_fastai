@@ -77,7 +77,8 @@ index = {"exists": "00_core.ipynb",
          "BPC": "07_metrics.ipynb",
          "bpc": "07_metrics.ipynb",
          "Adafactor": "08_optimizers.ipynb",
-         "adafactor": "08_optimizers.ipynb"}
+         "adafactor": "08_optimizers.ipynb",
+         "Learner.gather_args": "09_logging.ipynb"}
 
 modules = ["core.py",
            "layers.py",
@@ -87,7 +88,8 @@ modules = ["core.py",
            "tokenizers.py",
            "data.py",
            "metrics.py",
-           "optimizers.py"]
+           "optimizers.py",
+           "logging.py"]
 
 doc_url = "https://arampacha.github.io/reformer_fastai/"
 
