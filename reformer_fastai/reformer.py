@@ -608,7 +608,7 @@ class LSHLM(Module, LMMixin):
     def n_hashes(self, val):
         self._n_hashes = val
         for m in self.modules():
-            if isinstance(m, ReformerAttentionV2): m.n_hashes=val
+            if isinstance(m, LSHAttention): m.n_hashes=val
 
 # Cell
 class ReformerEncoder(Module):
