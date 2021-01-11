@@ -1330,15 +1330,15 @@ Parameters:</p>
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>{&#39;buckets:0&#39;: tensor([[ 0,  0,  1,  ..., 14, 14, 15],
-        [ 0,  0,  0,  ..., 14, 14, 15],
-        [ 0,  0,  0,  ..., 14, 14, 15],
-        [ 0,  0,  1,  ..., 14, 15, 15]])}
+<pre>{&#39;buckets:0&#39;: tensor([[ 0,  0,  0,  ..., 14, 14, 14],
+        [ 0,  0,  0,  ..., 15, 14, 14],
+        [ 1,  0,  0,  ..., 15, 14, 14],
+        [ 0,  0,  0,  ..., 15, 14, 14]])}
 torch.Size([4, 1024])
-{&#39;buckets:1&#39;: tensor([[ 1,  1,  0,  ..., 14, 15, 15],
-        [ 0,  1,  0,  ..., 15, 15, 14],
-        [ 0,  1,  0,  ..., 14, 15, 14],
-        [ 0,  1,  0,  ..., 14, 15, 15]])}
+{&#39;buckets:1&#39;: tensor([[ 0,  0,  0,  ..., 14, 15, 15],
+        [ 0,  0,  0,  ..., 14, 15, 15],
+        [ 0,  0,  0,  ..., 14, 15, 15],
+        [ 0,  0,  0,  ..., 14, 15, 15]])}
 torch.Size([4, 1024])
 </pre>
 </div>
@@ -1362,6 +1362,80 @@ torch.Size([4, 1024])
 </pre></div>
 
     </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><a href="/reformer_fastai/attention.html#LSHAttention"><code>LSHAttention</code></a> execution time depends on number of hashing rounds</p>
+
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Number of hashing rounds </span><span class="si">{</span><span class="n">model</span><span class="o">.</span><span class="n">n_hashes</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="o">%</span><span class="k">timeit</span> model(x)
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Number of hashing rounds 8
+303 ms ± 10.1 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">n_hashes</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Number of hashing rounds </span><span class="si">{</span><span class="n">model</span><span class="o">.</span><span class="n">n_hashes</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="o">%</span><span class="k">timeit</span> model(x)
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Number of hashing rounds 1
+75.5 ms ± 3.01 ms per loop (mean ± std. dev. of 7 runs, 10 loops each)
+</pre>
+</div>
+</div>
+
 </div>
 </div>
 
