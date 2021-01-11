@@ -3,7 +3,6 @@
 __all__ = []
 
 # Cell
-import wandb
 from fastai.callback.wandb import *
 from fastai.basics import *
 from fastcore.basics import *
