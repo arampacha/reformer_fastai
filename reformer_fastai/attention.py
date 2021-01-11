@@ -576,14 +576,16 @@ class ReformerAttentionV2(Module):
                  store_attention:bool=False,
                  use_lsh:bool = True,
                  n_hashes:int = 8,
-                 bucket_size:int = 64):
+                 bucket_size:int = 64,
+                 random_state:int=None):
         store_attr('causal, attn_mask, n_heads, bias, use_lsh')
 
         out_dropout = ifnone(out_dropout, dropout)
         self.in_proj = SharedQKAttnInProj(d_model, bias=bias)
 
         self.lsh_attn = LSHAttention(bucket_size=bucket_size, n_hashes=n_hashes, causal=causal,
-                                     return_attn=store_attention, dropout=dropout)
+                                     return_attn=store_attention, dropout=dropout,
+                                     random_state=random_state)
         self.full_attn = ScaledDotProdAttention(d_model, n_heads, causal=causal,
                                                 dropout=dropout, shared_qk=True,
                                                 store_attention=store_attention)
