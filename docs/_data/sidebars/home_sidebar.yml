@@ -43,6 +43,9 @@ entries:
           title: Synthetic task
           url: /experiment.synthetic-task.html
         - output: web,pdf
+          title: Synthetic task comparison
+          url: /experiment.synthetic-task-comparison.html
+        - output: web,pdf
           title: enwik8 baseline
           url: /experiment.enwik8_baseline.html
         - output: web,pdf
