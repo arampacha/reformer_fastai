@@ -9,12 +9,6 @@ entries:
     - output: web,pdf
       title: Overview
       url: /
-      - output: web
-        subfolderitems:
-        - output: web,pdf
-          title: Report Summary
-          url: /reproducibility.report_1_reproducibility_summary.html
-        title: Reformer Reproducibility
     - output: web,pdf
       title: Core
       url: core.html
