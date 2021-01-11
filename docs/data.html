@@ -47,7 +47,7 @@ nb_path: "nbs/06_data.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="read_lines" class="doc_header"><code>read_lines</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/data.py#L15" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>read_lines</code>(<strong><code>path</code></strong>)</p>
+<h4 id="read_lines" class="doc_header"><code>read_lines</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/data.py#L16" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>read_lines</code>(<strong><code>path</code></strong>)</p>
 </blockquote>
 <p>Tokenizes a text file.</p>
 
@@ -72,7 +72,7 @@ nb_path: "nbs/06_data.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="convert_data_to_seq_length" class="doc_header"><code>convert_data_to_seq_length</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/data.py#L27" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>convert_data_to_seq_length</code>(<strong><code>df</code></strong>, <strong><code>seq_length</code></strong>=<em><code>65536</code></em>)</p>
+<h4 id="convert_data_to_seq_length" class="doc_header"><code>convert_data_to_seq_length</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/data.py#L28" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>convert_data_to_seq_length</code>(<strong><code>df</code></strong>, <strong><code>seq_length</code></strong>=<em><code>65536</code></em>)</p>
 </blockquote>
 <p>Take a dataframe text data and convert it to a dataframe with the same columns where
 every data sample is of numericalized token length of seq_length, except for the last example which is the remainder.
@@ -102,7 +102,7 @@ every data sample is of numericalized token length of seq_length, except for the
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="read_and_prepare_data" class="doc_header"><code>read_and_prepare_data</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/data.py#L59" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>read_and_prepare_data</code>(<strong><code>data_path</code></strong>, <strong><code>seq_length</code></strong>=<em><code>0</code></em>)</p>
+<h4 id="read_and_prepare_data" class="doc_header"><code>read_and_prepare_data</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/data.py#L60" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>read_and_prepare_data</code>(<strong><code>data_path</code></strong>, <strong><code>seq_length</code></strong>=<em><code>0</code></em>)</p>
 </blockquote>
 <p>Read the data from file, and prepare the dataframe.
 This does not include splitting into train and validation sets.
@@ -250,9 +250,11 @@ This does not include splitting into train and validation sets.
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stderr output_text">
-<pre>tokenizing data: 100%|██████████| 1/1 [00:00&lt;00:00, 1047.01it/s]
-Splitting data: 100%|██████████| 7/7 [00:00&lt;00:00, 245.79it/s]
-Splitting data: 100%|██████████| 2/2 [00:00&lt;00:00, 206.42it/s]
+<pre>/home/local/NTU/hgi/miniconda3/envs/fastai/lib/python3.8/site-packages/tqdm/std.py:670: FutureWarning: The Panel class is removed from pandas. Accessing it from the top-level namespace will also be removed in the next version
+  from pandas import Panel
+tokenizing data: 100%|██████████| 1/1 [00:00&lt;00:00, 1247.56it/s]
+Splitting data: 100%|██████████| 7/7 [00:00&lt;00:00, 394.87it/s]
+Splitting data: 100%|██████████| 2/2 [00:00&lt;00:00, 420.29it/s]
 </pre>
 </div>
 </div>
@@ -292,6 +294,154 @@ Splitting data: 100%|██████████| 2/2 [00:00&lt;00:00, 206.42
 
 </div>
 </div>
+
+</div>
+    {% endraw %}
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Synthetic-task">Synthetic task<a class="anchor-link" href="#Synthetic-task"> </a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Data utils for the synthetic task of the reformer paper. We want to create sequences of the form 0w0w, where w is a sequence of integeres between 1-127 of some lenght: eg. 08470847.
+We create items on the fly instead of all items up front.</p>
+
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h2 id="TwinSequence" class="doc_header"><code>class</code> <code>TwinSequence</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/data.py#L96" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TwinSequence</code>(<strong>*<code>args</code></strong>, <strong>**<code>kwds</code></strong>) :: <code>Dataset</code></p>
+</blockquote>
+<p>An abstract class representing a :class:<code>Dataset</code>.</p>
+<p>All datasets that represent a map from keys to data samples should subclass
+it. All subclasses should overwrite :meth:<code>__getitem__</code>, supporting fetching a
+data sample for a given key. Subclasses could also optionally overwrite
+:meth:<code>__len__</code>, which is expected to return the size of the dataset by many
+:class:<code>~torch.utils.data.Sampler</code> implementations and the default options
+of :class:<code>~torch.utils.data.DataLoader</code>.</p>
+<p>.. note::
+  :class:<code>~torch.utils.data.DataLoader</code> by default constructs a index
+  sampler that yields integral indices.  To make it work with a map-style
+  dataset with non-integral indices/keys, a custom sampler must be provided.</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dls</span> <span class="o">=</span> <span class="n">DataLoaders</span><span class="o">.</span><span class="n">from_dsets</span><span class="p">(</span><span class="n">TwinSequence</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span> <span class="n">bs</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">xb</span><span class="p">,</span> <span class="n">yb</span> <span class="o">=</span> <span class="n">dls</span><span class="o">.</span><span class="n">one_batch</span><span class="p">()</span>
+<span class="n">xb</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">yb</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(torch.Size([6, 10]), torch.Size([6, 10]))</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">inp</span><span class="p">,</span> <span class="n">targ</span> <span class="o">=</span> <span class="n">xb</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="n">yb</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+<span class="k">assert</span> <span class="n">all_equal</span><span class="p">(</span><span class="n">inp</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">targ</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>For the synthetic task we also have to mask the <strong>first half</strong> of the targets. The first part is just random integers, so it's impossible to learn anything from it. We set the tokens in the first part to a special index, -100, and later tell our lossfunction to ignore items with this value. This means that the only task the model can learn is to copy the first part of the input sequence. If we didn't mask the first part, it would be penalized for poor performance in the first part, and would try to find a compromise.</p>
+
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h2 id="MaskTargCallback" class="doc_header"><code>class</code> <code>MaskTargCallback</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/data.py#L111" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>MaskTargCallback</code>(<strong><code>after_create</code></strong>=<em><code>None</code></em>, <strong><code>before_fit</code></strong>=<em><code>None</code></em>, <strong><code>before_epoch</code></strong>=<em><code>None</code></em>, <strong><code>before_train</code></strong>=<em><code>None</code></em>, <strong><code>before_batch</code></strong>=<em><code>None</code></em>, <strong><code>after_pred</code></strong>=<em><code>None</code></em>, <strong><code>after_loss</code></strong>=<em><code>None</code></em>, <strong><code>before_backward</code></strong>=<em><code>None</code></em>, <strong><code>after_backward</code></strong>=<em><code>None</code></em>, <strong><code>after_step</code></strong>=<em><code>None</code></em>, <strong><code>after_cancel_batch</code></strong>=<em><code>None</code></em>, <strong><code>after_batch</code></strong>=<em><code>None</code></em>, <strong><code>after_cancel_train</code></strong>=<em><code>None</code></em>, <strong><code>after_train</code></strong>=<em><code>None</code></em>, <strong><code>before_validate</code></strong>=<em><code>None</code></em>, <strong><code>after_cancel_validate</code></strong>=<em><code>None</code></em>, <strong><code>after_validate</code></strong>=<em><code>None</code></em>, <strong><code>after_cancel_epoch</code></strong>=<em><code>None</code></em>, <strong><code>after_epoch</code></strong>=<em><code>None</code></em>, <strong><code>after_cancel_fit</code></strong>=<em><code>None</code></em>, <strong><code>after_fit</code></strong>=<em><code>None</code></em>) :: <code>Callback</code></p>
+</blockquote>
+<p>Basic class handling tweaks of the training loop by changing a <code>Learner</code> in various events</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
 
 </div>
     {% endraw %}
