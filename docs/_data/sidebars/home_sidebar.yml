@@ -31,6 +31,9 @@ entries:
       title: Data
       url: data.html
     - output: web,pdf
+      title: Logging
+      url: logging.html
+    - output: web,pdf
       title: Optimizers
       url: optimizers.html
     - output: web,pdf

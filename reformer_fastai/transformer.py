@@ -340,7 +340,7 @@ class TransformerLM(Module, LMMixin):
                  prenorm:bool=False,
                  attn_bias:bool=False,
                  shared_qk:bool=False):
-        store_attr('max_seq_len, n_layers, pad_idx')
+        store_attr()
         self.emb = TransformerEmbedding(vocab_sz, d_model, max_seq_len, dropout=emb_dropout,
                                         pos_enc=pos_enc, axial_shape=axial_shape,
                                         axial_emb_dims=axial_emb_dims)
@@ -417,7 +417,7 @@ class Transformer(Module, EncDecMixin):
                  max_seq_len=512,
                  axial_shape=None,
                  axial_emb_dims=None):
-        store_attr('max_seq_len, n_enc_layers, n_dec_layers, pad_idx')
+        store_attr()
         self.enc_emb = TransformerEmbedding(enc_vocab_sz, d_model, max_seq_len, dropout=emb_dropout, pos_enc=pos_enc,
                                             axial_shape=axial_shape, axial_emb_dims=axial_emb_dims)
         if shared_emb:
