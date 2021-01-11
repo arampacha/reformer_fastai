@@ -346,7 +346,7 @@ class ReversibleLM(Module, LMMixin):
                  prenorm:bool=False,
                  attn_bias:bool=False,
                  rev_thres:int=0):
-        store_attr('max_seq_len, n_layers, pad_idx')
+        store_attr()
         self.emb = TransformerEmbedding(vocab_sz, d_model, max_seq_len, dropout=emb_dropout,
                                         pos_enc=pos_enc, axial_shape=axial_shape,
                                         axial_emb_dims=axial_emb_dims)
@@ -423,7 +423,7 @@ class ReversibleTransformer(Module):
                  max_seq_len=512,
                  axial_shape=None,
                  axial_emb_dims=None):
-        store_attr('max_seq_len, n_enc_layers, n_dec_layers, pad_idx')
+        store_attr()
         n_enc_layers = ifnone(n_enc_layers, n_layers)
         n_dec_layers = ifnone(n_dec_layers, n_layers)
         self.enc_emb = TransformerEmbedding(enc_vocab_sz, d_model, max_seq_len, dropout=emb_dropout, pos_enc=pos_enc,
@@ -573,7 +573,7 @@ class LSHLM(Module, LMMixin):
                  n_hashes:int=8,
                  bucket_size:int=64,
                  random_state:int=None):
-        store_attr('max_seq_len, n_layers, pad_idx')
+        store_attr()
         self._use_lsh = use_lsh
         self._n_hashes = n_hashes
         self.emb = TransformerEmbedding(vocab_sz, d_model, max_seq_len, dropout=emb_dropout,
@@ -710,7 +710,7 @@ class ReformerLM(Module, LMMixin):
                  bucket_size:int=64,
                  rev_thres:int=0,
                  random_state:int=None):
-        store_attr('max_seq_len, n_layers, pad_idx')
+        store_attr()
         self._use_lsh = use_lsh
         self._n_hashes = n_hashes
         self.emb = TransformerEmbedding(vocab_sz, d_model, max_seq_len, dropout=emb_dropout,

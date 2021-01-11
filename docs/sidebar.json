@@ -8,6 +8,7 @@
     "Reformer": "reformer.html",
     "Tokenizers": "tokenizers.html",
     "Data": "data.html",
+    "Logging": "logging.html",  
     "Optimizers":"optimizers.html",
     "Metrics":"metrics.html",
     "": {
