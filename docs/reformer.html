@@ -1330,15 +1330,15 @@ Parameters:</p>
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>{&#39;buckets:0&#39;: tensor([[ 0,  0,  0,  ..., 14, 14, 14],
-        [ 0,  0,  0,  ..., 15, 14, 14],
-        [ 1,  0,  0,  ..., 15, 14, 14],
-        [ 0,  0,  0,  ..., 15, 14, 14]])}
+<pre>{&#39;buckets:0&#39;: tensor([[ 1,  0,  1,  ..., 14, 14, 14],
+        [ 1,  0,  1,  ..., 14, 14, 14],
+        [ 1,  0,  1,  ..., 14, 14, 14],
+        [ 1,  0,  1,  ..., 14, 14, 14]])}
 torch.Size([4, 1024])
-{&#39;buckets:1&#39;: tensor([[ 0,  0,  0,  ..., 14, 15, 15],
-        [ 0,  0,  0,  ..., 14, 15, 15],
-        [ 0,  0,  0,  ..., 14, 15, 15],
-        [ 0,  0,  0,  ..., 14, 15, 15]])}
+{&#39;buckets:1&#39;: tensor([[ 0,  1,  1,  ..., 14, 15, 15],
+        [ 0,  1,  1,  ..., 14, 15, 15],
+        [ 0,  1,  1,  ..., 14, 15, 15],
+        [ 0,  1,  1,  ..., 15, 15, 14]])}
 torch.Size([4, 1024])
 </pre>
 </div>
@@ -1397,7 +1397,7 @@ torch.Size([4, 1024])
 
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>Number of hashing rounds 8
-303 ms ± 10.1 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+278 ms ± 15.3 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
 </pre>
 </div>
 </div>
@@ -1431,7 +1431,7 @@ torch.Size([4, 1024])
 
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>Number of hashing rounds 1
-75.5 ms ± 3.01 ms per loop (mean ± std. dev. of 7 runs, 10 loops each)
+74.5 ms ± 3.14 ms per loop (mean ± std. dev. of 7 runs, 10 loops each)
 </pre>
 </div>
 </div>
