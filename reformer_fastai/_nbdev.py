@@ -98,7 +98,7 @@ index = {"exists": "00_core.ipynb",
          "get_dataloaders": "20_experiment-script.ipynb",
          "get_model": "20_experiment-script.ipynb",
          "get_learner": "20_experiment-script.ipynb",
-         "exp_run_synthetic": "20_experiment-script.ipynb"}
+         "run_exp": "20_experiment-script.ipynb"}
 
 modules = ["core.py",
            "layers.py",
