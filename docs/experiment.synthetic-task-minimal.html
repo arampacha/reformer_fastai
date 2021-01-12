@@ -38,25 +38,11 @@ nb_path: "nbs/10b_experiment.synthetic-task-minimal.ipynb"
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">fastai.text.all</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">reformer_fastai.reformer</span> <span class="kn">import</span> <span class="n">LSHLM</span>
-<span class="kn">from</span> <span class="nn">reformer_fastai.data</span> <span class="kn">import</span> <span class="n">TwinSequence</span><span class="p">,</span> <span class="n">MaskTargCallback</span>
+<span class="kn">from</span> <span class="nn">reformer_fastai.data</span> <span class="kn">import</span> <span class="n">get_twinseq_dls</span><span class="p">,</span> <span class="n">MaskTargCallback</span>
 <span class="kn">from</span> <span class="nn">reformer_fastai.metrics</span> <span class="kn">import</span> <span class="n">MaskedAccuracy</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span> 
+<span class="kn">from</span> <span class="nn">reformer_fastai.tracking</span> <span class="kn">import</span> <span class="n">WandbCallback</span>
+<span class="kn">from</span> <span class="nn">reformer_fastai.optimizers</span> <span class="kn">import</span> <span class="n">adafactor</span>
+<span class="kn">import</span> <span class="nn">wandb</span>
 </pre></div>
 
     </div>
@@ -68,8 +54,50 @@ nb_path: "nbs/10b_experiment.synthetic-task-minimal.ipynb"
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Sequence length of 1024, similar what is used in the paper.</p>
+<h2 id="initialise-wandb">initialise wandb<a class="anchor-link" href="#initialise-wandb"> </a></h2>
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
 
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># GROUP = &#39;TEST&#39;</span>
+<span class="c1"># NOTES = &#39;Syntethic task testing&#39;</span>
+<span class="c1"># CONFIG = {}</span>
+<span class="c1"># TAGS =[&#39;lsh&#39;, &#39;lm&#39;,&#39;test&#39;,&#39;synthetic-task&#39;]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#            name=WANDB_NAME, group=GROUP, notes=NOTES, tags=TAGS, config=CONFIG)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="get-data">get data<a class="anchor-link" href="#get-data"> </a></h2>
 </div>
 </div>
 </div>
@@ -81,10 +109,8 @@ nb_path: "nbs/10b_experiment.synthetic-task-minimal.ipynb"
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">bs</span><span class="p">,</span> <span class="n">sl</span> <span class="o">=</span> <span class="mi">32</span><span class="p">,</span><span class="mi">64</span>
-<span class="n">n_epochs</span> <span class="o">=</span> <span class="mi">1</span>
-<span class="n">train_sz</span> <span class="o">=</span> <span class="mi">500</span>
-<span class="n">valid_sz</span> <span class="o">=</span> <span class="mi">100</span>
-<span class="n">dls</span> <span class="o">=</span> <span class="n">DataLoaders</span><span class="o">.</span><span class="n">from_dsets</span><span class="p">(</span><span class="n">TwinSequence</span><span class="p">(</span><span class="n">sl</span><span class="p">,</span> <span class="n">train_sz</span><span class="p">),</span> <span class="n">TwinSequence</span><span class="p">(</span><span class="n">sl</span><span class="p">,</span> <span class="n">valid_sz</span><span class="p">),</span> <span class="n">bs</span><span class="o">=</span><span class="n">bs</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cuda&#39;</span><span class="p">)</span>
+<span class="n">train_sz</span><span class="p">,</span> <span class="n">valid_sz</span> <span class="o">=</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">100</span>
+<span class="n">dls</span> <span class="o">=</span> <span class="n">get_twinseq_dls</span><span class="p">(</span><span class="n">sl</span><span class="p">,</span> <span class="n">train_sz</span><span class="p">,</span> <span class="n">valid_sz</span><span class="p">,</span> <span class="n">bs</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -94,6 +120,12 @@ nb_path: "nbs/10b_experiment.synthetic-task-minimal.ipynb"
 </div>
     {% endraw %}
 
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="get-model">get model<a class="anchor-link" href="#get-model"> </a></h2>
+</div>
+</div>
+</div>
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
@@ -101,9 +133,11 @@ nb_path: "nbs/10b_experiment.synthetic-task-minimal.ipynb"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">n_hashes</span><span class="o">=</span><span class="mi">4</span>
-<span class="n">bucket_size</span> <span class="o">=</span> <span class="mi">32</span>
-<span class="k">assert</span> <span class="n">sl</span> <span class="o">%</span> <span class="p">(</span><span class="n">bucket_size</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">bucket_size</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="n">n_hashes</span><span class="o">=</span><span class="mi">4</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">LSHLM</span><span class="p">(</span><span class="n">vocab_sz</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span> <span class="n">d_model</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span> <span class="n">n_layers</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_heads</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> 
+              <span class="n">max_seq_len</span><span class="o">=</span><span class="n">sl</span><span class="p">,</span><span class="n">bucket_size</span><span class="o">=</span><span class="n">bucket_size</span><span class="p">,</span> <span class="n">n_hashes</span><span class="o">=</span><span class="n">n_hashes</span><span class="p">,</span> 
+              <span class="n">causal</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">use_lsh</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -113,6 +147,12 @@ nb_path: "nbs/10b_experiment.synthetic-task-minimal.ipynb"
 </div>
     {% endraw %}
 
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="train">train<a class="anchor-link" href="#train"> </a></h2>
+</div>
+</div>
+</div>
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
@@ -120,12 +160,12 @@ nb_path: "nbs/10b_experiment.synthetic-task-minimal.ipynb"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span> <span class="o">=</span> <span class="n">LSHLM</span><span class="p">(</span><span class="n">vocab_sz</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span> <span class="n">d_model</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span> <span class="n">n_layers</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_heads</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">max_seq_len</span><span class="o">=</span><span class="n">sl</span><span class="p">,</span>
-              <span class="n">bucket_size</span><span class="o">=</span><span class="n">bucket_size</span><span class="p">,</span> <span class="n">n_hashes</span><span class="o">=</span><span class="n">n_hashes</span><span class="p">,</span> <span class="n">causal</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> 
-                      <span class="n">use_lsh</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">learn</span> <span class="o">=</span> <span class="n">Learner</span><span class="p">(</span><span class="n">dls</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">loss_func</span><span class="o">=</span><span class="n">CrossEntropyLossFlat</span><span class="p">(</span><span class="n">ignore_index</span><span class="o">=-</span><span class="mi">100</span><span class="p">),</span> 
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">n_epochs</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">lr</span> <span class="o">=</span> <span class="mf">1e-3</span>
+<span class="n">learn</span> <span class="o">=</span> <span class="n">Learner</span><span class="p">(</span><span class="n">dls</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">opt_func</span><span class="o">=</span><span class="n">adafactor</span><span class="p">,</span> 
+                <span class="n">loss_func</span><span class="o">=</span><span class="n">CrossEntropyLossFlat</span><span class="p">(</span><span class="n">ignore_index</span><span class="o">=-</span><span class="mi">100</span><span class="p">),</span> 
                 <span class="n">metrics</span><span class="o">=</span><span class="n">MaskedAccuracy</span><span class="p">(),</span> <span class="n">cbs</span><span class="o">=</span><span class="p">[</span><span class="n">MaskTargCallback</span><span class="p">()])</span>
-<span class="n">learn</span><span class="o">.</span><span class="n">fit_one_cycle</span><span class="p">(</span><span class="n">n_epochs</span><span class="p">,</span> <span class="mf">1e-3</span><span class="p">)</span>
+<span class="n">learn</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">n_epochs</span><span class="p">,</span> <span class="n">lr</span><span class="p">)</span> <span class="c1">#, cbs=WandbCallback(log_model=True, log_preds=True)</span>
 </pre></div>
 
     </div>
@@ -152,8 +192,8 @@ nb_path: "nbs/10b_experiment.synthetic-task-minimal.ipynb"
   <tbody>
     <tr>
       <td>0</td>
-      <td>4.812356</td>
-      <td>4.760940</td>
+      <td>5.476266</td>
+      <td>4.794622</td>
       <td>0.038438</td>
       <td>00:03</td>
     </tr>
