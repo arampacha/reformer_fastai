@@ -80,7 +80,25 @@ index = {"exists": "00_core.ipynb",
          "bpc": "07_metrics.ipynb",
          "Adafactor": "08_optimizers.ipynb",
          "adafactor": "08_optimizers.ipynb",
-         "Learner.gather_args": "09_tracking.ipynb"}
+         "Learner.gather_args": "09_tracking.ipynb",
+         "bs": "10c_experiment.synthetic-script.ipynb",
+         "sl": "10c_experiment.synthetic-script.ipynb",
+         "n_epochs": "10c_experiment.synthetic-script.ipynb",
+         "train_sz": "10c_experiment.synthetic-script.ipynb",
+         "valid_sz": "10c_experiment.synthetic-script.ipynb",
+         "n_hashes": "10c_experiment.synthetic-script.ipynb",
+         "bucket_size": "10c_experiment.synthetic-script.ipynb",
+         "vocab_sz": "10c_experiment.synthetic-script.ipynb",
+         "d_model": "10c_experiment.synthetic-script.ipynb",
+         "n_layers": "10c_experiment.synthetic-script.ipynb",
+         "n_heads": "10c_experiment.synthetic-script.ipynb",
+         "max_seq_len": "10c_experiment.synthetic-script.ipynb",
+         "causal": "10c_experiment.synthetic-script.ipynb",
+         "use_lsh": "10c_experiment.synthetic-script.ipynb",
+         "get_dataloaders": "10c_experiment.synthetic-script.ipynb",
+         "get_model": "10c_experiment.synthetic-script.ipynb",
+         "get_learner": "10c_experiment.synthetic-script.ipynb",
+         "exp_run_synthetic": "10c_experiment.synthetic-script.ipynb"}
 
 modules = ["core.py",
            "layers.py",
@@ -91,7 +109,8 @@ modules = ["core.py",
            "data.py",
            "metrics.py",
            "optimizers.py",
-           "tracking.py"]
+           "tracking.py",
+           "expscript.py"]
 
 doc_url = "https://arampacha.github.io/reformer_fastai/"
 
