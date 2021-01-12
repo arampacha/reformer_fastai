@@ -112,7 +112,7 @@ class TwinSequence(Dataset):
 def get_twinseq_dls(sl, train_sz=500, valid_sz=100, bs=64, shuffle=False, device='cuda'):
     return DataLoaders.from_dsets(TwinSequence(sl, train_sz),
                                   TwinSequence(sl, valid_sz),
-                                  bs=bs, shuffle=False, device='cuda')
+                                  bs=bs, shuffle=False, device=device)
 
 # Cell
 class MaskTargCallback(Callback):
