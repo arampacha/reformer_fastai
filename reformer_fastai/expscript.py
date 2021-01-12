@@ -46,7 +46,7 @@ causal=True
 use_lsh=True
 
 # Cell
-def get_twin_sequence_dataloaders(bs:int=32, sl:int=64, train_sz:int=500, valid_sz:int=100):
+def get_twin_sequence_dataloaders(bs:int=32, sl:int=1024, train_sz:int=500, valid_sz:int=100):
 
     dls = DataLoaders.from_dsets(TwinSequence(sl, train_sz), TwinSequence(sl, valid_sz), bs=bs, shuffle=False, device='cuda')
     return dls
@@ -70,7 +70,10 @@ def get_synthetic_learner(dls, model):
     return learn
 
 # Cell
-def init_wandb(cbs:list=[], wandb_name:str='', wandb_group:str='', wandb_notes:str='', wandb_tags:list=[]):
+def init_wandb(cbs:list=[], wandb_name:str='', wandb_group:str='', wandb_notes:str='', wandb_tags:str='test'):
+
+    wandb_tags_ls = wandb_tags.split(' ')
+
     try:
         import wandb
         #!wandb login
@@ -80,7 +83,7 @@ def init_wandb(cbs:list=[], wandb_name:str='', wandb_group:str='', wandb_notes:s
     # Init wandb
     try:
         wandb_run=wandb.init(reinit=True, project="reformer-fastai", entity="fastai_community",
-               name=wandb_name, group=wandb_group, notes=wandb_notes, tags=wandb_tags, config={})
+               name=wandb_name, group=wandb_group, notes=wandb_notes, tags=wandb_tags_ls, config={})
         print('Weights & Biases initialised ...')
     except Exception as e:
         print(e)
@@ -115,15 +118,18 @@ def run_exp(task:Param(help="Which exeriment task to run", type=str),
          wandb_group:Param(help="wandb group", type=str, default='TEST'),
          wandb_notes:Param(help="wandb notes", type=str, default='My experiment notes'),
 #          wandb_config:Param(help="Use wandb logging", type=bool_arg, default='my_experiment_name'),
-         wandb_tags:Param(help="wandb tags", type=list, default=['test']),
+         wandb_tags:Param(help="wandb tags, add tags in a single string, space separated", type=str, default='test'),
          save_model:Param(help="Save model locally in /models", type=bool_arg, default=True),
-         cuda_id:Param(help="Which cuda device to use", type=int, default=0)
-                     ):
+         cuda_id:Param(help="Which cuda device to use", type=int, default=0),
+         seed:Param(help="Set seed for reproducibiltiy, passing anything except 0 will use fastai's set_seed", type=int, default=0)
+        ):
 
     """tasks: synt, lm, trans"""
 
     # Callbacks used for training
     cbs = []
+
+    if seed !=0 : set_seed(seed, reproducible=True)
 
     if task == 'synt':
         # Set which GPU to run the script on
@@ -164,5 +170,7 @@ def run_exp(task:Param(help="Which exeriment task to run", type=str),
             now = datetime.datetime.now().strftime("%Y%m%d_%H:%M:%S")
             learn.save(f'{task}_n_hashes-{n_hashes}_use-lsh-{use_lsh}_epohs-{n_epochs}_{now}')
 
+    elif task =='test':
+        print('testing testing :)')
     else:
         print('No task run')
