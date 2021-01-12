@@ -248,7 +248,7 @@ class ReversibleEncoder(Module):
         return x
 
 # Cell
-class ReversibleDecoder(nn.Module):
+class ReversibleDecoder(Module):
     "Stack of ReversibleBlocks. Uses AdditiveAttention."
     def __init__(self,
                  d_model,
@@ -269,11 +269,8 @@ class ReversibleDecoder(nn.Module):
                  final_norm:Module=None,
                  rev_thres = 0,
                  ):
-        super().__init__()
-        self.d_model = d_model
-        self.n_layers = n_layers
+        store_attr('d_model,n_layers')
 
-        # use regular attention for now
         get_attn = lambda: AdditiveAttention(d_model, heads, causal=True, dropout=attn_dropout, out_dropout=post_attn_dropout, bias=attn_bias)
         get_ff = lambda: ChunkedFeedForward(d_model, d_ff, chunks=ff_chunks, dropout=ff_dropout, dim=1)
         norm_wrapper = PreNorm if prenorm else PostNorm
@@ -314,7 +311,7 @@ class ReversibleLM(Module, LMMixin):
         * max_seq_len: int (default: 512)
         * tie_weights: bool - if True target embedding weights are used for computation output projection
         * prenorm: bool - wether to use PreNorm or PostNorm
-        * attn_bias: bool - wether to allow biases in attention projection layers
+        * attn_bias: bool - if True projection layers attention modules will have bias
         * pad_idx: int - padding token id, required for autogeneration of padding mask
         * pos_enc: str from {'absolute', 'fixed', 'axial'} - type of positional encoding to use
         * axial_shape: tuple - required if 'axial' positional encoding are used, should be factors of
@@ -545,9 +542,15 @@ class LSHLM(Module, LMMixin):
         * axial_shape: tuple - required if 'axial' positional encoding are used, should be factors of
                 max_seq_len
         * axial_emb_dims: tuple - [optional] axial embedding components, should sum to d_model
+        * use_slh: bool - parameter to switch between LSH and full attention
+        * n_hashes: int - number of hashing rounds for LSH
+        * bucket_size: int - input sequence length should be divisible by 2*bucket_size
+        * random_state: int - for LSHAttention module
+
     Inputs:
         * x - input ids, shape [bs, sl]
         * mask - optional boolean mask, shape [bs, sl]
+
     Returns:
         * logits - target token logits, shape [bs, sl, vocab_sz]
     """
@@ -599,16 +602,18 @@ class LSHLM(Module, LMMixin):
     @use_lsh.setter
     def use_lsh(self, val):
         self._use_lsh = val
-        for m in self.modules():
-            if isinstance(m, ReformerAttentionV2): m.use_lsh=val
+        for c in self.children():
+            for m in c.modules():
+                if hasattr(m, 'use_lsh'): m.use_lsh=val
     @property
     def n_hashes(self):
         return self._n_hashes
     @n_hashes.setter
     def n_hashes(self, val):
         self._n_hashes = val
-        for m in self.modules():
-            if isinstance(m, LSHAttention): m.n_hashes=val
+        for c in self.children():
+            for m in c.modules():
+                if hasattr(m, 'n_hashes'): m.n_hashes=val
 
 # Cell
 class ReformerEncoder(Module):
@@ -659,7 +664,7 @@ class ReformerEncoder(Module):
 # Cell
 class ReformerLM(Module, LMMixin):
     """
-    Reformer for language modelling with LSH attention
+    Reformer for language modelling. Uses LSH or full sharedQK attention
 
     Parameters:
         * vocab_sz: int
@@ -680,9 +685,16 @@ class ReformerLM(Module, LMMixin):
         * axial_shape: tuple - required if 'axial' positional encoding are used, should be factors of
                 max_seq_len
         * axial_emb_dims: tuple - [optional] axial embedding components, should sum to d_model
+        * rev_thres: int - if (seq_len < rev_thres) applies irreversible blocks
+        * use_slh: bool - parameter to switch between LSH and full attention
+        * n_hashes: int - number of hashing rounds for LSH
+        * bucket_size: int - input sequence length should be divisible by 2*bucket_size
+        * random_state: int - for LSHAttention module
+
     Inputs:
         * x - input ids, shape [bs, sl]
         * mask - optional boolean mask, shape [bs, sl]
+
     Returns:
         * logits - target token logits, shape [bs, sl, vocab_sz]
     """
@@ -736,13 +748,15 @@ class ReformerLM(Module, LMMixin):
     @use_lsh.setter
     def use_lsh(self, val):
         self._use_lsh = val
-        for m in self.modules():
-            if isinstance(m, ReformerAttentionV2): m.use_lsh=val
+        for c in self.children():
+            for m in c.modules():
+                if hasattr(m, 'use_lsh'): m.use_lsh=val
     @property
     def n_hashes(self):
         return self._n_hashes
     @n_hashes.setter
     def n_hashes(self, val):
         self._n_hashes = val
-        for m in self.modules():
-            if isinstance(m, LSHAttention): m.n_hashes=val
+        for c in self.children():
+            for m in c.modules():
+                if hasattr(m, 'n_hashes'): m.n_hashes=val
