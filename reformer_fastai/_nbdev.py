@@ -80,7 +80,25 @@ index = {"exists": "00_core.ipynb",
          "bpc": "07_metrics.ipynb",
          "Adafactor": "08_optimizers.ipynb",
          "adafactor": "08_optimizers.ipynb",
-         "Learner.gather_args": "09_tracking.ipynb"}
+         "Learner.gather_args": "09_tracking.ipynb",
+         "bs": "20_experiment-script.ipynb",
+         "sl": "20_experiment-script.ipynb",
+         "n_epochs": "20_experiment-script.ipynb",
+         "train_sz": "20_experiment-script.ipynb",
+         "valid_sz": "20_experiment-script.ipynb",
+         "n_hashes": "20_experiment-script.ipynb",
+         "bucket_size": "20_experiment-script.ipynb",
+         "vocab_sz": "20_experiment-script.ipynb",
+         "d_model": "20_experiment-script.ipynb",
+         "n_layers": "20_experiment-script.ipynb",
+         "n_heads": "20_experiment-script.ipynb",
+         "max_seq_len": "20_experiment-script.ipynb",
+         "causal": "20_experiment-script.ipynb",
+         "use_lsh": "20_experiment-script.ipynb",
+         "get_dataloaders": "20_experiment-script.ipynb",
+         "get_model": "20_experiment-script.ipynb",
+         "get_learner": "20_experiment-script.ipynb",
+         "run_exp": "20_experiment-script.ipynb"}
 
 modules = ["core.py",
            "layers.py",
@@ -91,7 +109,8 @@ modules = ["core.py",
            "data.py",
            "metrics.py",
            "optimizers.py",
-           "tracking.py"]
+           "tracking.py",
+           "expscript.py"]
 
 doc_url = "https://arampacha.github.io/reformer_fastai/"
 

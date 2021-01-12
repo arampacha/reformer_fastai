@@ -21,7 +21,7 @@ def gather_args(self:Learner):
     args = {'Learner':self, **cb_args}
 
     # Log model attrs
-    model_attrs = getattr(learn.model,'__stored_args__',True)
+    model_attrs = getattr(self.model,'__stored_args__',True)
     args.update({f'model_{k}' : model_attrs[k] for k in model_attrs.keys()})
 
     # input dimensions
