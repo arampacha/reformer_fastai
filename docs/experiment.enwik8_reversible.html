@@ -523,7 +523,7 @@ Wall time: 36.5 s
 <span class="n">learn</span> <span class="o">=</span> <span class="n">Learner</span><span class="p">(</span><span class="n">dls</span><span class="p">,</span> <span class="n">ReversibleLM</span><span class="p">(</span><span class="n">vocab_sz</span><span class="p">,</span> <span class="mi">1024</span><span class="p">,</span> <span class="n">n_layers</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">max_seq_len</span><span class="o">=</span><span class="n">sl</span><span class="p">,</span> <span class="n">rev_thres</span><span class="o">=</span><span class="mi">1025</span><span class="p">),</span> <span class="c1">#using irrev blocks for speed</span>
                 <span class="n">loss_func</span><span class="o">=</span><span class="n">CrossEntropyLossFlat</span><span class="p">(),</span> <span class="n">opt_func</span><span class="o">=</span><span class="n">opt_func</span><span class="p">,</span>
                 <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="n">accuracy</span><span class="p">,</span> <span class="n">perplexity</span><span class="p">,</span> <span class="n">BPC</span><span class="p">()],</span>
-                <span class="n">cbs</span><span class="o">=</span><span class="n">TerminateOnNaNCallback</span><span class="p">())</span><span class="o">.</span><span class="n">to_native_fp16</span><span class="p">()</span>
+                <span class="n">cbs</span><span class="o">=</span><span class="n">TerminateOnNaNCallback</span><span class="p">())</span><span class="o">.</span><span class="n">to_fp16</span><span class="p">()</span>
 </pre></div>
 
     </div>

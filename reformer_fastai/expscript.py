@@ -86,7 +86,7 @@ def run_exp(task:Param(help="Which exeriment task to run", type=str),
 
         torch.cuda.set_device(cuda_id)
 
-        dls = get_dataloaders(bs=bs, sl=sl, n_epochs=n_epochs, train_sz=train_sz, valid_sz=valid_sz)
+        dls = get_dataloaders(bs=bs, sl=sl, train_sz=train_sz, valid_sz=valid_sz)
 
         model = get_model(vocab_sz=vocab_sz, d_model=d_model, n_layers=n_layers, n_heads=n_heads,
                   max_seq_len=max_seq_len, bucket_size=bucket_size, n_hashes=n_hashes, causal=causal, use_lsh=use_lsh)
