@@ -76,38 +76,38 @@ def init_wandb(cbs:list=[], wandb_name:str='', wandb_group:str='', wandb_notes:s
 # Cell
 @call_parse
 def run_exp(task:Param(help="Which exeriment task to run", type=str),
+         n_epochs:Param(help="Number of epochs", type=int, default=n_epochs),
          lr:Param(help="Learning rate", type=float, default=1e-3),
          bs:Param(help="Batch size", type=int, default=bs),
          sl:Param(help="Seqlence length", type=int, default=sl),
-         n_epochs:Param(help="Number of epochs", type=int, default=n_epochs),
+         d_model:Param(help="Model dimension", type=int, default=d_model),
+         n_layers:Param(help="Number of model layers", type=int, default=n_layers),
+         n_heads:Param(help="Number of attention heads", type=int, default=n_heads),
+         vocab_sz:Param(help="Vocab size", type=int, default=vocab_sz),
          train_sz:Param(help="TwinSequence train size", type=int, default=train_sz),
          valid_sz:Param(help="TwinSequence valid size", type=int, default=valid_sz),
          n_hashes:Param(help="Number of LSH Attention hashes", type=int, default=n_hashes),
          bucket_size:Param(help="LSH Attention bucket size", type=int, default=bucket_size),
-         vocab_sz:Param(help="Vocab size", type=int, default=vocab_sz),
-         d_model:Param(help="Model dimension", type=int, default=d_model),
-         n_layers:Param(help="Number of model layers", type=int, default=n_layers),
-         n_heads:Param(help="Number of attention heads", type=int, default=n_heads),
+         causal:Param(help="Use causal masking", type=bool_arg, default=causal),
+         use_lsh:Param(help="Use LSH Attention", type=bool_arg, default=use_lsh),
          max_seq_len:Param(help="Max sequence length for model embedding", type=int, default=max_seq_len),
-         causal:Param(help="Use causal masking", type=int, default=causal),
-         use_lsh:Param(help="Use LSH Attention", type=bool, default=use_lsh),
-         save_model:Param(help="Save model locally in /models", type=bool, default=True),
-         do_wandb_logging:Param(help="Use wandb logging", type=bool, default=True),
+         do_wandb_logging:Param(help="Use weights and biases logging", type=bool_arg, default=True),
          wandb_name:Param(help="wandb run name", type=str, default='my_experiment_name'),
          wandb_group:Param(help="wandb group", type=str, default='TEST'),
          wandb_notes:Param(help="wandb notes", type=str, default='My experiment notes'),
-#          wandb_config:Param(help="Use wandb logging", type=bool, default='my_experiment_name'),
+#          wandb_config:Param(help="Use wandb logging", type=bool_arg, default='my_experiment_name'),
          wandb_tags:Param(help="wandb tags", type=list, default=['test']),
+         save_model:Param(help="Save model locally in /models", type=bool_arg, default=True),
          cuda_id:Param(help="Which cuda device to use", type=int, default=0)
                      ):
 
-    """tasks: synthetic, lm, translation"""
+    """tasks: synt, lm, trans"""
 
     # Callbacks used for training
     cbs = []
 
     if task == 'synt':
-
+        # Set which GPU to run the script on
         torch.cuda.set_device(cuda_id)
 
         print('Getting dataloaders ...')
