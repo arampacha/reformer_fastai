@@ -3,7 +3,8 @@
 __all__ = ['exists', 'default', 'expand_dim1', 'max_neg_value', 'setattr_on', 'top_p_filter', 'top_k_filter',
            'cache_method_decorator', 'look_one_back', 'chunked_sum', 'sort_key_val', 'batched_index_select',
            'do_cuda_timing', 'model_performance', 'total_params', 'CombineInputOutputCallback', 'RemoveEOSCallback',
-           'LossTargetShiftCallback', 'LabelSmoothingCrossEntropy', 'LabelSmoothingCrossEntropyFlat']
+           'LossTargetShiftCallback', 'PadBatchCallback', 'LabelSmoothingCrossEntropy',
+           'LabelSmoothingCrossEntropyFlat']
 
 # Cell
 import torch
@@ -217,6 +218,19 @@ class LossTargetShiftCallback(Callback):
     def __init__(self): pass
     def after_pred(self):
         self.learn.yb = (self.learn.yb[0][:,1:],)
+
+# Cell
+class PadBatchCallback(Callback):
+    "Pads input and target sequences to multiple of 2*bucket_size"
+    def __init__(self, bucket_size:int=64, val:int=0, y_val:int=-100):
+        self.mult = 2*bucket_size
+        self.val, self.y_val = val, y_val
+    def before_batch(self):
+        bs, sl = self.x.size()
+        if sl % self.mult != 0:
+            pad_ = self.mult - sl%self.mult
+            self.learn.xb = (F.pad(self.x, (0,pad_), 'constant', self.val), )
+            self.learn.yb = (F.pad(self.y, (0,pad_), 'constant', self.y_val), )
 
 # Cell
 class LabelSmoothingCrossEntropy(Module):
