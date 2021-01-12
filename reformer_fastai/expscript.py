@@ -44,7 +44,7 @@ def get_twin_sequence_dataloaders(bs:int=32, sl:int=64, train_sz:int=500, valid_
 def get_lshlm_model(vocab_sz:int=128, d_model:int=256, n_layers:int=1, n_heads:int=4,
               max_seq_len:int=64, bucket_size:int=32, n_hashes:int=4, causal:bool=True, use_lsh:bool=True):
     model = LSHLM(vocab_sz=vocab_sz, d_model=d_model, n_layers=n_layers, n_heads=n_heads, max_seq_len=max_seq_len,
-              bucket_size=bucket_size, n_hashes=n_hashes, causal=True, use_lsh=True)
+              bucket_size=bucket_size, n_hashes=n_hashes, causal=causal, use_lsh=use_lsh)
     return model
 
 # Cell
