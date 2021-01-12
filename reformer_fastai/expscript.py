@@ -121,7 +121,7 @@ def run_exp(task:Param(help="Which exeriment task to run", type=str),
          wandb_tags:Param(help="wandb tags, add tags in a single string, space separated", type=str, default='test'),
          save_model:Param(help="Save model locally in /models", type=bool_arg, default=True),
          cuda_id:Param(help="Which cuda device to use", type=int, default=0),
-         seed:Param(help="Set seed for reproducibiltiy", type=int, default=None)
+         seed:Param(help="Set seed for reproducibiltiy, passing anything except 0 will use fastai's set_seed", type=int, default=0)
         ):
 
     """tasks: synt, lm, trans"""
@@ -129,7 +129,7 @@ def run_exp(task:Param(help="Which exeriment task to run", type=str),
     # Callbacks used for training
     cbs = []
 
-    if seed is not None: set_seed(seed, reproducible=True)
+    if seed !=0 : set_seed(seed, reproducible=True)
 
     if task == 'synt':
         # Set which GPU to run the script on
