@@ -95,9 +95,10 @@ index = {"exists": "00_core.ipynb",
          "max_seq_len": "20_experiment-script.ipynb",
          "causal": "20_experiment-script.ipynb",
          "use_lsh": "20_experiment-script.ipynb",
-         "get_dataloaders": "20_experiment-script.ipynb",
-         "get_model": "20_experiment-script.ipynb",
-         "get_learner": "20_experiment-script.ipynb",
+         "get_twin_sequence_dataloaders": "20_experiment-script.ipynb",
+         "get_lshlm_model": "20_experiment-script.ipynb",
+         "get_synthetic_learner": "20_experiment-script.ipynb",
+         "init_wandb": "20_experiment-script.ipynb",
          "run_exp": "20_experiment-script.ipynb"}
 
 modules = ["core.py",
