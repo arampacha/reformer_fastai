@@ -17,7 +17,7 @@ from .tracking import WandbCallback
 # Cell
 
 # Dataloaders
-bs=32
+bs=128
 sl=1024
 train_sz=900
 valid_sz=100
@@ -35,7 +35,7 @@ causal=True
 use_lsh=True
 
 # Cell
-def get_dataloaders(bs:int=32, sl:int=64, n_epochs:int=1, train_sz:int=500, valid_sz:int=100):
+def get_dataloaders(bs:int=32, sl:int=64, train_sz:int=500, valid_sz:int=100):
     dls = DataLoaders.from_dsets(TwinSequence(sl, train_sz), TwinSequence(sl, valid_sz), bs=bs, shuffle=False, device='cuda')
     return dls
 
@@ -71,10 +71,10 @@ def run_exp(task:Param(help="Which exeriment task to run", type=str),
          causal:Param(help="Use causal masking", type=int, default=causal),
          use_lsh:Param(help="Use LSH Attention", type=bool, default=use_lsh),
          save_model:Param(help="Save model locally in /models", type=bool, default=True),
-         do_wandb_logging:Param(help="Use wandb logging", type=bool, default=True),
-         wandb_name:Param(help="wandb run name", type=bool, default='my_experiment_name'),
-         wandb_group:Param(help="wandb group", type=bool, default='TEST'),
-         wandb_notes:Param(help="wandb notes", type=bool, default='My experiment notes'),
+         do_wandb_logging:Param(help="Use wandb logging", type=bool, default=False),
+         wandb_name:Param(help="wandb run name", type=str, default='my_experiment_name'),
+         wandb_group:Param(help="wandb group", type=str, default='TEST'),
+         wandb_notes:Param(help="wandb notes", type=str, default='My experiment notes'),
 #          wandb_config:Param(help="Use wandb logging", type=bool, default='my_experiment_name'),
          wandb_tags:Param(help="wandb tags", type=list, default=['test']),
          cuda_id:Param(help="Which cuda device to use", type=int, default=0)
@@ -95,18 +95,18 @@ def run_exp(task:Param(help="Which exeriment task to run", type=str),
 
         cbs=[MaskTargCallback()]
 
-#         if do_wandb_logging:
-#             try:
-#                 import wandb
-#                 #!wandb login
-#             except ImportError as e:
-#                 print(e)
+        if do_wandb_logging:
+            try:
+                import wandb
+                #!wandb login
+            except ImportError as e:
+                print(e)
 
-#             # Init wandb
-#             wandb.init(reinit=True, project="reformer-fastai", entity="fastai_community",
-#                    name=wandb_name, group=wandb_group, notes=wandb_notes, tags=wandb_tags, config={})
+            # Init wandb
+            wandb.init(reinit=True, project="reformer-fastai", entity="fastai_community",
+                   name=wandb_name, group=wandb_group, notes=wandb_notes, tags=wandb_tags, config={})
 
-#             cbs.append(WandbCallback(log_model=False, log_preds=False))
+            cbs.append(WandbCallback(log_model=False, log_preds=False))
         print('starting train')
         learn.fit_one_cycle(n_epochs, lr, cbs=cbs)
 
