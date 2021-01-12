@@ -85,6 +85,38 @@ nb_path: "nbs/20_experiment-script.ipynb"
 </div>
     {% endraw %}
 
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#     --attn_dropout=0.0 \</span>
+<span class="c1">#     --ff_dropout=0.0 \</span>
+<span class="c1">#     --emb_dropout=0.0 \</span>
+<span class="c1">#     --d_ff=256 \</span>
+<span class="c1">#     --d_model=256 \</span>
+<span class="c1">#     --n_layers=1 \</span>
+<span class="c1">#     --bucket_size=64 \</span>
+<span class="c1">#     --bs=256 \</span>
+<span class="c1">#     --sl=1024 \</span>
+<span class="c1">#     --train_sz=9000 \</span>
+<span class="c1">#     --valid_sz=1000 \</span>
+<span class="c1">#     --wandb_group=&#39;Synthetic&#39; \</span>
+<span class="c1">#     --wandb_tags=&#39;synthetic_task lsh lm test&#39; \</span>
+<span class="c1">#     --wandb_name=&#39;synth_lsh_1_hash&#39; \</span>
+<span class="c1">#     --use_lsh=True \</span>
+<span class="c1">#     --n_hashes=1</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Dataloaders">Dataloaders<a class="anchor-link" href="#Dataloaders"> </a></h2>
@@ -109,7 +141,7 @@ nb_path: "nbs/20_experiment-script.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_twin_sequence_dataloaders" class="doc_header"><code>get_twin_sequence_dataloaders</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/expscript.py#L49" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_twin_sequence_dataloaders</code>(<strong><code>bs</code></strong>:<code>int</code>=<em><code>32</code></em>, <strong><code>sl</code></strong>:<code>int</code>=<em><code>64</code></em>, <strong><code>train_sz</code></strong>:<code>int</code>=<em><code>500</code></em>, <strong><code>valid_sz</code></strong>:<code>int</code>=<em><code>100</code></em>)</p>
+<h4 id="get_twin_sequence_dataloaders" class="doc_header"><code>get_twin_sequence_dataloaders</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/expscript.py#L49" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_twin_sequence_dataloaders</code>(<strong><code>bs</code></strong>:<code>int</code>=<em><code>32</code></em>, <strong><code>sl</code></strong>:<code>int</code>=<em><code>1024</code></em>, <strong><code>train_sz</code></strong>:<code>int</code>=<em><code>500</code></em>, <strong><code>valid_sz</code></strong>:<code>int</code>=<em><code>100</code></em>)</p>
 </blockquote>
 
 </div>
@@ -234,7 +266,7 @@ nb_path: "nbs/20_experiment-script.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="init_wandb" class="doc_header"><code>init_wandb</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/expscript.py#L73" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>init_wandb</code>(<strong><code>cbs</code></strong>:<code>list</code>=<em><code>[]</code></em>, <strong><code>wandb_name</code></strong>:<code>str</code>=<em><code>''</code></em>, <strong><code>wandb_group</code></strong>:<code>str</code>=<em><code>''</code></em>, <strong><code>wandb_notes</code></strong>:<code>str</code>=<em><code>''</code></em>, <strong><code>wandb_tags</code></strong>:<code>list</code>=<em><code>[]</code></em>)</p>
+<h4 id="init_wandb" class="doc_header"><code>init_wandb</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/expscript.py#L73" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>init_wandb</code>(<strong><code>cbs</code></strong>:<code>list</code>=<em><code>[]</code></em>, <strong><code>wandb_name</code></strong>:<code>str</code>=<em><code>''</code></em>, <strong><code>wandb_group</code></strong>:<code>str</code>=<em><code>''</code></em>, <strong><code>wandb_notes</code></strong>:<code>str</code>=<em><code>''</code></em>, <strong><code>wandb_tags</code></strong>:<code>str</code>=<em><code>'test'</code></em>)</p>
 </blockquote>
 
 </div>
@@ -271,7 +303,7 @@ nb_path: "nbs/20_experiment-script.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="run_exp" class="doc_header"><code>run_exp</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/expscript.py#L92" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>run_exp</code>(<strong><code>task</code></strong>:"Which exeriment task to run", <strong><code>n_epochs</code></strong>:"Number of epochs", <strong><code>lr</code></strong>:"Learning rate", <strong><code>bs</code></strong>:"Batch size", <strong><code>sl</code></strong>:"Seqlence length", <strong><code>d_model</code></strong>:"Model dimension", <strong><code>n_layers</code></strong>:"Number of model layers", <strong><code>n_heads</code></strong>:"Number of attention heads", <strong><code>vocab_sz</code></strong>:"Vocab size", <strong><code>d_ff</code></strong>:"Vocab size", <strong><code>attn_dropout</code></strong>:"Attention dropout rate", <strong><code>ff_dropout</code></strong>:"Attention dropout rate", <strong><code>emb_dropout</code></strong>:"Attention dropout rate", <strong><code>train_sz</code></strong>:"TwinSequence train size", <strong><code>valid_sz</code></strong>:"TwinSequence valid size", <strong><code>n_hashes</code></strong>:"Number of LSH Attention hashes", <strong><code>bucket_size</code></strong>:"LSH Attention bucket size", <strong><code>causal</code></strong>:"Use causal masking", <strong><code>use_lsh</code></strong>:"Use LSH Attention", <strong><code>max_seq_len</code></strong>:"Max sequence length for model embedding", <strong><code>do_wandb_logging</code></strong>:"Use weights and biases logging", <strong><code>wandb_name</code></strong>:"wandb run name", <strong><code>wandb_group</code></strong>:"wandb group", <strong><code>wandb_notes</code></strong>:"wandb notes", <strong><code>wandb_tags</code></strong>:"wandb tags", <strong><code>save_model</code></strong>:"Save model locally in /models", <strong><code>cuda_id</code></strong>:"Which cuda device to use")</p>
+<h4 id="run_exp" class="doc_header"><code>run_exp</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/expscript.py#L95" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>run_exp</code>(<strong><code>task</code></strong>:"Which exeriment task to run", <strong><code>n_epochs</code></strong>:"Number of epochs", <strong><code>lr</code></strong>:"Learning rate", <strong><code>bs</code></strong>:"Batch size", <strong><code>sl</code></strong>:"Seqlence length", <strong><code>d_model</code></strong>:"Model dimension", <strong><code>n_layers</code></strong>:"Number of model layers", <strong><code>n_heads</code></strong>:"Number of attention heads", <strong><code>vocab_sz</code></strong>:"Vocab size", <strong><code>d_ff</code></strong>:"Vocab size", <strong><code>attn_dropout</code></strong>:"Attention dropout rate", <strong><code>ff_dropout</code></strong>:"Attention dropout rate", <strong><code>emb_dropout</code></strong>:"Attention dropout rate", <strong><code>train_sz</code></strong>:"TwinSequence train size", <strong><code>valid_sz</code></strong>:"TwinSequence valid size", <strong><code>n_hashes</code></strong>:"Number of LSH Attention hashes", <strong><code>bucket_size</code></strong>:"LSH Attention bucket size", <strong><code>causal</code></strong>:"Use causal masking", <strong><code>use_lsh</code></strong>:"Use LSH Attention", <strong><code>max_seq_len</code></strong>:"Max sequence length for model embedding", <strong><code>do_wandb_logging</code></strong>:"Use weights and biases logging", <strong><code>wandb_name</code></strong>:"wandb run name", <strong><code>wandb_group</code></strong>:"wandb group", <strong><code>wandb_notes</code></strong>:"wandb notes", <strong><code>wandb_tags</code></strong>:"wandb tags, add tags in a single string, space separated", <strong><code>save_model</code></strong>:"Save model locally in /models", <strong><code>cuda_id</code></strong>:"Which cuda device to use", <strong><code>seed</code></strong>:"Set seed for reproducibiltiy")</p>
 </blockquote>
 <p>tasks: synt, lm, trans</p>
 
