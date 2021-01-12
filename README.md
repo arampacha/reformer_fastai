@@ -2,7 +2,7 @@
 > Fastai community entry to <a href='https://paperswithcode.com/rc2020'>2020 Reproducibility Challenge</a>
 
 
-## Insatllation
+## Installation
 
 `pip install git+git://github.com/arampacha/reformer_fastai.git`
 

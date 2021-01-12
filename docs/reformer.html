@@ -1111,9 +1111,24 @@ Parameters:</p>
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">use_lsh</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="n">out</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 <span class="k">assert</span> <span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="n">sl</span><span class="p">,</span> <span class="n">vocab_sz</span><span class="p">))</span>
+<span class="o">%</span><span class="k">timeit</span> model(x)
 </pre></div>
 
     </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>298 ms ± 8.76 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+</pre>
+</div>
+</div>
+
 </div>
 </div>
 
@@ -1130,9 +1145,24 @@ Parameters:</p>
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">use_lsh</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="n">out</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 <span class="k">assert</span> <span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="n">sl</span><span class="p">,</span> <span class="n">vocab_sz</span><span class="p">))</span>
+<span class="o">%</span><span class="k">timeit</span> model(x)
 </pre></div>
 
     </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>7.84 ms ± 63.7 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)
+</pre>
+</div>
+</div>
+
 </div>
 </div>
 
@@ -1343,15 +1373,15 @@ Parameters:</p>
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>{&#39;buckets:0&#39;: tensor([[ 0,  0,  1,  ..., 15, 14, 15],
-        [ 0,  0,  0,  ..., 14, 15, 14],
-        [ 0,  0,  0,  ..., 15, 15, 15],
-        [ 0,  0,  0,  ..., 15, 14, 15]])}
+<pre>{&#39;buckets:0&#39;: tensor([[ 1,  0,  1,  ..., 15, 15, 14],
+        [ 1,  0,  1,  ..., 15, 14, 14],
+        [ 1,  0,  1,  ..., 14, 15, 14],
+        [ 1,  0,  1,  ..., 15, 14, 14]])}
 torch.Size([4, 1024])
-{&#39;buckets:1&#39;: tensor([[ 0,  1,  0,  ..., 15, 14, 15],
-        [ 0,  1,  1,  ..., 14, 15, 15],
-        [ 0,  1,  1,  ..., 15, 15, 15],
-        [ 0,  1,  1,  ..., 15, 15, 15]])}
+{&#39;buckets:1&#39;: tensor([[ 1,  1,  0,  ..., 14, 14, 15],
+        [ 1,  1,  1,  ..., 14, 15, 15],
+        [ 1,  1,  1,  ..., 14, 14, 15],
+        [ 1,  1,  0,  ..., 14, 14, 15]])}
 torch.Size([4, 1024])
 </pre>
 </div>
@@ -1410,7 +1440,7 @@ torch.Size([4, 1024])
 
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>Number of hashing rounds 8
-311 ms ± 13.3 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+302 ms ± 27.8 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
 </pre>
 </div>
 </div>
@@ -1444,7 +1474,7 @@ torch.Size([4, 1024])
 
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>Number of hashing rounds 1
-76.6 ms ± 2.26 ms per loop (mean ± std. dev. of 7 runs, 10 loops each)
+72.9 ms ± 623 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)
 </pre>
 </div>
 </div>
