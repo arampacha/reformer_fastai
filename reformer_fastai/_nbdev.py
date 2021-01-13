@@ -108,7 +108,8 @@ index = {"exists": "00_core.ipynb",
          "init_wandb": "20_experiment-script.ipynb",
          "run_exp": "20_experiment-script.ipynb",
          "ConfigBase": "21_experiment-configs.ipynb",
-         "SyntheticConfig": "21_experiment-configs.ipynb"}
+         "SyntheticConfig": "21_experiment-configs.ipynb",
+         "TransformerLMConfigEnwik8": "21_experiment-configs.ipynb"}
 
 modules = ["core.py",
            "layers.py",
