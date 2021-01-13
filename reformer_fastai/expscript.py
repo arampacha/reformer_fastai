@@ -150,8 +150,9 @@ def run_exp(task:Param(help="Which exeriment task to run", type=str),
         print('done!')
 
         print('Getting model ...')
-        model = get_lshlm_model(vocab_sz=vocab_sz, d_model=d_model, n_layers=n_layers, n_heads=n_heads,
-                  max_seq_len=max_seq_len, bucket_size=bucket_size, n_hashes=n_hashes, causal=causal, use_lsh=use_lsh)
+        config = SyntheticConfig(use_lsh=use_lsh, n_hashes=n_hashes)
+        config.save(wandb_name, add_tstmp=True)
+        model = LSHLM.from_config(config)
         print('done!')
 
         print('Getting learner ...')
@@ -181,7 +182,6 @@ def run_exp(task:Param(help="Which exeriment task to run", type=str),
             learn.save(f'{task}_n_hashes-{n_hashes}_use-lsh-{use_lsh}_epohs-{n_epochs}_{now}')
 
     elif task =='test':
-        print(locals())
         print('testing testing :)')
     else:
         print('No task run')
