@@ -46,19 +46,22 @@ causal=True
 use_lsh=True
 
 # Cell
-def get_twin_sequence_dataloaders(bs:int=32, sl:int=1024, train_sz:int=500, valid_sz:int=100):
+def get_twin_sequence_dataloaders(bs:int=32, sl:int=1024, train_sz:int=500, valid_sz:int=100, seed=None):
 
-    dls = DataLoaders.from_dsets(TwinSequence(sl, train_sz), TwinSequence(sl, valid_sz), bs=bs, shuffle=False, device='cuda')
+    dls = DataLoaders.from_dsets(TwinSequence(sl, train_sz, seed),
+                                 TwinSequence(sl, valid_sz, seed),
+                                 bs=bs, shuffle=False, device='cuda')
     return dls
 
 # Cell
 def get_lshlm_model(vocab_sz:int=128, d_model:int=256, n_layers:int=1, n_heads:int=4, d_ff:int=None,
               max_seq_len:int=64, bucket_size:int=32, n_hashes:int=4, causal:bool=True, use_lsh:bool=True,
-              attn_dropout:float=0.1, ff_dropout:float=0.1, emb_dropout:float=0.1):
+              attn_dropout:float=0.1, ff_dropout:float=0.1, emb_dropout:float=0.1, seed=None):
 
     model = LSHLM(vocab_sz=vocab_sz, d_model=d_model, n_layers=n_layers, n_heads=n_heads, d_ff=d_ff,
                   max_seq_len=max_seq_len, bucket_size=bucket_size, n_hashes=n_hashes, causal=causal,
-                  use_lsh=use_lsh, attn_dropout=attn_dropout, ff_dropout=ff_dropout, emb_dropout=emb_dropout)
+                  use_lsh=use_lsh, attn_dropout=attn_dropout, ff_dropout=ff_dropout,
+                  emb_dropout=emb_dropout, random_state=seed)
     return model
 
 # Cell
@@ -113,13 +116,13 @@ def run_exp(task:Param(help="Which exeriment task to run", type=str),
          causal:Param(help="Use causal masking", type=bool_arg, default=causal),
          use_lsh:Param(help="Use LSH Attention", type=bool_arg, default=use_lsh),
          max_seq_len:Param(help="Max sequence length for model embedding", type=int, default=max_seq_len),
-         do_wandb_logging:Param(help="Use weights and biases logging", type=bool_arg, default=True),
+         do_wandb_logging:Param(help="Use weights and biases logging", type=bool_arg, default=False),
          wandb_name:Param(help="wandb run name", type=str, default='my_experiment_name'),
          wandb_group:Param(help="wandb group", type=str, default='TEST'),
          wandb_notes:Param(help="wandb notes", type=str, default='My experiment notes'),
 #          wandb_config:Param(help="Use wandb logging", type=bool_arg, default='my_experiment_name'),
          wandb_tags:Param(help="wandb tags, add tags in a single string, space separated", type=str, default='test'),
-         save_model:Param(help="Save model locally in /models", type=bool_arg, default=True),
+         save_model:Param(help="Save model locally in /models", type=bool_arg, default=False),
          cuda_id:Param(help="Which cuda device to use", type=int, default=0),
          seed:Param(help="Set seed for reproducibiltiy, passing anything except 0 will use fastai's set_seed", type=int, default=0)
         ):
@@ -129,7 +132,13 @@ def run_exp(task:Param(help="Which exeriment task to run", type=str),
     # Callbacks used for training
     cbs = []
 
-    if seed !=0 : set_seed(seed, reproducible=True)
+
+    #random seeds
+    random_state = seed if seed!=0 else None      # this is passed to LSH and data generator respectively
+
+    if seed !=0 :
+        set_seed(seed, reproducible=True)          # this also sets `torch.backends.cudnn`
+
 
     if task == 'synt':
         # Set which GPU to run the script on

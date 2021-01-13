@@ -94,10 +94,12 @@ def read_and_prepare_data(data_path, seq_length=0):
 
 # Cell
 class TwinSequence(Dataset):
-    def __init__(self, sl=1024, len=100):
+    def __init__(self, sl=1024, len=100, seed=None):
         assert sl%2 == 0
         self.sl = sl
         self.len = len
+        if seed is not None:
+            torch.manual_seed(seed)
     def __getitem__(self, idx):
         seq = torch.randint(1,128,(self.sl//2,))             # w: [1-127] of len sl//2
         seq[0] = 0                                           # seq = 0w
