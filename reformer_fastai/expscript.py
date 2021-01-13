@@ -10,7 +10,7 @@ from fastcore.all import *
 from fastai.basics import *
 
 from .reformer import LSHLM
-from .data import TwinSequence, MaskTargCallback
+from .data import DeterministicTwinSequence, MaskTargCallback
 from .metrics import MaskedAccuracy
 
 from .tracking import *
@@ -48,8 +48,8 @@ use_lsh=True
 # Cell
 def get_twin_sequence_dataloaders(bs:int=32, sl:int=1024, train_sz:int=500, valid_sz:int=100, seed=None):
 
-    dls = DataLoaders.from_dsets(TwinSequence(sl, train_sz, seed),
-                                 TwinSequence(sl, valid_sz, seed),
+    dls = DataLoaders.from_dsets(DeterministicTwinSequence(sl, train_sz, seed),
+                                 DeterministicTwinSequence(sl, valid_sz, seed),
                                  bs=bs, shuffle=False, device='cuda')
     return dls
 
@@ -177,7 +177,7 @@ def run_exp(task:Param(help="Which exeriment task to run", type=str),
         if save_model:
             import datetime
             now = datetime.datetime.now().strftime("%Y%m%d_%H:%M:%S")
-            learn.save(f'{task}_n_hashes-{n_hashes}_use-lsh-{use_lsh}_epohs-{n_epochs}_{now}')
+            learn.save(f'{task}_n_hashes-{n_hashes}_use-lsh-{use_lsh}_epochs-{n_epochs}_{now}')
 
     elif task =='test':
         print('testing testing :)')
