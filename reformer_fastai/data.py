@@ -119,6 +119,7 @@ class MaskTargCallback(Callback):
 class DeterministicTwinSequence(Dataset):
     def __init__(self, sl=1024, n_items=100, seed=None):
         assert sl%2 == 0
+        self.sl = sl
         self.items, self.target = self._create_ds(sl, n_items, seed)
 
     def __getitem__(self, idx):
