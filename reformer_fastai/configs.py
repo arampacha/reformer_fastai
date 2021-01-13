@@ -63,7 +63,7 @@ class SyntheticConfig(ConfigBase):
         'bucket_size':64,
         'use_lsh':True,
         'n_hashes':4,
-        'random_state':123,
+        'seed':123,
     }
 
     @delegates(_model)
