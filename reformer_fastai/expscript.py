@@ -15,6 +15,7 @@ from .metrics import MaskedAccuracy
 
 from .tracking import *
 from .tracking import WandbCallback
+from .configs import SyntheticConfig
 
 # Cell
 
@@ -149,8 +150,9 @@ def run_exp(task:Param(help="Which exeriment task to run", type=str),
         print('done!')
 
         print('Getting model ...')
-        model = get_lshlm_model(vocab_sz=vocab_sz, d_model=d_model, n_layers=n_layers, n_heads=n_heads,
-                  max_seq_len=max_seq_len, bucket_size=bucket_size, n_hashes=n_hashes, causal=causal, use_lsh=use_lsh)
+        config = SyntheticConfig(**locals())
+        config.save(wandb_name, add_tstmp=True)
+        model = LSHLM.from_config(config)
         print('done!')
 
         print('Getting learner ...')
