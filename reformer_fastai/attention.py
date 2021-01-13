@@ -246,7 +246,8 @@ class LSHAttention(Module):
         # 2. Calculate hash bucket id via random rotations, concatenation and argmax
         # note: we copy rotations accross batch dimension (see exploration notebook for details).
 
-        if self.random_state is not None: set_seed(self.random_state, reproducible=True)
+        if self.random_state is not None:
+            torch.manual_seed(self.random_state)
 
         random_rotations = repeat(torch.randn(rotations_shape,device=device),
                                   'd nh nb -> bs d nh nb', bs=batch_size)
