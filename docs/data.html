@@ -47,7 +47,7 @@ nb_path: "nbs/06_data.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="read_lines" class="doc_header"><code>read_lines</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/data.py#L16" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>read_lines</code>(<strong><code>path</code></strong>)</p>
+<h4 id="read_lines" class="doc_header"><code>read_lines</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/data.py#L17" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>read_lines</code>(<strong><code>path</code></strong>)</p>
 </blockquote>
 <p>Tokenizes a text file.</p>
 
@@ -72,7 +72,7 @@ nb_path: "nbs/06_data.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="convert_data_to_seq_length" class="doc_header"><code>convert_data_to_seq_length</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/data.py#L28" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>convert_data_to_seq_length</code>(<strong><code>df</code></strong>, <strong><code>seq_length</code></strong>=<em><code>65536</code></em>)</p>
+<h4 id="convert_data_to_seq_length" class="doc_header"><code>convert_data_to_seq_length</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/data.py#L29" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>convert_data_to_seq_length</code>(<strong><code>df</code></strong>, <strong><code>seq_length</code></strong>=<em><code>65536</code></em>)</p>
 </blockquote>
 <p>Take a dataframe text data and convert it to a dataframe with the same columns where
 every data sample is of numericalized token length of seq_length, except for the last example which is the remainder.
@@ -102,7 +102,7 @@ every data sample is of numericalized token length of seq_length, except for the
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="read_and_prepare_data" class="doc_header"><code>read_and_prepare_data</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/data.py#L60" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>read_and_prepare_data</code>(<strong><code>data_path</code></strong>, <strong><code>seq_length</code></strong>=<em><code>0</code></em>)</p>
+<h4 id="read_and_prepare_data" class="doc_header"><code>read_and_prepare_data</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/data.py#L61" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>read_and_prepare_data</code>(<strong><code>data_path</code></strong>, <strong><code>seq_length</code></strong>=<em><code>0</code></em>)</p>
 </blockquote>
 <p>Read the data from file, and prepare the dataframe.
 This does not include splitting into train and validation sets.
@@ -250,9 +250,9 @@ This does not include splitting into train and validation sets.
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stderr output_text">
-<pre>tokenizing data: 100%|██████████| 1/1 [00:00&lt;00:00, 1153.55it/s]
-Splitting data: 100%|██████████| 7/7 [00:00&lt;00:00, 261.46it/s]
-Splitting data: 100%|██████████| 2/2 [00:00&lt;00:00, 295.90it/s]
+<pre>tokenizing data: 100%|██████████| 1/1 [00:00&lt;00:00, 1174.88it/s]
+Splitting data: 100%|██████████| 7/7 [00:00&lt;00:00, 272.55it/s]
+Splitting data: 100%|██████████| 2/2 [00:00&lt;00:00, 243.28it/s]
 </pre>
 </div>
 </div>
@@ -321,7 +321,7 @@ We create items on the fly instead of all items up front.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="TwinSequence" class="doc_header"><code>class</code> <code>TwinSequence</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/data.py#L96" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TwinSequence</code>(<strong><code>sl</code></strong>=<em><code>1024</code></em>, <strong><code>len</code></strong>=<em><code>100</code></em>, <strong><code>seed</code></strong>=<em><code>None</code></em>) :: <code>Dataset</code></p>
+<h2 id="TwinSequence" class="doc_header"><code>class</code> <code>TwinSequence</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/data.py#L97" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TwinSequence</code>(<strong><code>sl</code></strong>=<em><code>1024</code></em>, <strong><code>len</code></strong>=<em><code>100</code></em>, <strong><code>seed</code></strong>=<em><code>None</code></em>) :: <code>Dataset</code></p>
 </blockquote>
 <p>An abstract class representing a :class:<code>Dataset</code>.</p>
 <p>All datasets that represent a map from keys to data samples should subclass
@@ -463,7 +463,7 @@ of :class:<code>~torch.utils.data.DataLoader</code>.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="MaskTargCallback" class="doc_header"><code>class</code> <code>MaskTargCallback</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/data.py#L113" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>MaskTargCallback</code>(<strong><code>after_create</code></strong>=<em><code>None</code></em>, <strong><code>before_fit</code></strong>=<em><code>None</code></em>, <strong><code>before_epoch</code></strong>=<em><code>None</code></em>, <strong><code>before_train</code></strong>=<em><code>None</code></em>, <strong><code>before_batch</code></strong>=<em><code>None</code></em>, <strong><code>after_pred</code></strong>=<em><code>None</code></em>, <strong><code>after_loss</code></strong>=<em><code>None</code></em>, <strong><code>before_backward</code></strong>=<em><code>None</code></em>, <strong><code>before_step</code></strong>=<em><code>None</code></em>, <strong><code>after_cancel_step</code></strong>=<em><code>None</code></em>, <strong><code>after_step</code></strong>=<em><code>None</code></em>, <strong><code>after_cancel_batch</code></strong>=<em><code>None</code></em>, <strong><code>after_batch</code></strong>=<em><code>None</code></em>, <strong><code>after_cancel_train</code></strong>=<em><code>None</code></em>, <strong><code>after_train</code></strong>=<em><code>None</code></em>, <strong><code>before_validate</code></strong>=<em><code>None</code></em>, <strong><code>after_cancel_validate</code></strong>=<em><code>None</code></em>, <strong><code>after_validate</code></strong>=<em><code>None</code></em>, <strong><code>after_cancel_epoch</code></strong>=<em><code>None</code></em>, <strong><code>after_epoch</code></strong>=<em><code>None</code></em>, <strong><code>after_cancel_fit</code></strong>=<em><code>None</code></em>, <strong><code>after_fit</code></strong>=<em><code>None</code></em>) :: <code>Callback</code></p>
+<h2 id="MaskTargCallback" class="doc_header"><code>class</code> <code>MaskTargCallback</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/data.py#L114" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>MaskTargCallback</code>(<strong><code>after_create</code></strong>=<em><code>None</code></em>, <strong><code>before_fit</code></strong>=<em><code>None</code></em>, <strong><code>before_epoch</code></strong>=<em><code>None</code></em>, <strong><code>before_train</code></strong>=<em><code>None</code></em>, <strong><code>before_batch</code></strong>=<em><code>None</code></em>, <strong><code>after_pred</code></strong>=<em><code>None</code></em>, <strong><code>after_loss</code></strong>=<em><code>None</code></em>, <strong><code>before_backward</code></strong>=<em><code>None</code></em>, <strong><code>before_step</code></strong>=<em><code>None</code></em>, <strong><code>after_cancel_step</code></strong>=<em><code>None</code></em>, <strong><code>after_step</code></strong>=<em><code>None</code></em>, <strong><code>after_cancel_batch</code></strong>=<em><code>None</code></em>, <strong><code>after_batch</code></strong>=<em><code>None</code></em>, <strong><code>after_cancel_train</code></strong>=<em><code>None</code></em>, <strong><code>after_train</code></strong>=<em><code>None</code></em>, <strong><code>before_validate</code></strong>=<em><code>None</code></em>, <strong><code>after_cancel_validate</code></strong>=<em><code>None</code></em>, <strong><code>after_validate</code></strong>=<em><code>None</code></em>, <strong><code>after_cancel_epoch</code></strong>=<em><code>None</code></em>, <strong><code>after_epoch</code></strong>=<em><code>None</code></em>, <strong><code>after_cancel_fit</code></strong>=<em><code>None</code></em>, <strong><code>after_fit</code></strong>=<em><code>None</code></em>) :: <code>Callback</code></p>
 </blockquote>
 <p>Basic class handling tweaks of the training loop by changing a <code>Learner</code> in various events</p>
 
@@ -480,6 +480,75 @@ of :class:<code>~torch.utils.data.DataLoader</code>.</p>
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    {% endraw %}
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Below is a TwinSequence dataset that is deterministic, and loads all items to memory:</p>
+
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h2 id="DeterministicTwinSequence" class="doc_header"><code>class</code> <code>DeterministicTwinSequence</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/data.py#L119" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>DeterministicTwinSequence</code>(<strong><code>sl</code></strong>=<em><code>1024</code></em>, <strong><code>n_items</code></strong>=<em><code>100</code></em>, <strong><code>seed</code></strong>=<em><code>None</code></em>) :: <code>Dataset</code></p>
+</blockquote>
+<p>An abstract class representing a :class:<code>Dataset</code>.</p>
+<p>All datasets that represent a map from keys to data samples should subclass
+it. All subclasses should overwrite :meth:<code>__getitem__</code>, supporting fetching a
+data sample for a given key. Subclasses could also optionally overwrite
+:meth:<code>__len__</code>, which is expected to return the size of the dataset by many
+:class:<code>~torch.utils.data.Sampler</code> implementations and the default options
+of :class:<code>~torch.utils.data.DataLoader</code>.</p>
+<p>.. note::
+  :class:<code>~torch.utils.data.DataLoader</code> by default constructs a index
+  sampler that yields integral indices.  To make it work with a map-style
+  dataset with non-integral indices/keys, a custom sampler must be provided.</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dls</span><span class="o">=</span><span class="n">DataLoaders</span><span class="o">.</span><span class="n">from_dsets</span><span class="p">(</span><span class="n">TwinSequence</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">),</span> <span class="n">bs</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cpu&#39;</span><span class="p">)</span>
+<span class="n">xb</span><span class="p">,</span> <span class="n">yb</span> <span class="o">=</span> <span class="n">dls</span><span class="o">.</span><span class="n">one_batch</span><span class="p">()</span>
+<span class="n">inp3</span><span class="p">,</span> <span class="n">targ3</span> <span class="o">=</span> <span class="n">xb</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="n">yb</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+<span class="k">assert</span> <span class="n">all_equal</span><span class="p">(</span><span class="n">inp3</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">targ3</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
 
 </div>
     {% endraw %}
