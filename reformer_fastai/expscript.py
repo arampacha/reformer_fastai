@@ -150,7 +150,7 @@ def run_exp(task:Param(help="Which exeriment task to run", type=str),
         print('done!')
 
         print('Getting model ...')
-        config = SyntheticConfig(use_lsh=use_lsh, n_hashes=n_hashes)
+        config = SyntheticConfig(**locals())
         config.save(wandb_name, add_tstmp=True)
         model = LSHLM.from_config(config)
         print('done!')

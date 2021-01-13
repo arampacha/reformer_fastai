@@ -45,6 +45,7 @@ nb_path: "nbs/20_experiment-script.ipynb"
 
 <span class="kn">from</span> <span class="nn">reformer_fastai.tracking</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">reformer_fastai.tracking</span> <span class="kn">import</span> <span class="n">WandbCallback</span>
+<span class="kn">from</span> <span class="nn">reformer_fastai.configs</span> <span class="kn">import</span> <span class="n">SyntheticConfig</span>
 </pre></div>
 
     </div>
@@ -140,7 +141,7 @@ nb_path: "nbs/20_experiment-script.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_twin_sequence_dataloaders" class="doc_header"><code>get_twin_sequence_dataloaders</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/expscript.py#L49" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_twin_sequence_dataloaders</code>(<strong><code>bs</code></strong>:<code>int</code>=<em><code>32</code></em>, <strong><code>sl</code></strong>:<code>int</code>=<em><code>1024</code></em>, <strong><code>train_sz</code></strong>:<code>int</code>=<em><code>500</code></em>, <strong><code>valid_sz</code></strong>:<code>int</code>=<em><code>100</code></em>, <strong><code>seed</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="get_twin_sequence_dataloaders" class="doc_header"><code>get_twin_sequence_dataloaders</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/expscript.py#L50" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_twin_sequence_dataloaders</code>(<strong><code>bs</code></strong>:<code>int</code>=<em><code>32</code></em>, <strong><code>sl</code></strong>:<code>int</code>=<em><code>1024</code></em>, <strong><code>train_sz</code></strong>:<code>int</code>=<em><code>500</code></em>, <strong><code>valid_sz</code></strong>:<code>int</code>=<em><code>100</code></em>, <strong><code>seed</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 
 </div>
@@ -184,7 +185,7 @@ nb_path: "nbs/20_experiment-script.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_lshlm_model" class="doc_header"><code>get_lshlm_model</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/expscript.py#L57" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_lshlm_model</code>(<strong><code>vocab_sz</code></strong>:<code>int</code>=<em><code>128</code></em>, <strong><code>d_model</code></strong>:<code>int</code>=<em><code>256</code></em>, <strong><code>n_layers</code></strong>:<code>int</code>=<em><code>1</code></em>, <strong><code>n_heads</code></strong>:<code>int</code>=<em><code>4</code></em>, <strong><code>d_ff</code></strong>:<code>int</code>=<em><code>None</code></em>, <strong><code>max_seq_len</code></strong>:<code>int</code>=<em><code>64</code></em>, <strong><code>bucket_size</code></strong>:<code>int</code>=<em><code>32</code></em>, <strong><code>n_hashes</code></strong>:<code>int</code>=<em><code>4</code></em>, <strong><code>causal</code></strong>:<code>bool</code>=<em><code>True</code></em>, <strong><code>use_lsh</code></strong>:<code>bool</code>=<em><code>True</code></em>, <strong><code>attn_dropout</code></strong>:<code>float</code>=<em><code>0.1</code></em>, <strong><code>ff_dropout</code></strong>:<code>float</code>=<em><code>0.1</code></em>, <strong><code>emb_dropout</code></strong>:<code>float</code>=<em><code>0.1</code></em>, <strong><code>seed</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="get_lshlm_model" class="doc_header"><code>get_lshlm_model</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/expscript.py#L58" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_lshlm_model</code>(<strong><code>vocab_sz</code></strong>:<code>int</code>=<em><code>128</code></em>, <strong><code>d_model</code></strong>:<code>int</code>=<em><code>256</code></em>, <strong><code>n_layers</code></strong>:<code>int</code>=<em><code>1</code></em>, <strong><code>n_heads</code></strong>:<code>int</code>=<em><code>4</code></em>, <strong><code>d_ff</code></strong>:<code>int</code>=<em><code>None</code></em>, <strong><code>max_seq_len</code></strong>:<code>int</code>=<em><code>64</code></em>, <strong><code>bucket_size</code></strong>:<code>int</code>=<em><code>32</code></em>, <strong><code>n_hashes</code></strong>:<code>int</code>=<em><code>4</code></em>, <strong><code>causal</code></strong>:<code>bool</code>=<em><code>True</code></em>, <strong><code>use_lsh</code></strong>:<code>bool</code>=<em><code>True</code></em>, <strong><code>attn_dropout</code></strong>:<code>float</code>=<em><code>0.1</code></em>, <strong><code>ff_dropout</code></strong>:<code>float</code>=<em><code>0.1</code></em>, <strong><code>emb_dropout</code></strong>:<code>float</code>=<em><code>0.1</code></em>, <strong><code>seed</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 
 </div>
@@ -228,7 +229,7 @@ nb_path: "nbs/20_experiment-script.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_synthetic_learner" class="doc_header"><code>get_synthetic_learner</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/expscript.py#L68" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_synthetic_learner</code>(<strong><code>dls</code></strong>, <strong><code>model</code></strong>)</p>
+<h4 id="get_synthetic_learner" class="doc_header"><code>get_synthetic_learner</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/expscript.py#L69" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_synthetic_learner</code>(<strong><code>dls</code></strong>, <strong><code>model</code></strong>)</p>
 </blockquote>
 
 </div>
@@ -265,7 +266,7 @@ nb_path: "nbs/20_experiment-script.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="init_wandb" class="doc_header"><code>init_wandb</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/expscript.py#L76" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>init_wandb</code>(<strong><code>cbs</code></strong>:<code>list</code>=<em><code>[]</code></em>, <strong><code>wandb_name</code></strong>:<code>str</code>=<em><code>''</code></em>, <strong><code>wandb_group</code></strong>:<code>str</code>=<em><code>''</code></em>, <strong><code>wandb_notes</code></strong>:<code>str</code>=<em><code>''</code></em>, <strong><code>wandb_tags</code></strong>:<code>str</code>=<em><code>'test'</code></em>)</p>
+<h4 id="init_wandb" class="doc_header"><code>init_wandb</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/expscript.py#L77" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>init_wandb</code>(<strong><code>cbs</code></strong>:<code>list</code>=<em><code>[]</code></em>, <strong><code>wandb_name</code></strong>:<code>str</code>=<em><code>''</code></em>, <strong><code>wandb_group</code></strong>:<code>str</code>=<em><code>''</code></em>, <strong><code>wandb_notes</code></strong>:<code>str</code>=<em><code>''</code></em>, <strong><code>wandb_tags</code></strong>:<code>str</code>=<em><code>'test'</code></em>)</p>
 </blockquote>
 
 </div>
@@ -294,23 +295,6 @@ nb_path: "nbs/20_experiment-script.ipynb"
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="o">??</span>set_seed
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
 
 <div class="output_wrapper">
 <div class="output">
@@ -319,7 +303,7 @@ nb_path: "nbs/20_experiment-script.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="run_exp" class="doc_header"><code>run_exp</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/expscript.py#L98" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>run_exp</code>(<strong><code>task</code></strong>:"Which exeriment task to run", <strong><code>n_epochs</code></strong>:"Number of epochs", <strong><code>lr</code></strong>:"Learning rate", <strong><code>bs</code></strong>:"Batch size", <strong><code>sl</code></strong>:"Seqlence length", <strong><code>d_model</code></strong>:"Model dimension", <strong><code>n_layers</code></strong>:"Number of model layers", <strong><code>n_heads</code></strong>:"Number of attention heads", <strong><code>vocab_sz</code></strong>:"Vocab size", <strong><code>d_ff</code></strong>:"Vocab size", <strong><code>attn_dropout</code></strong>:"Attention dropout rate", <strong><code>ff_dropout</code></strong>:"Attention dropout rate", <strong><code>emb_dropout</code></strong>:"Attention dropout rate", <strong><code>train_sz</code></strong>:"TwinSequence train size", <strong><code>valid_sz</code></strong>:"TwinSequence valid size", <strong><code>n_hashes</code></strong>:"Number of LSH Attention hashes", <strong><code>bucket_size</code></strong>:"LSH Attention bucket size", <strong><code>causal</code></strong>:"Use causal masking", <strong><code>use_lsh</code></strong>:"Use LSH Attention", <strong><code>max_seq_len</code></strong>:"Max sequence length for model embedding", <strong><code>do_wandb_logging</code></strong>:"Use weights and biases logging", <strong><code>wandb_name</code></strong>:"wandb run name", <strong><code>wandb_group</code></strong>:"wandb group", <strong><code>wandb_notes</code></strong>:"wandb notes", <strong><code>wandb_tags</code></strong>:"wandb tags, add tags in a single string, space separated", <strong><code>save_model</code></strong>:"Save model locally in /models", <strong><code>cuda_id</code></strong>:"Which cuda device to use", <strong><code>seed</code></strong>:"Set seed for reproducibiltiy, passing anything except 0 will use fastai's set_seed")</p>
+<h4 id="run_exp" class="doc_header"><code>run_exp</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/expscript.py#L99" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>run_exp</code>(<strong><code>task</code></strong>:"Which exeriment task to run", <strong><code>n_epochs</code></strong>:"Number of epochs", <strong><code>lr</code></strong>:"Learning rate", <strong><code>bs</code></strong>:"Batch size", <strong><code>sl</code></strong>:"Seqlence length", <strong><code>d_model</code></strong>:"Model dimension", <strong><code>n_layers</code></strong>:"Number of model layers", <strong><code>n_heads</code></strong>:"Number of attention heads", <strong><code>vocab_sz</code></strong>:"Vocab size", <strong><code>d_ff</code></strong>:"Vocab size", <strong><code>attn_dropout</code></strong>:"Attention dropout rate", <strong><code>ff_dropout</code></strong>:"Attention dropout rate", <strong><code>emb_dropout</code></strong>:"Attention dropout rate", <strong><code>train_sz</code></strong>:"TwinSequence train size", <strong><code>valid_sz</code></strong>:"TwinSequence valid size", <strong><code>n_hashes</code></strong>:"Number of LSH Attention hashes", <strong><code>bucket_size</code></strong>:"LSH Attention bucket size", <strong><code>causal</code></strong>:"Use causal masking", <strong><code>use_lsh</code></strong>:"Use LSH Attention", <strong><code>max_seq_len</code></strong>:"Max sequence length for model embedding", <strong><code>do_wandb_logging</code></strong>:"Use weights and biases logging", <strong><code>wandb_name</code></strong>:"wandb run name", <strong><code>wandb_group</code></strong>:"wandb group", <strong><code>wandb_notes</code></strong>:"wandb notes", <strong><code>wandb_tags</code></strong>:"wandb tags, add tags in a single string, space separated", <strong><code>save_model</code></strong>:"Save model locally in /models", <strong><code>cuda_id</code></strong>:"Which cuda device to use", <strong><code>seed</code></strong>:"Set seed for reproducibiltiy, passing anything except 0 will use fastai's set_seed")</p>
 </blockquote>
 <p>tasks: synt, lm, trans</p>
 
