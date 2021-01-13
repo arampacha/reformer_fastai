@@ -15,6 +15,7 @@ from .metrics import MaskedAccuracy
 
 from .tracking import *
 from .tracking import WandbCallback
+from .configs import SyntheticConfig
 
 # Cell
 
@@ -180,6 +181,7 @@ def run_exp(task:Param(help="Which exeriment task to run", type=str),
             learn.save(f'{task}_n_hashes-{n_hashes}_use-lsh-{use_lsh}_epohs-{n_epochs}_{now}')
 
     elif task =='test':
+        print(locals())
         print('testing testing :)')
     else:
         print('No task run')

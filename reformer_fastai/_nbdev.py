@@ -53,6 +53,8 @@ index = {"exists": "00_core.ipynb",
          "TransformerDecoder": "03_transformer.ipynb",
          "TransformerLM": "03_transformer.ipynb",
          "Transformer": "03_transformer.ipynb",
+         "from_config": "04_reformer.ipynb",
+         "MODELS": "04_reformer.ipynb",
          "Chunk": "04_reformer.ipynb",
          "ChunkedFeedForward": "04_reformer.ipynb",
          "Deterministic": "04_reformer.ipynb",
@@ -104,7 +106,9 @@ index = {"exists": "00_core.ipynb",
          "get_lshlm_model": "20_experiment-script.ipynb",
          "get_synthetic_learner": "20_experiment-script.ipynb",
          "init_wandb": "20_experiment-script.ipynb",
-         "run_exp": "20_experiment-script.ipynb"}
+         "run_exp": "20_experiment-script.ipynb",
+         "ConfigBase": "21_experiment-configs.ipynb",
+         "SyntheticConfig": "21_experiment-configs.ipynb"}
 
 modules = ["core.py",
            "layers.py",
@@ -116,7 +120,8 @@ modules = ["core.py",
            "metrics.py",
            "optimizers.py",
            "tracking.py",
-           "expscript.py"]
+           "expscript.py",
+           "configs.py"]
 
 doc_url = "https://arampacha.github.io/reformer_fastai/"
 

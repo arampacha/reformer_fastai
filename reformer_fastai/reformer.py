@@ -2,7 +2,7 @@
 
 __all__ = ['Chunk', 'ChunkedFeedForward', 'Deterministic', 'ReversibleBlock', 'IrreversibleBlock', 'ReversibleSequence',
            'ReversibleEncoder', 'ReversibleDecoder', 'ReversibleLM', 'ReversibleTransformer', 'LSHEncoderBlock',
-           'LSHEncoder', 'LSHLM', 'ReformerEncoder', 'ReformerLM']
+           'LSHEncoder', 'LSHLM', 'ReformerEncoder', 'ReformerLM', 'from_config', 'MODELS']
 
 # Cell
 from torch.autograd.function import Function
@@ -760,3 +760,9 @@ class ReformerLM(Module, LMMixin):
         for c in self.children():
             for m in c.modules():
                 if hasattr(m, 'n_hashes'): m.n_hashes=val
+
+# Cell
+MODELS = (LSHLM, ReversibleLM, ReversibleTransformer, ReformerLM)
+@patch(cls_method=True)
+def from_config(cls:MODELS, config):
+    return cls(**config.dict())
