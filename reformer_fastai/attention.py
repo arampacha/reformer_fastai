@@ -222,7 +222,7 @@ class LSHAttention(Module):
                   attend_across_buckets = False,      # as in the paper
                   drop_for_hash_rate = 0.0,           # unsure of default, not mentioned in paper
                   return_attn = False,
-                  random_state = None,                # for reproducibility
+                  seed = None,                # for reproducibility
                   **kwargs):
 
         if dropout >= 1.0 or drop_for_hash_rate >=1.0:
@@ -246,8 +246,8 @@ class LSHAttention(Module):
         # 2. Calculate hash bucket id via random rotations, concatenation and argmax
         # note: we copy rotations accross batch dimension (see exploration notebook for details).
 
-        if self.random_state is not None:
-            torch.manual_seed(self.random_state)
+        if self.seed is not None:
+            torch.manual_seed(self.seed)
 
         random_rotations = repeat(torch.randn(rotations_shape,device=device),
                                   'd nh nb -> bs d nh nb', bs=batch_size)
@@ -446,7 +446,7 @@ class LSHSelfAttention(Module):
                  attend_across_buckets = False,
                  allow_duplicate_attention = False,   # Penalize multiple qk-v pairs in same attention chunk or not
                  return_attn = False,                 # Not implemented yet
-                 random_state = None,                 # for reproducibility
+                 seed = None,                 # for reproducibility
                  dropout = 0.,                        # dropout for LSH-Attention attention matrix
                  dropout_hash = 0.,                   # dropout for hashing algorithm
                  out_dropout = 0.):                   # a final dropout on output
@@ -463,7 +463,7 @@ class LSHSelfAttention(Module):
                                      return_attn = return_attn,
                                      dropout = dropout,
                                      dropout_hash = dropout_hash,
-                                     random_state=random_state)
+                                     seed=seed)
         self.out_dropout = nn.Dropout(out_dropout)
         self._init()
 
@@ -578,7 +578,7 @@ class ReformerAttentionV2(Module):
                  use_lsh:bool = True,
                  n_hashes:int = 8,
                  bucket_size:int = 64,
-                 random_state:int=None):
+                 seed:int=None):
         store_attr('causal, attn_mask, n_heads, bias, use_lsh')
 
         out_dropout = ifnone(out_dropout, dropout)
@@ -586,7 +586,7 @@ class ReformerAttentionV2(Module):
 
         self.lsh_attn = LSHAttention(bucket_size=bucket_size, n_hashes=n_hashes, causal=causal,
                                      return_attn=store_attention, dropout=dropout,
-                                     random_state=random_state)
+                                     seed=seed)
         self.full_attn = ScaledDotProdAttention(d_model, n_heads, causal=causal,
                                                 dropout=dropout, shared_qk=True,
                                                 store_attention=store_attention)

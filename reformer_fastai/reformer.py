@@ -466,19 +466,19 @@ class LSHEncoderBlock(Module):
                  use_lsh:bool=True,
                  n_hashes:int=8,
                  bucket_size:int=64,
-                 random_state:int=None):
+                 seed:int=None):
         store_attr('attn_dropout') # mb separate argument attn_post_dropout
         if prenorm:
             self.attn = Residual(PreNorm(d_model, ReformerAttentionV2(d_model, n_heads=n_heads, causal=causal,
                                                     dropout=attn_dropout, bias=attn_bias, use_lsh=use_lsh,
                                                     n_hashes=n_hashes, bucket_size=bucket_size,
-                                                    random_state=random_state)))
+                                                    seed=seed)))
             self.ff = Residual(PreNorm(d_model, FeedForward(d_model, d_ff=d_ff, dropout=ff_dropout)))
         else:
             self.attn = PostNorm(d_model, Residual(ReformerAttentionV2(d_model, n_heads=n_heads, causal=causal,
                                                     dropout=attn_dropout, bias=attn_bias, use_lsh=use_lsh,
                                                     n_hashes=n_hashes, bucket_size=bucket_size,
-                                                    random_state=random_state)))
+                                                    seed=seed)))
             self.ff = PostNorm(d_model, Residual(FeedForward(d_model, d_ff=d_ff, dropout=ff_dropout)))
 
     def forward(self, x, mask=None):
@@ -502,7 +502,7 @@ class LSHEncoder(Module):
                  final_norm=None,
                  n_hashes:int=8,
                  bucket_size:int=64,
-                 random_state:int=None):
+                 seed:int=None):
         store_attr('d_model')
         self.layers = nn.ModuleList([])
         for _ in range(n_layers):
@@ -510,7 +510,7 @@ class LSHEncoder(Module):
                                     d_ff=d_ff, attn_dropout=attn_dropout, ff_dropout=ff_dropout,
                                     prenorm=prenorm, attn_bias=attn_bias, use_lsh=use_lsh,
                                     n_hashes=n_hashes, bucket_size=bucket_size,
-                                    random_state=random_state))
+                                    seed=seed))
         self.norm = None if final_norm is None else final_norm(d_model)
 
     def forward(self, x, mask=None):
@@ -545,7 +545,7 @@ class LSHLM(Module, LMMixin):
         * use_slh: bool - parameter to switch between LSH and full attention
         * n_hashes: int - number of hashing rounds for LSH
         * bucket_size: int - input sequence length should be divisible by 2*bucket_size
-        * random_state: int - for LSHAttention module
+        * seed: int - for LSHAttention module
 
     Inputs:
         * x - input ids, shape [bs, sl]
@@ -575,7 +575,7 @@ class LSHLM(Module, LMMixin):
                  use_lsh:bool=True,
                  n_hashes:int=8,
                  bucket_size:int=64,
-                 random_state:int=None):
+                 seed:int=None):
         store_attr()
         self._use_lsh = use_lsh
         self._n_hashes = n_hashes
@@ -587,7 +587,7 @@ class LSHLM(Module, LMMixin):
                                   attn_dropout=attn_dropout, ff_dropout=ff_dropout,
                                   prenorm=prenorm, attn_bias=attn_bias, use_lsh=use_lsh,
                                   final_norm=final_norm, n_hashes=n_hashes, bucket_size=bucket_size,
-                                  random_state=random_state)
+                                  seed=seed)
         self.proj = nn.Linear(d_model, vocab_sz)
         if tie_weights: self.proj.weight = self.emb.emb.weight
 
@@ -636,14 +636,14 @@ class ReformerEncoder(Module):
                  use_lsh:bool=True,
                  n_hashes:int=8,
                  bucket_size:int=64,
-                 random_state:int=None):
+                 seed:int=None):
         # store_attr()
         blocks = []
         norm_wrapper = PreNorm if prenorm else PostNorm
         for ind in range(n_layers):
             attn = ReformerAttentionV2(d_model, n_heads=n_heads, causal=causal, dropout=attn_dropout,
                                        bias=attn_bias, use_lsh=use_lsh, n_hashes=n_hashes, bucket_size=bucket_size,
-                                       random_state=random_state)
+                                       seed=seed)
             ff = ChunkedFeedForward(d_model, d_ff, chunks=ff_chunks, dropout=ff_dropout, dim=1)
 
             f = norm_wrapper(d_model, attn)
@@ -689,7 +689,7 @@ class ReformerLM(Module, LMMixin):
         * use_slh: bool - parameter to switch between LSH and full attention
         * n_hashes: int - number of hashing rounds for LSH
         * bucket_size: int - input sequence length should be divisible by 2*bucket_size
-        * random_state: int - for LSHAttention module
+        * seed: int - for LSHAttention module
 
     Inputs:
         * x - input ids, shape [bs, sl]
@@ -721,7 +721,7 @@ class ReformerLM(Module, LMMixin):
                  n_hashes:int=8,
                  bucket_size:int=64,
                  rev_thres:int=0,
-                 random_state:int=None):
+                 seed:int=None):
         store_attr()
         self._use_lsh = use_lsh
         self._n_hashes = n_hashes
@@ -733,7 +733,7 @@ class ReformerLM(Module, LMMixin):
                                       attn_dropout=attn_dropout, ff_dropout=ff_dropout,
                                       prenorm=prenorm, attn_bias=attn_bias, use_lsh=use_lsh,
                                       final_norm=final_norm, n_hashes=n_hashes, bucket_size=bucket_size,
-                                      ff_chunks=ff_chunks, rev_thres=rev_thres, random_state=random_state)
+                                      ff_chunks=ff_chunks, rev_thres=rev_thres, seed=seed)
         self.proj = nn.Linear(d_model, vocab_sz)
         if tie_weights: self.proj.weight = self.emb.emb.weight
 

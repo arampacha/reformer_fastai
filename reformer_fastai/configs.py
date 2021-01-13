@@ -51,17 +51,24 @@ class SyntheticConfig(ConfigBase):
         'attn_dropout':0.0,
         'ff_dropout':0.0,
         'emb_dropout':0.0,
-        'bucket_size':64,
+        'tie_weights':True,
+        'causal':True,
+        'pos_enc':'absolute',
         'max_seq_len':1024,
-        'random_state':123,
+        'axial_shape':None,
+        'axial_emb_dims':None,
+        'pad_idx':None,
+        'prenorm':False,
+        'attn_bias':False,
+        'bucket_size':64,
         'use_lsh':True,
         'n_hashes':4,
-        'pos_enc':'absolute'
+        'random_state':123,
     }
 
     @delegates(_model)
     def __init__(self, **kwargs):
+        self.validate()
         for k,v in kwargs.items():
             if k in self._d: self._d[k]=v
-            else: print(f'Parameter {key} is not accepted by LSHLM. Skipped')
-        self.validate()
+            else: print(f'Parameter {k} is not accepted by LSHLM. Skipped')
