@@ -146,7 +146,7 @@ def run_exp(task:Param(help="Which exeriment task to run", type=str),
         torch.cuda.set_device(cuda_id)
 
         print('Getting dataloaders ...')
-        dls = get_twin_sequence_dataloaders(bs=bs, sl=sl, train_sz=train_sz, valid_sz=valid_sz)
+        dls = get_twin_sequence_dataloaders(bs=bs, sl=sl, train_sz=train_sz, valid_sz=valid_sz, seed=seed)
         print('done!')
 
         print('Getting model ...')
