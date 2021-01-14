@@ -40,6 +40,13 @@ nb_path: "nbs/21_experiment-configs.ipynb"
     
 <div class="cell border-box-sizing code_cell rendered">
 
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
 <div class="output_wrapper">
 <div class="output">
 
@@ -47,7 +54,7 @@ nb_path: "nbs/21_experiment-configs.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="ConfigBase" class="doc_header"><code>class</code> <code>ConfigBase</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/configs.py#L12" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ConfigBase</code>()</p>
+<h2 id="ConfigBase" class="doc_header"><code>class</code> <code>ConfigBase</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/configs.py#L15" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ConfigBase</code>()</p>
 </blockquote>
 <p>Base class for Configs</p>
 
@@ -79,7 +86,7 @@ nb_path: "nbs/21_experiment-configs.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="SyntheticConfig" class="doc_header"><code>class</code> <code>SyntheticConfig</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/configs.py#L39" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>SyntheticConfig</code>(<strong><code>n_layers</code></strong>:<code>int</code>=<em><code>6</code></em>, <strong><code>n_heads</code></strong>:<code>int</code>=<em><code>8</code></em>, <strong><code>d_ff</code></strong>:<code>int</code>=<em><code>None</code></em>, <strong><code>attn_dropout</code></strong>:<code>float</code>=<em><code>0.1</code></em>, <strong><code>ff_dropout</code></strong>:<code>float</code>=<em><code>0.1</code></em>, <strong><code>emb_dropout</code></strong>:<code>float</code>=<em><code>0.1</code></em>, <strong><code>tie_weights</code></strong>:<code>bool</code>=<em><code>True</code></em>, <strong><code>causal</code></strong>:<code>bool</code>=<em><code>True</code></em>, <strong><code>pos_enc</code></strong>:<code>str</code>=<em><code>'absolute'</code></em>, <strong><code>max_seq_len</code></strong>:<code>int</code>=<em><code>512</code></em>, <strong><code>axial_shape</code></strong>:<code>tuple</code>=<em><code>None</code></em>, <strong><code>axial_emb_dims</code></strong>:<code>tuple</code>=<em><code>None</code></em>, <strong><code>pad_idx</code></strong>:<code>int</code>=<em><code>None</code></em>, <strong><code>prenorm</code></strong>:<code>bool</code>=<em><code>False</code></em>, <strong><code>attn_bias</code></strong>:<code>bool</code>=<em><code>False</code></em>, <strong><code>use_lsh</code></strong>:<code>bool</code>=<em><code>True</code></em>, <strong><code>n_hashes</code></strong>:<code>int</code>=<em><code>8</code></em>, <strong><code>bucket_size</code></strong>:<code>int</code>=<em><code>64</code></em>, <strong><code>seed</code></strong>:<code>int</code>=<em><code>None</code></em>) :: <a href="/reformer_fastai/experiment-configs.html#ConfigBase"><code>ConfigBase</code></a></p>
+<h2 id="SyntheticConfig" class="doc_header"><code>class</code> <code>SyntheticConfig</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/configs.py#L50" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>SyntheticConfig</code>() :: <a href="/reformer_fastai/experiment-configs.html#ConfigBase"><code>ConfigBase</code></a></p>
 </blockquote>
 <p>Config for Synthetic Experiment.
 See <a href="https://arampacha.github.io/reformer_fastai/experiment.synthetic-task.html">https://arampacha.github.io/reformer_fastai/experiment.synthetic-task.html</a> for details</p>
@@ -147,6 +154,98 @@ bucket_size     64
 use_lsh         True
 n_hashes        4
 seed            123</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>{% include note.html content='Config for envik8 needs to be updated when we diside on sequence length.' %}</p>
+
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h2 id="TransformerLMConfigEnwik8" class="doc_header"><code>class</code> <code>TransformerLMConfigEnwik8</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/configs.py#L82" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TransformerLMConfigEnwik8</code>() :: <a href="/reformer_fastai/experiment-configs.html#ConfigBase"><code>ConfigBase</code></a></p>
+</blockquote>
+<p>Config for enwik8 Experiment.
+See <a href="https://arampacha.github.io/reformer_fastai/experiment.enwik8-baseline.html">https://arampacha.github.io/reformer_fastai/experiment.enwik8-baseline.html</a> for details</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">TransformerLMConfigEnwik8</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>TransformerLM config 
+--------------------
+vocab_sz        256
+d_model         1024
+n_layers        3
+n_heads         8
+d_ff            4096
+attn_dropout    0.1
+ff_dropout      0.1
+emb_dropout     0.1
+tie_weights     True
+causal          True
+pos_enc         axial
+max_seq_len     2048
+axial_shape     (64, 32)
+axial_emb_dims  None
+pad_idx         None
+prenorm         False
+attn_bias       False
+shared_qk       False</pre>
 </div>
 
 </div>
