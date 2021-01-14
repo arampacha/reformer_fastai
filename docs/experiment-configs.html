@@ -54,7 +54,7 @@ nb_path: "nbs/21_experiment-configs.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="ConfigBase" class="doc_header"><code>class</code> <code>ConfigBase</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/configs.py#L15" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ConfigBase</code>()</p>
+<h2 id="ConfigBase" class="doc_header"><code>class</code> <code>ConfigBase</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/configs.py#L17" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ConfigBase</code>(<strong><code>verbouse</code></strong>=<em><code>False</code></em>, <strong><code>warn</code></strong>=<em><code>True</code></em>)</p>
 </blockquote>
 <p>Base class for Configs</p>
 
@@ -86,7 +86,7 @@ nb_path: "nbs/21_experiment-configs.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="SyntheticConfig" class="doc_header"><code>class</code> <code>SyntheticConfig</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/configs.py#L50" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>SyntheticConfig</code>() :: <a href="/reformer_fastai/experiment-configs.html#ConfigBase"><code>ConfigBase</code></a></p>
+<h2 id="SyntheticConfig" class="doc_header"><code>class</code> <code>SyntheticConfig</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/configs.py#L57" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>SyntheticConfig</code>(<strong><code>verbouse</code></strong>=<em><code>False</code></em>, <strong><code>warn</code></strong>=<em><code>True</code></em>) :: <a href="/reformer_fastai/experiment-configs.html#ConfigBase"><code>ConfigBase</code></a></p>
 </blockquote>
 <p>Config for Synthetic Experiment.
 See <a href="https://arampacha.github.io/reformer_fastai/experiment.synthetic-task.html">https://arampacha.github.io/reformer_fastai/experiment.synthetic-task.html</a> for details</p>
@@ -115,7 +115,7 @@ See <a href="https://arampacha.github.io/reformer_fastai/experiment.synthetic-ta
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">synt_config</span> <span class="o">=</span> <span class="n">SyntheticConfig</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">synt_config</span> <span class="o">=</span> <span class="n">SyntheticConfig</span><span class="p">(</span><span class="n">n_hashes</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">foo</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">verbouse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">synt_config</span>
 </pre></div>
 
@@ -125,6 +125,16 @@ See <a href="https://arampacha.github.io/reformer_fastai/experiment.synthetic-ta
 
 <div class="output_wrapper">
 <div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Setting n_hashes = 8
+Setting seed = 1
+Parameter foo is not accepted by LSHLM. Skipped
+</pre>
+</div>
+</div>
 
 <div class="output_area">
 
@@ -152,8 +162,8 @@ prenorm         False
 attn_bias       False
 bucket_size     64
 use_lsh         True
-n_hashes        4
-seed            123</pre>
+n_hashes        8
+seed            1</pre>
 </div>
 
 </div>
@@ -182,7 +192,7 @@ seed            123</pre>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="TransformerLMConfigEnwik8" class="doc_header"><code>class</code> <code>TransformerLMConfigEnwik8</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/configs.py#L82" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TransformerLMConfigEnwik8</code>() :: <a href="/reformer_fastai/experiment-configs.html#ConfigBase"><code>ConfigBase</code></a></p>
+<h2 id="TransformerLMConfigEnwik8" class="doc_header"><code>class</code> <code>TransformerLMConfigEnwik8</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/configs.py#L89" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TransformerLMConfigEnwik8</code>(<strong><code>verbouse</code></strong>=<em><code>False</code></em>, <strong><code>warn</code></strong>=<em><code>True</code></em>) :: <a href="/reformer_fastai/experiment-configs.html#ConfigBase"><code>ConfigBase</code></a></p>
 </blockquote>
 <p>Config for enwik8 Experiment.
 See <a href="https://arampacha.github.io/reformer_fastai/experiment.enwik8-baseline.html">https://arampacha.github.io/reformer_fastai/experiment.enwik8-baseline.html</a> for details</p>
