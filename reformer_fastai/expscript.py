@@ -62,7 +62,7 @@ def get_lshlm_model(vocab_sz:int=128, d_model:int=256, n_layers:int=1, n_heads:i
     model = LSHLM(vocab_sz=vocab_sz, d_model=d_model, n_layers=n_layers, n_heads=n_heads, d_ff=d_ff,
                   max_seq_len=max_seq_len, bucket_size=bucket_size, n_hashes=n_hashes, causal=causal,
                   use_lsh=use_lsh, attn_dropout=attn_dropout, ff_dropout=ff_dropout,
-                  emb_dropout=emb_dropout, random_state=seed)
+                  emb_dropout=emb_dropout, seed=seed)
     return model
 
 # Cell
@@ -135,11 +135,10 @@ def run_exp(task:Param(help="Which exeriment task to run", type=str),
 
 
     #random seeds
-    random_state = seed if seed!=0 else None      # this is passed to LSH and data generator respectively
-
-    if seed !=0 :
-        set_seed(seed, reproducible=True)          # this also sets `torch.backends.cudnn`
-
+    if seed!=0:
+        set_seed(seed, reproducible=True)  # this  sets `torch.cudnn.backends ++`
+    else:
+        seed = None   # this is passed to LSH and data generator. They expect None or int
 
     if task == 'synt':
         # Set which GPU to run the script on
