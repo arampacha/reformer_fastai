@@ -8,6 +8,8 @@ from fastai.basics import *
 
 from .all import *
 
+import json
+
 # Cell
 def _dummy(): return
 
@@ -18,11 +20,13 @@ class ConfigBase:
     _model = _dummy
 
     @delegates(_model)
-    def __init__(self, **kwargs):
+    def __init__(self, verbouse=False, warn=True, **kwargs):
         self.validate()
         for k,v in kwargs.items():
-            if k in self._d: self._d[k]=v
-            else: print(f'Parameter {k} is not accepted by LSHLM. Skipped')
+            if k in self._d:
+                self._d[k]=v
+                if verbouse: print(f'Setting {k} = {v}')
+            elif warn: print(f'Parameter {k} is not accepted by LSHLM. Skipped')
 
     def validate(self):
         assert exists(self._d), "_d missing. You might want to provide defaults for config"
@@ -39,11 +43,14 @@ class ConfigBase:
         if add_tstmp:
             tstmp = time.strftime("_%d_%m_%Y_%H:%M", time.gmtime())
             fn += tstmp
-        save_pickle(fn, self)
+        with open(f'{fn}.json', 'w') as f:
+            json.dump(self.dict(), f)
 
     @classmethod
     def from_file(cls, fn):
-        return load_pickle(fn)
+        with open(f'{fn}.json') as f:
+            d = json.load(f)
+        return cls(d)
 
 
 # Cell

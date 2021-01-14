@@ -149,7 +149,7 @@ def run_exp(task:Param(help="Which exeriment task to run", type=str),
         print('done!')
 
         print('Getting model ...')
-        config = SyntheticConfig(**locals())
+        config = SyntheticConfig(warn=False, verbouse=False, **locals())
         config.save(wandb_name, add_tstmp=True)
         model = LSHLM.from_config(config)
         print('done!')
@@ -180,7 +180,15 @@ def run_exp(task:Param(help="Which exeriment task to run", type=str),
             now = datetime.datetime.now().strftime("%Y%m%d_%H:%M:%S")
             learn.save(f'{task}_n_hashes-{n_hashes}_use-lsh-{use_lsh}_epochs-{n_epochs}_{now}')
 
-    elif task =='test':
+    elif task == 'test_cfg':
+        print('Locals ', locals())
+        print()
+        config = SyntheticConfig(verbouse=True, **locals())
+        print(config)
+        config.save('test')
+        config2 = SyntheticConfig.from_file('test')
+        print(config2)
+    elif task == 'test':
         print('testing testing :)')
     else:
         print('No task run')
