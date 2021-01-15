@@ -43,12 +43,12 @@ class ConfigBase:
         if add_tstmp:
             tstmp = time.strftime("_%d_%m_%Y_%H:%M", time.gmtime())
             fn += tstmp
-        with open(f'{fn}.json', 'w') as f:
+        with open(f'exp_configs/{fn}.json', 'w') as f:
             json.dump(self.dict(), f)
 
     @classmethod
     def from_file(cls, fn):
-        with open(f'{fn}.json') as f:
+        with open(f'exp_configs/{fn}.json') as f:
             d = json.load(f)
         return cls(d)
 

@@ -8,6 +8,7 @@ __all__ = ['lr', 'bs', 'sl', 'train_sz', 'valid_sz', 'n_epochs', 'n_hashes', 'bu
 # Cell
 from fastcore.all import *
 from fastai.basics import *
+from .all import *
 
 from .reformer import LSHLM
 from .data import DeterministicTwinSequence, MaskTargCallback
@@ -174,11 +175,10 @@ def run_exp(task:Param(help="Which exeriment task to run", type=str),
         # Close wandb logging for this run
         if do_wandb_logging: wandb_run.finish()
 
-        # Save model weights if needed
+        # Save model weights if needed, saved in /models relative to where script is run
         if save_model:
-            import datetime
-            now = datetime.datetime.now().strftime("%Y%m%d_%H:%M:%S")
-            learn.save(f'{task}_n_hashes-{n_hashes}_use-lsh-{use_lsh}_epochs-{n_epochs}_{now}')
+            now = time.strftime("_%d_%m_%Y_%H:%M", time.gmtime())
+            learn.save(f'{task}_{wandb_name}_{now}')
 
     elif task == 'test_cfg':
         print('Locals ', locals())
