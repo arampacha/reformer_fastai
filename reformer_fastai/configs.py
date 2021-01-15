@@ -35,12 +35,12 @@ class ConfigBase:
     _d:dict = None
     _model = _dummy
 
-    def __init__(self, *, verbouse=False, warn=True, **kwargs):
+    def __init__(self, *, verbose=False, warn=True, **kwargs):
         self.validate()
         for k,v in kwargs.items():
             if k in self._d:
                 self._d[k]=v
-                if verbouse: print(f'Setting {k} = {v}')
+                if verbose: print(f'Setting {k} = {v}')
             elif warn: print(f'Parameter {k} is not accepted by LSHLM. Skipped')
 
     def validate(self):

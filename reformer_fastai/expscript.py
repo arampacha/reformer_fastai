@@ -2,21 +2,24 @@
 
 __all__ = ['lr', 'bs', 'sl', 'train_sz', 'valid_sz', 'n_epochs', 'n_hashes', 'bucket_size', 'vocab_sz', 'd_model',
            'n_layers', 'n_heads', 'd_ff', 'attn_dropout', 'ff_dropout', 'emb_dropout', 'max_seq_len', 'causal',
-           'use_lsh', 'get_twin_sequence_dataloaders', 'get_lshlm_model', 'get_synthetic_learner', 'init_wandb',
-           'run_exp']
+           'use_lsh', 'download_enwik8_data', 'get_enwik8_dataloader', 'get_twin_sequence_dataloaders',
+           'get_lshlm_model', 'get_synthetic_learner', 'get_lm_learner', 'init_wandb', 'run_exp']
 
 # Cell
+import sys
 from fastcore.all import *
 from fastai.basics import *
+from fastai.text.all import *
+
 from .all import *
 
-from .reformer import LSHLM
-from .data import DeterministicTwinSequence, MaskTargCallback
-from .metrics import MaskedAccuracy
+# from reformer_fastai.reformer import LSHLM
+# from reformer_fastai.data import DeterministicTwinSequence, MaskTargCallback
+# from reformer_fastai.metrics import MaskedAccuracy
 
-from .tracking import *
-from .tracking import WandbCallback
-from .configs import SyntheticConfig
+# from reformer_fastai.tracking import *
+# from reformer_fastai.tracking import WandbCallback
+# from reformer_fastai.configs import SyntheticConfig
 
 # Cell
 
@@ -48,6 +51,63 @@ causal=True
 use_lsh=True
 
 # Cell
+import multiprocessing
+
+# Cell
+def download_enwik8_data(dest='./data'):
+    return untar_data('http://mattmahoney.net/dc/enwik8.zip', dest='data')
+
+def get_enwik8_dataloader(data_path='/data', bs:int=8, sl:int=1024, n_workers=None, val_test_chars:int=10e6, verbose=False):
+
+    if 'google.colab' in sys.modules:
+        data_path = '/content' + data_path + '/enwik8'
+    else:
+        data_path = data_path + '/enwik8'
+
+    if verbose: print('Reading data into dataframe ...')
+    df = pd.DataFrame({'text':read_lines(data_path)})
+    if verbose: print('done')
+
+    # Do tokenization
+    btt = ByteTextTokenizer(is_lm=True, add_bos=False, add_eos=False)
+    if verbose: print('Tokenizing text ...')
+    df['toks'] = df['text'].apply(btt)
+    if verbose: print('done')
+
+    # Get length of each sample and cumulative sum of lens
+    df['lens'] = df['toks'].apply(len)
+    df['lens_cum_sum'] = df.lens.cumsum()
+
+    # Get splits, split train/valid/test based on count of tokens in each split
+    train_cutoff = df.lens.sum() - val_test_chars  # keep all but 10M characters for val and test
+    train_idxs = df.loc[df['lens_cum_sum'] < train_cutoff].index.values
+    train_idxs = list(range(0, max(train_idxs)))
+
+    remaining_idxs = len(df) - max(train_idxs)
+    validation_idxs = list(range(max(train_idxs), max(train_idxs) + int(remaining_idxs/2)))
+    test_idxs = list(range(max(validation_idxs), len(df)))
+
+    splits = [train_idxs, validation_idxs]
+
+    # Get Datasets
+    if verbose: print('Setting up Datasets')
+    tfms = [attrgetter("text"), btt]
+    dsets = Datasets(df, [tfms], splits=splits, dl_type=LMDataLoader)
+    if verbose: print('done')
+
+    # Get Dataloaders
+    dl_kwargs = [{'lens':df['lens'].values[train_idxs]},
+                 {'val_lens':df['lens'].values[validation_idxs]}]
+    if verbose: print('Setting up Dataloaders ...')
+
+    n_cpus = multiprocessing.cpu_count()
+    n_workers = n_cpus if n_workers is None else n_workers
+
+    dls = dsets.dataloaders(bs=bs, seq_len=sl, dl_kwargs=dl_kwargs, shuffle_train=True, n_workers=n_workers)
+    print('done')
+    return dls
+
+# Cell
 def get_twin_sequence_dataloaders(bs:int=32, sl:int=1024, train_sz:int=500, valid_sz:int=100, seed=None):
 
     dls = DataLoaders.from_dsets(DeterministicTwinSequence(sl, train_sz, seed),
@@ -75,6 +135,13 @@ def get_synthetic_learner(dls, model):
     return learn
 
 # Cell
+def get_lm_learner(dls, model, opt_func=adafactor):
+    learn = Learner(dls, model,
+                    loss_func=CrossEntropyLossFlat(ignore_index=-100),
+                    opt_func=opt_func, metrics=[accuracy, perplexity, BPC()]).to_fp16()
+    return learn
+
+# Cell
 def init_wandb(cbs:list=[], wandb_name:str='', wandb_group:str='', wandb_notes:str='', wandb_tags:str='test'):
 
     wandb_tags_ls = wandb_tags.split(' ')
@@ -98,26 +165,27 @@ def init_wandb(cbs:list=[], wandb_name:str='', wandb_group:str='', wandb_notes:s
 
 # Cell
 @call_parse
-def run_exp(task:Param(help="Which exeriment task to run", type=str),
+def run_exp(task:Param(help="Task options: 'synt','lm_base','lm_rev',lm_shared_qk, trans", type=str),
+         data_path:Param(help="Path to data folder", type=str, default='./data'),
          n_epochs:Param(help="Number of epochs", type=int, default=n_epochs),
          lr:Param(help="Learning rate", type=float, default=lr),
          bs:Param(help="Batch size", type=int, default=bs),
          sl:Param(help="Seqlence length", type=int, default=sl),
-         d_model:Param(help="Model dimension", type=int, default=d_model),
-         n_layers:Param(help="Number of model layers", type=int, default=n_layers),
-         n_heads:Param(help="Number of attention heads", type=int, default=n_heads),
-         vocab_sz:Param(help="Vocab size", type=int, default=vocab_sz),
-         d_ff:Param(help="Vocab size", type=int, default=d_ff),
-         attn_dropout:Param(help="Attention dropout rate", type=float, default=attn_dropout),
-         ff_dropout:Param(help="Attention dropout rate", type=float, default=ff_dropout),
-         emb_dropout:Param(help="Attention dropout rate", type=float, default=emb_dropout),
-         train_sz:Param(help="TwinSequence train size", type=int, default=train_sz),
-         valid_sz:Param(help="TwinSequence valid size", type=int, default=valid_sz),
-         n_hashes:Param(help="Number of LSH Attention hashes", type=int, default=n_hashes),
-         bucket_size:Param(help="LSH Attention bucket size", type=int, default=bucket_size),
-         causal:Param(help="Use causal masking", type=bool_arg, default=causal),
-         use_lsh:Param(help="Use LSH Attention", type=bool_arg, default=use_lsh),
-         max_seq_len:Param(help="Max sequence length for model embedding", type=int, default=max_seq_len),
+#          d_model:Param(help="Model dimension", type=int, default=d_model),
+#          n_layers:Param(help="Number of model layers", type=int, default=n_layers),
+#          n_heads:Param(help="Number of attention heads", type=int, default=n_heads),
+#          vocab_sz:Param(help="Vocab size", type=int, default=vocab_sz),
+#          d_ff:Param(help="Vocab size", type=int, default=d_ff),
+#          attn_dropout:Param(help="Attention dropout rate", type=float, default=attn_dropout),
+#          ff_dropout:Param(help="Attention dropout rate", type=float, default=ff_dropout),
+#          emb_dropout:Param(help="Attention dropout rate", type=float, default=emb_dropout),
+#          train_sz:Param(help="TwinSequence train size", type=int, default=train_sz),
+#          valid_sz:Param(help="TwinSequence valid size", type=int, default=valid_sz),
+#          n_hashes:Param(help="Number of LSH Attention hashes", type=int, default=n_hashes),
+#          bucket_size:Param(help="LSH Attention bucket size", type=int, default=bucket_size),
+#          causal:Param(help="Use causal masking", type=bool_arg, default=causal),
+#          use_lsh:Param(help="Use LSH Attention", type=bool_arg, default=use_lsh),
+#          max_seq_len:Param(help="Max sequence length for model embedding", type=int, default=max_seq_len),
          do_wandb_logging:Param(help="Use weights and biases logging", type=bool_arg, default=False),
          wandb_name:Param(help="wandb run name", type=str, default='my_experiment_name'),
          wandb_group:Param(help="wandb group", type=str, default='TEST'),
@@ -126,14 +194,14 @@ def run_exp(task:Param(help="Which exeriment task to run", type=str),
          wandb_tags:Param(help="wandb tags, add tags in a single string, space separated", type=str, default='test'),
          save_model:Param(help="Save model locally in /models", type=bool_arg, default=False),
          cuda_id:Param(help="Which cuda device to use", type=int, default=0),
-         seed:Param(help="Set seed for reproducibiltiy, passing anything except 0 will use fastai's set_seed", type=int, default=0)
+         seed:Param(help="Set seed for reproducibiltiy, passing anything except 0 will use fastai's set_seed", type=int, default=0),
+#          verbose:Param(help="Print script logs", type=bool_arg, default=False)
         ):
 
-    """tasks: synt, lm, trans"""
+    """Task options: 'synt','lm_base','lm_rev',lm_shared_qk, trans"""
 
     # Callbacks used for training
     cbs = []
-
 
     #random seeds
     if seed!=0:
@@ -141,16 +209,16 @@ def run_exp(task:Param(help="Which exeriment task to run", type=str),
     else:
         seed = None   # this is passed to LSH and data generator. They expect None or int
 
-    if task == 'synt':
-        # Set which GPU to run the script on
-        torch.cuda.set_device(cuda_id)
+    # Set which GPU to run the script on
+    torch.cuda.set_device(cuda_id)
 
+    if task == 'synt':
         print('Getting dataloaders ...')
         dls = get_twin_sequence_dataloaders(bs=bs, sl=sl, train_sz=train_sz, valid_sz=valid_sz, seed=seed)
         print('done!')
 
         print('Getting model ...')
-        config = SyntheticConfig(warn=False, verbouse=False, **locals())
+        config = SyntheticConfig(warn=False, verbose=verbose, **locals())
         config.save(wandb_name, add_tstmp=True)
         model = LSHLM.from_config(config)
         print('done!')
@@ -180,6 +248,60 @@ def run_exp(task:Param(help="Which exeriment task to run", type=str),
             now = time.strftime("_%d_%m_%Y_%H:%M", time.gmtime())
             learn.save(f'{task}_{wandb_name}_{now}')
 
+    elif 'lm' in task:
+
+        if task == 'lm_base':
+            config = TransformerLMConfigEnwik8(warn=False, verbose=False, **locals())
+            print('Getting model ...')
+            model = TransformerLM.from_config(config)
+            print('done!')
+        elif task == 'lm_rev':
+            config = ReversibleLMConfigEnwik8(warn=False, verbose=False, **locals())
+            print('Getting model ...')
+            model = ReversibleLM.from_config(config)
+            print('done!')
+        elif task == 'lm_shared_qk':
+            config = TransformerLMConfigEnwik8(warn=False, verbose=False, **locals())
+            config['shared_qk'] = True
+            print('Getting model ...')
+            model = TransformerLM.from_config(config)
+            print('done!')
+
+        config.save(wandb_name, add_tstmp=True)
+
+        print('Checking data')
+        download_enwik8_data(dest='./data')
+        print('done')
+
+        print('Getting dataloaders ...')
+        dls = get_enwik8_dataloader(data_path=data_path, bs=bs, sl=sl,verbose=True)
+        print('done')
+
+        print('Getting learner ...')
+        learn = get_lm_learner(dls, model, opt_func=adafactor)
+        print('done!')
+
+        # Set up Weights & Biases logging, if needed
+        if do_wandb_logging:
+            wandb_run, cbs = init_wandb(cbs, wandb_name=wandb_name, wandb_group=wandb_group,
+                                        wandb_notes=wandb_notes, wandb_tags=wandb_tags)
+
+        # Append training callbacks needed
+#         cbs.append()
+
+        # Start training
+        print('Starting training...')
+        learn.fit_one_cycle(n_epochs, lr, cbs=cbs)
+        print('done!')
+
+        # Close wandb logging for this run
+        if do_wandb_logging: wandb_run.finish()
+
+        # Save model weights if needed, saved in /models relative to where script is run
+        if save_model:
+            now = time.strftime("_%d_%m_%Y_%H:%M", time.gmtime())
+            learn.save(f'{task}_{wandb_name}_{now}')
+
     elif task == 'test_cfg':
         print('Locals ', locals())
         print()
@@ -188,7 +310,9 @@ def run_exp(task:Param(help="Which exeriment task to run", type=str),
         config.save('test')
         config2 = SyntheticConfig.from_file('test')
         print(config2)
+
     elif task == 'test':
         print('testing testing :)')
+
     else:
         print('No task run')
