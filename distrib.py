@@ -1,10 +1,10 @@
 from fastai.basics import *
-from .all import *
-from .expscript import *
+from reformer_fastai.all import *
+from reformer_fastai.expscript import *
 from fastai.distributed import *
 import time
 
-path = rank0_first(download_enwik8_data())
+path = rank0_first(download_enwik8_data)
 dls = get_enwik8_dataloader(data_path='./data', bs=8, sl=2048, n_workers=None)
 config = TransformerLMConfigEnwik8(warn=False, verbose=False)
 model = TransformerLM.from_config(config)
