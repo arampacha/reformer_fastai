@@ -18,7 +18,7 @@ def download_enwik8_data(dest='./data'):
     return untar_data('http://mattmahoney.net/dc/enwik8.zip', dest='data')
 
 # Cell
-def get_enwik8_dataloader(data_path='/data', bs:int=8, sl:int=1024, n_workers=None, val_test_chars:int=10e6, verbose=False):
+def get_enwik8_dataloader(data_path='data', bs:int=8, sl:int=1024, n_workers=None, val_test_chars:int=10e6, verbose=False):
 
     if 'google.colab' in sys.modules:
         data_path = '/content' + data_path + '/enwik8'
@@ -143,6 +143,7 @@ def run_exp(task:Param(help="Task options: 'synt','lm_base','lm_rev',lm_shared_q
          wandb_notes:Param(help="wandb notes", type=str, default='My experiment notes'),
          wandb_tags:Param(help="wandb tags, add tags in a single string, space separated", type=str, default='test'),
          save_model:Param(help="Save model locally in /models", type=bool_arg, default=False),
+         grad_accum:Param(help="Gradient Accumulation, set greater than 1 to implement", type=int, default=1),
          cuda_id:Param(help="Which cuda device to use", type=int, default=0),
          seed:Param(help="Set seed for reproducibiltiy, passing anything except 0 will use fastai's set_seed", type=int, default=0),
 #          verbose:Param(help="Print script logs", type=bool_arg, default=False)
@@ -212,21 +213,21 @@ def run_exp(task:Param(help="Task options: 'synt','lm_base','lm_rev',lm_shared_q
         axial_shape = (int(ax[0]),int(ax[1]))
 
         if task == 'lm_base':
-            if run_name == '': run_name = f'{task}_sl-{max_seq_len}_bs-{bs}_n_eps-{n_epochs}'
+            if run_name == '': run_name = f'{task}_enwik8_sl-{max_seq_len}_bs-{bs}_n_eps-{n_epochs}'
             config = TransformerLMConfigEnwik8(warn=False, verbose=False,
                                                axial_shape=axial_shape, max_seq_len=max_seq_len)
             print('Getting model ...')
             model = TransformerLM.from_config(config)
             print('done!')
         elif task == 'lm_rev':
-            if run_name == '': run_name = f'{task}_sl-{max_seq_len}_bs-{bs}_n_eps-{n_epochs}'
+            if run_name == '': run_name = f'{task}_enwik8_sl-{max_seq_len}_bs-{bs}_n_eps-{n_epochs}'
             config = ReversibleLMConfigEnwik8(warn=False, verbose=False,
                                               axial_shape=axial_shape, max_seq_len=max_seq_len)
             print('Getting model ...')
             model = ReversibleLM.from_config(config)
             print('done!')
         elif task == 'lm_shared_qk':
-            if run_name == '': run_name = f'{task}_sl-{max_seq_len}_bs-{bs}_n_eps-{n_epochs}'
+            if run_name == '': run_name = f'{task}_enwik8_sl-{max_seq_len}_bs-{bs}_n_eps-{n_epochs}'
             config = TransformerLMConfigEnwik8(warn=False, verbose=False, shared_qk=True,
                                                axial_shape=axial_shape, max_seq_len=max_seq_len)
             print('Getting model ...')
@@ -251,6 +252,10 @@ def run_exp(task:Param(help="Task options: 'synt','lm_base','lm_rev',lm_shared_q
         if do_wandb_logging:
             wandb_run, cbs = init_wandb(cbs, wandb_name=run_name, wandb_group=wandb_group,
                                         wandb_notes=wandb_notes, wandb_tags=wandb_tags)
+
+        if grad_accum > 1:
+            print(f'Gradient accumulation on, virtual batch size == {bs*grad_accum}')
+            cbs.append(GradientAccumulation(n_acc=grad_accum))
 
         # Start training
         print('Starting training...')
