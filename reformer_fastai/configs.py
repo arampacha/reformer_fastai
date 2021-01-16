@@ -18,7 +18,7 @@ def _dummy(): return
 
 # Cell
 def update_sig(d):
-    "Update signature of `f` from `d`"
+    "Update signature of `f` from dict `d`"
     d = {k:Parameter(k, Parameter.KEYWORD_ONLY, default=v) for k,v in d.items()}
     def _f(f):
         sig = signature(f)
@@ -40,12 +40,33 @@ class ConfigBase:
         for k,v in kwargs.items():
             if k in self._d:
                 self._d[k]=v
-                if verbose: print(f'Setting {k} = {v}')
-            elif warn: print(f'Parameter {k} is not accepted by LSHLM. Skipped')
+                if verbose: print(f'Setting `{k}` = {v}')
+            elif warn: print(f'Parameter `{k}` is not accepted by {self._model.__name__}. Skipped')
 
     def validate(self):
         assert exists(self._d), "_d missing. You might want to provide defaults for config"
         assert self._model is not _dummy, "_model missing. Provide a model class"
+
+    def validate_arg(self, k):
+        assert k in self._d.keys(), f"{self._model.__name__} does not accept `{k}` argument"
+
+    def __getattr__(self, k):
+        try:
+            res = self._d[k]
+        except KeyError:
+            raise AttributeError(f"{type(self).__name__} does not have attribute `{k}`")
+        return res
+
+    def __setattr__(self, k, v):
+        self.validate_arg(k)
+        self._d[k] = v
+
+    def __getitem__(self, k):
+        return self._d[k]
+
+    def __setitem__(self, k, v):
+        self.validate_arg(k)
+        self._d[k] = v
 
     def __repr__(self):
         s = f"{self._model.__name__} config \n" + '-'*20
