@@ -124,70 +124,6 @@ nb_path: "nbs/20_experiment-script.ipynb"
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dls</span> <span class="o">=</span> <span class="n">get_enwik8_dataloader</span><span class="p">(</span><span class="n">sl</span><span class="o">=</span><span class="mi">8192</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>done
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">len</span><span class="p">(</span><span class="n">dls</span><span class="o">.</span><span class="n">train</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>1374</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
 
 <div class="output_wrapper">
 <div class="output">
@@ -542,71 +478,19 @@ nb_path: "nbs/20_experiment-script.ipynb"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># total_chars * 369</span>
-
-<span class="c1"># sm = 8192 * 2792</span>
-
-<span class="c1"># total_chars * 369 / sm</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># sl - n_batches/epoch - n_epochs</span>
 <span class="c1"># 65536 == 172 == 349</span>
 <span class="c1"># 32768 == 344 == 698</span>
 <span class="c1"># 16384 == 688 == 1398</span>
 <span class="c1"># 8192 == 1376 == 2792</span>
+
+<span class="c1"># total_chars = 65536 * 172;total_chars</span>
+<span class="c1"># total_chars * 369</span>
+<span class="c1"># sm = 8192 * 2792</span>
+<span class="c1"># total_chars * 369 / sm</span>
 </pre></div>
 
     </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stderr output_text">
-<pre>[autoreload of reformer_fastai.reformer failed: Traceback (most recent call last):
-  File &#34;/home/morgan/anaconda3/envs/fastai_env/lib/python3.7/site-packages/IPython/extensions/autoreload.py&#34;, line 245, in check
-    superreload(m, reload, self.old_objects)
-  File &#34;/home/morgan/anaconda3/envs/fastai_env/lib/python3.7/site-packages/IPython/extensions/autoreload.py&#34;, line 410, in superreload
-    update_generic(old_obj, new_obj)
-  File &#34;/home/morgan/anaconda3/envs/fastai_env/lib/python3.7/site-packages/IPython/extensions/autoreload.py&#34;, line 347, in update_generic
-    update(a, b)
-  File &#34;/home/morgan/anaconda3/envs/fastai_env/lib/python3.7/site-packages/IPython/extensions/autoreload.py&#34;, line 302, in update_class
-    if update_generic(old_obj, new_obj): continue
-  File &#34;/home/morgan/anaconda3/envs/fastai_env/lib/python3.7/site-packages/IPython/extensions/autoreload.py&#34;, line 347, in update_generic
-    update(a, b)
-  File &#34;/home/morgan/anaconda3/envs/fastai_env/lib/python3.7/site-packages/IPython/extensions/autoreload.py&#34;, line 302, in update_class
-    if update_generic(old_obj, new_obj): continue
-  File &#34;/home/morgan/anaconda3/envs/fastai_env/lib/python3.7/site-packages/IPython/extensions/autoreload.py&#34;, line 347, in update_generic
-    update(a, b)
-  File &#34;/home/morgan/anaconda3/envs/fastai_env/lib/python3.7/site-packages/IPython/extensions/autoreload.py&#34;, line 302, in update_class
-    if update_generic(old_obj, new_obj): continue
-  File &#34;/home/morgan/anaconda3/envs/fastai_env/lib/python3.7/site-packages/IPython/extensions/autoreload.py&#34;, line 347, in update_generic
-    update(a, b)
-  File &#34;/home/morgan/anaconda3/envs/fastai_env/lib/python3.7/site-packages/IPython/extensions/autoreload.py&#34;, line 302, in update_class
-    if update_generic(old_obj, new_obj): continue
-RecursionError: maximum recursion depth exceeded
-]
-</pre>
-</div>
-</div>
-
 </div>
 </div>
 
