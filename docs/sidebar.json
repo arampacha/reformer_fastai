@@ -14,10 +14,13 @@
     "": {
       "Experiments": {
         "Synthetic task": "/experiment.synthetic-task.html",
-	"Synthetic task comparison": "/experiment.synthetic-task-comparison.html",
+        "Synthetic task: Comparison": "/experiment.synthetic-task-comparison.html",
+        "Synthetic task: Analysis": "/experiment.synthetic-task-analysis.html",
         "enwik8 baseline": "/experiment.enwik8_baseline.html",
         "enwik8 SharedQK": "/experiment.enwik8_sharedQK.html",
-        "enwik8 Reversible": "/experiment.enwik8_reversible.html"
+        "enwik8 Reversible": "/experiment.enwik8_reversible.html",
+        "Script": "/experiment-script.html", 
+        "Configs": "/experiment-configs.html"
       }
     },
     "empty1": {
