@@ -46,8 +46,11 @@ entries:
           title: Synthetic task
           url: /experiment.synthetic-task.html
         - output: web,pdf
-          title: Synthetic task comparison
+          title: 'Synthetic task: Comparison'
           url: /experiment.synthetic-task-comparison.html
+        - output: web,pdf
+          title: 'Synthetic task: Analysis'
+          url: /experiment.synthetic-task-analysis.html
         - output: web,pdf
           title: enwik8 baseline
           url: /experiment.enwik8_baseline.html
@@ -57,6 +60,12 @@ entries:
         - output: web,pdf
           title: enwik8 Reversible
           url: /experiment.enwik8_reversible.html
+        - output: web,pdf
+          title: Script
+          url: /experiment-script.html
+        - output: web,pdf
+          title: Configs
+          url: /experiment-configs.html
         title: Experiments
       - output: web
         subfolderitems:
