@@ -64,7 +64,7 @@ def get_enwik8_dataloader(data_path='data', bs:int=8, sl:int=1024, n_workers=Non
     n_cpus = multiprocessing.cpu_count()
     n_workers = n_cpus if n_workers is None else n_workers
 
-    dls = dsets.dataloaders(bs=bs, seq_len=sl, dl_kwargs=dl_kwargs, shuffle_train=True, n_workers=n_workers)
+    dls = dsets.dataloaders(bs=bs, val_bs=4*bs, seq_len=sl, dl_kwargs=dl_kwargs, shuffle_train=True, n_workers=n_workers)
     print('done')
     return dls
 
@@ -259,7 +259,7 @@ def run_exp(task:Param(help="Task options: 'synt','lm_base','lm_rev',lm_shared_q
 
         # Start training
         print('Starting training...')
-        learn.fit_one_cycle(n_epochs, lr, cbs=cbs)
+        learn.fit(n_epochs, cbs=cbs)
         print('done!')
 
         # Close wandb logging for this run
