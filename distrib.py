@@ -1,7 +1,8 @@
 from fastai.basics import *
+from fastai.distributed import *
 from reformer_fastai.all import *
 from reformer_fastai.expscript import *
-from fastai.distributed import *
+
 import time
 
 print('Loading data...')
