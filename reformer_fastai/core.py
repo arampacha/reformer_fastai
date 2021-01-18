@@ -265,3 +265,23 @@ class LabelSmoothingCrossEntropyFlat(BaseLoss):
     def __init__(self, *args, axis=-1, **kwargs): super().__init__(LabelSmoothingCrossEntropy, *args, axis=axis, **kwargs)
     def activation(self, out): return F.softmax(out, dim=-1)
     def decodes(self, out):    return out.argmax(dim=-1)
+
+# Cell
+from fastai.distributed import *
+@patch
+@contextmanager
+def distrib_ctx(self: Learner, cuda_id=None,sync_bn=True):
+    "A context manager to adapt a learner to train in distributed data parallel mode."
+    # Figure out the GPU to use from rank.  Create a dpg if none exists yet.
+    if cuda_id is None: cuda_id = int(os.environ.get('DEFAULT_GPU', 0))
+    if not torch.distributed.is_initialized():
+        setup_distrib(cuda_id)
+        cleanup_dpg = torch.distributed.is_initialized()
+    else: cleanup_dpg = False
+    # Adapt self to DistributedDataParallel, yield, and cleanup afterwards.
+    try:
+        if num_distrib(): self.to_distributed(cuda_id,sync_bn)
+        yield self
+    finally:
+        self.detach_distributed()
+        if cleanup_dpg: teardown_distrib()
