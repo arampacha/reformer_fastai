@@ -11,7 +11,7 @@ print('Preparing dataloaders...')
 dls = rank0_first(get_enwik8_dataloader, data_path='./data', bs=4, sl=512, n_workers=4)
 config = TransformerLMConfigEnwik8(warn=False, verbose=False)
 model = TransformerLM.from_config(config)
-learn = rank0_first(get_lm_learner, dls, model)
+learn = get_lm_learner(dls, model)
 cbs = []
 # wandb_run, cbs = init_wandb(cbs, wandb_name=run_name, wandb_group=wandb_group, 
 #                             wandb_notes=wandb_notes, wandb_tags=wandb_tags)
