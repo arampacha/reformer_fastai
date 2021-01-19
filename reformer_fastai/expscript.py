@@ -145,7 +145,7 @@ def run_exp(task:Param(help="Task options: 'synt','lm_base','lm_rev',lm_shared_q
     """Task options: 'synt','lm_base','lm_rev',lm_shared_qk, trans"""
     #Set up distributed training
     _wrapper = rank0_first if distrib else partial
-    if cuda_id == : cuda_id = None
+    if distrib: cuda_id = None
 
     # Callbacks used for training
     cbs = []
@@ -155,9 +155,6 @@ def run_exp(task:Param(help="Task options: 'synt','lm_base','lm_rev',lm_shared_q
         set_seed(seed, reproducible=True)  # this  sets `torch.cudnn.backends ++`
     else:
         seed = None   # this is passed to LSH and data generator. They expect None or int
-
-    # Set which GPU to run the script on
-    #torch.cuda.set_device(cuda_id)
 
     if task == 'synt':
         "Model + Data Args than can be changed from command line: train_sz, valid_sz, n_hashes, use_lsh, seed"
