@@ -86,10 +86,11 @@ def get_synthetic_learner(dls, model):
     return learn
 
 # Cell
-def get_lm_learner(dls, model, opt_func=adafactor):
+def get_lm_learner(dls, model, opt_func=adafactor, clip=0.0):
+    if clip == 0.0: clip=None
     learn = Learner(dls, model,
                     loss_func=CrossEntropyLossFlat(ignore_index=dls.byte_text_tokenizer.pad_token_id),
-                    opt_func=opt_func, metrics=[accuracy, perplexity, BPC()]).to_fp16()
+                    opt_func=opt_func, metrics=[accuracy, perplexity, BPC()]).to_fp16(clip=clip)
     return learn
 
 # Cell
@@ -134,6 +135,7 @@ def run_exp(task:Param(help="Task options: 'synt','lm_base','lm_rev',lm_shared_q
          wandb_tags:Param(help="wandb tags, add tags in a single string, space separated", type=str, default='test'),
          save_model:Param(help="Save model locally in /models", type=bool_arg, default=False),
          grad_accum:Param(help="Gradient Accumulation, set greater than 1 to implement", type=int, default=1),
+         clip:Param(help="Gradient Clipping, will be set if > 0", type=float, default=0.0),
          cuda_id:Param(help="Which cuda device to use", type=int, default=0),
          seed:Param(help="Set seed for reproducibiltiy, passing anything except 0 will use fastai's set_seed", type=int, default=0),
 #          verbose:Param(help="Print script logs", type=bool_arg, default=False)
@@ -235,7 +237,7 @@ def run_exp(task:Param(help="Task options: 'synt','lm_base','lm_rev',lm_shared_q
         print('done')
 
         print('Getting learner ...')
-        learn = get_lm_learner(dls, model, opt_func=adafactor)
+        learn = get_lm_learner(dls, model, opt_func=adafactor, clip=clip)
         print('done!')
 
         # Set up Weights & Biases logging, if needed
