@@ -10,6 +10,7 @@ import multiprocessing
 from fastcore.all import *
 from fastai.basics import *
 from fastai.text.all import *
+from fastai.distributed import *
 
 from .all import *
 
@@ -89,7 +90,7 @@ def get_synthetic_learner(dls, model):
 def get_lm_learner(dls, model, opt_func=adafactor):
     learn = Learner(dls, model,
                     loss_func=CrossEntropyLossFlat(ignore_index=dls.byte_text_tokenizer.pad_token_id),
-                    opt_func=opt_func, metrics=[accuracy, perplexity, BPC()]).to_fp16()
+                    opt_func=opt_func, metrics=[accuracy, perplexity, bpc]).to_fp16()
     return learn
 
 # Cell
@@ -137,10 +138,14 @@ def run_exp(task:Param(help="Task options: 'synt','lm_base','lm_rev',lm_shared_q
          clip:Param(help="Gradient Clipping, will be set if > 0.0", type=float, default=0.0),
          cuda_id:Param(help="Which cuda device to use", type=int, default=0),
          seed:Param(help="Set seed for reproducibiltiy, passing anything except 0 will use fastai's set_seed", type=int, default=0),
+         distrib:Param(help="Set to True if using distributed training", type=bool_arg, default=False)
 #          verbose:Param(help="Print script logs", type=bool_arg, default=False)
         ):
 
     """Task options: 'synt','lm_base','lm_rev',lm_shared_qk, trans"""
+    #Set up distributed training
+    _wrapper = rank0_first if distrib else partial
+    if cuda_id == : cuda_id = None
 
     # Callbacks used for training
     cbs = []
@@ -152,10 +157,11 @@ def run_exp(task:Param(help="Task options: 'synt','lm_base','lm_rev',lm_shared_q
         seed = None   # this is passed to LSH and data generator. They expect None or int
 
     # Set which GPU to run the script on
-    torch.cuda.set_device(cuda_id)
+    #torch.cuda.set_device(cuda_id)
 
     if task == 'synt':
         "Model + Data Args than can be changed from command line: train_sz, valid_sz, n_hashes, use_lsh, seed"
+
 
         if run_name == '':
             if use_lsh: run_name = f'{task}_lsh-{n_hashes}_bs-{bs}_n_eps-{n_epochs}'
@@ -187,7 +193,7 @@ def run_exp(task:Param(help="Task options: 'synt','lm_base','lm_rev',lm_shared_q
 
         # Start training
         print('Starting training...')
-        learn.fit_one_cycle(n_epochs, lr, cbs=cbs)
+        with learn.distrib_ctx(cuda_id=cuda_id): learn.fit_one_cycle(n_epochs, lr, cbs=cbs)
         print('done!')
 
         # Close wandb logging for this run
@@ -200,8 +206,7 @@ def run_exp(task:Param(help="Task options: 'synt','lm_base','lm_rev',lm_shared_q
 
     elif 'lm' in task:
         "Model args that can be changed from command line: axial_shape, max_seq_len"
-        ax = axial_shape.split(',')
-        axial_shape = (int(ax[0]),int(ax[1]))
+        axial_shape = tuple(map(int, axial_shape.split(',')))
 
         if task == 'lm_base':
             if run_name == '': run_name = f'{task}_enwik8_sl-{max_seq_len}_bs-{bs}_n_eps-{n_epochs}'
@@ -228,7 +233,7 @@ def run_exp(task:Param(help="Task options: 'synt','lm_base','lm_rev',lm_shared_q
         config.save(run_name, add_tstmp=True)
 
         print('Checking data')
-        download_enwik8_data(dest='./data')
+        _wrapper(download_enwik8_data, dest='./data')
         print('done')
 
         print('Getting dataloaders ...')
@@ -245,7 +250,7 @@ def run_exp(task:Param(help="Task options: 'synt','lm_base','lm_rev',lm_shared_q
 
         # Gradient Accumulation
         if grad_accum > 1:
-            print(f'Gradient accumulation on, virtual batch size == {bs*grad_accum}')
+            print(f'Gradient accumulation on, virtual batch size == {grad_accum}')
             cbs.append(GradientAccumulation(n_acc=grad_accum))
             run_name = run_name + f'_grad-accum-{grad_accum}'
 
@@ -256,7 +261,7 @@ def run_exp(task:Param(help="Task options: 'synt','lm_base','lm_rev',lm_shared_q
 
         # Start training
         print('Starting training...')
-        learn.fit(n_epochs, cbs=cbs)
+        with learn.distrib_ctx(cuda_id=cuda_id): learn.fit(n_epochs, cbs=cbs)
         print('done!')
 
         # Close wandb logging for this run
