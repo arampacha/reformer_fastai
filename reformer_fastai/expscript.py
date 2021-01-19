@@ -145,9 +145,6 @@ def run_exp(task:Param(help="Task options: 'synt','lm_base','lm_rev',lm_shared_q
     # Callbacks used for training
     cbs = []
 
-    # Add gradient clipping if needed
-    if clip != 0.0: cbs.append(GradientClip(max_norm=clip))
-
     #random seeds
     if seed!=0:
         set_seed(seed, reproducible=True)  # this  sets `torch.cudnn.backends ++`
@@ -242,14 +239,20 @@ def run_exp(task:Param(help="Task options: 'synt','lm_base','lm_rev',lm_shared_q
         learn = get_lm_learner(dls, model, opt_func=adafactor)
         print('done!')
 
+        # CALLBACKS
+        # Gradient Clipping
+        if clip != 0.0: cbs.append(GradientClip(max_norm=clip))
+
+        # Gradient Accumulation
+        if grad_accum > 1:
+            print(f'Gradient accumulation on, virtual batch size == {bs*grad_accum}')
+            cbs.append(GradientAccumulation(n_acc=grad_accum))
+            run_name = run_name + f'_grad-accum-{grad_accum}'
+
         # Set up Weights & Biases logging, if needed
         if do_wandb_logging:
             wandb_run, cbs = init_wandb(cbs, wandb_name=run_name, wandb_group=wandb_group,
                                         wandb_notes=wandb_notes, wandb_tags=wandb_tags)
-
-        if grad_accum > 1:
-            print(f'Gradient accumulation on, virtual batch size == {bs*grad_accum}')
-            cbs.append(GradientAccumulation(n_acc=grad_accum))
 
         # Start training
         print('Starting training...')
