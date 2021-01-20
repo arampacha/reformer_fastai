@@ -22,7 +22,6 @@ def download_enwik8_data(data_path='./data'):
 
 # Cell
 def get_twin_sequence_dataloaders(bs:int=32, sl:int=1024, train_sz:int=500, valid_sz:int=100, seed=None):
-
     dls = DataLoaders.from_dsets(DeterministicTwinSequence(sl, train_sz, seed),
                                  DeterministicTwinSequence(sl, valid_sz, seed),
                                  bs=bs, shuffle=False, device='cuda')
@@ -87,7 +86,6 @@ def get_enwik8_dataloader(data_path='data', bs:int=8, val_bs:int=32, sl:int=1024
 
 # Cell
 def get_synthetic_learner(dls, model):
-
     learn = Learner(dls, model,
                     loss_func=CrossEntropyLossFlat(ignore_index=-100),
                     metrics=[MaskedAccuracy()]).to_fp16()
@@ -102,7 +100,6 @@ def get_lm_learner(dls, model, opt_func=adafactor):
 
 # Cell
 def init_wandb(cbs:list=[], wandb_name:str='', wandb_group:str='', wandb_notes:str='', wandb_tags:str='test'):
-
     wandb_tags_ls = wandb_tags.split(' ')
 
     try:
@@ -238,7 +235,9 @@ def run_exp(task:Param(help="Task options: 'synt','lm_base','lm_rev',lm_shared_q
         config.save(run_name, add_tstmp=True)
 
         print('Checking data')
-        _wrapper(download_enwik8_data, data_path=data_path)
+#         _wrapper(download_enwik8_data, data_path=data_path)
+        if distrib: rank0_first(download_enwik8_data, data_path=data_path)
+        else: download_enwik8_data(data_path=data_path)
         print('done')
 
         print('Getting dataloaders ...')
@@ -251,10 +250,10 @@ def run_exp(task:Param(help="Task options: 'synt','lm_base','lm_rev',lm_shared_q
         print('done!')
 
         # CALLBACKS
-        # Gradient Clipping
+        ## Gradient Clipping
         if clip != 0.0: cbs.append(GradientClip(max_norm=clip))
 
-        # Gradient Accumulation
+        ## Gradient Accumulation
         if grad_accum > 1:
             print(f'Gradient accumulation on, virtual batch size == {grad_accum}')
             cbs.append(GradientAccumulation(n_acc=grad_accum))
