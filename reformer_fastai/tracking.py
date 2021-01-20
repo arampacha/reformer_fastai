@@ -12,6 +12,8 @@ except ImportError as e:
 
 from fastai.basics import *
 
+from fastai.callback.hook import total_params
+
 # Cell
 @patch
 def gather_args(self:Learner):
@@ -33,7 +35,6 @@ def gather_args(self:Learner):
     except: print(f'Could not gather input dimensions')
     # other useful information
     with ignore_exceptions():
-        getattr(args['Learner'].model)
         args['batch size'] = self.dls.bs
         args['batch per epoch'] = len(self.dls.train)
         args['model parameters'] = total_params(self.model)[0]
