@@ -134,7 +134,6 @@ def run_exp(task:Param(help="Task options: 'synt','lm_base','lm_rev',lm_shared_q
          n_hashes:Param(help="Number of LSH Attention hashes", type=int, default=1),
          use_lsh:Param(help="Use LSH Attention", type=bool_arg, default=False),
          max_seq_len:Param(help="Max sequence length for model embedding and dataloader", type=int, default=2048),
-         axial_shape:Param(help="Axial Positional Encoding shape, passed as a string, e.g. '64,32''", type=str, default='64,32'),
          do_wandb_logging:Param(help="Use weights and biases logging", type=bool_arg, default=False),
          run_name:Param(help="Run name for wandb tracking and model filename", type=str, default=''),
          wandb_group:Param(help="wandb group", type=str, default='TEST'),
@@ -212,8 +211,7 @@ def run_exp(task:Param(help="Task options: 'synt','lm_base','lm_rev',lm_shared_q
 
     elif 'lm' in task:
         "Model args that can be changed from command line: axial_shape, max_seq_len"
-        axial_shape = tuple(map(int, axial_shape.split(',')))
-
+        axial_shape = get_axial_shape(max_seq_len)
         if task == 'lm_base':
             if run_name == '': run_name = f'{task}_enwik8_sl-{max_seq_len}_bs-{bs}_n_eps-{n_epochs}'
             config = TransformerLMConfigEnwik8(warn=False, verbose=verbose,
