@@ -18,7 +18,7 @@ from .all import *
 def download_enwik8_data(data_path='./data'):
     dest = Path(data_path)
     if not dest.exists(): dest.mkdir()
-    return untar_data('http://mattmahoney.net/dc/enwik8.zip', dest='data')
+    return untar_data('http://mattmahoney.net/dc/enwik8.zip', dest=dest)
 
 # Cell
 def get_twin_sequence_dataloaders(bs:int=32, sl:int=1024, train_sz:int=500, valid_sz:int=100, seed=None):
