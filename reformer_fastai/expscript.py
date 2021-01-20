@@ -15,7 +15,9 @@ from fastai.distributed import *
 from .all import *
 
 # Cell
-def download_enwik8_data(dest='./data'):
+def download_enwik8_data(data_path='./data'):
+    dest = Path(data_path)
+    if not dest.exists(): dest.mkdir()
     return untar_data('http://mattmahoney.net/dc/enwik8.zip', dest='data')
 
 # Cell
@@ -28,7 +30,7 @@ def get_twin_sequence_dataloaders(bs:int=32, sl:int=1024, train_sz:int=500, vali
 
 # Cell
 def get_enwik8_dataloader(data_path='data', bs:int=8, val_bs:int=32, sl:int=1024, n_workers=None,
-                          val_test_chars:int=10e6, verbose=False):
+                          val_test_chars:int=10e6, verbose=False, tiny=False):
 
     if 'google.colab' in sys.modules:
         data_path = '/content' + data_path + '/enwik8'
@@ -37,6 +39,11 @@ def get_enwik8_dataloader(data_path='data', bs:int=8, val_bs:int=32, sl:int=1024
 
     if verbose: print('Reading data into dataframe ...')
     df = pd.DataFrame({'text':read_lines(data_path)})
+    if tiny:
+        df = df.sample(frac=0.05)
+        df.reset_index(drop=True, inplace=True)
+        val_test_chars = 10000
+
     if verbose: print('done')
 
     # Do tokenization
@@ -61,7 +68,7 @@ def get_enwik8_dataloader(data_path='data', bs:int=8, val_bs:int=32, sl:int=1024
     splits = [train_idxs, validation_idxs]
 
     # Get Datasets
-    if verbose: print('Setting up Datasets')
+    if verbose: print('Setting up Datasets ...')
     tfms = [attrgetter("text"), btt]
     dsets = Datasets(df, [tfms], splits=splits, dl_type=LMDataLoader)
     if verbose: print('done')
@@ -138,8 +145,9 @@ def run_exp(task:Param(help="Task options: 'synt','lm_base','lm_rev',lm_shared_q
          clip:Param(help="Gradient Clipping, will be set if > 0.0", type=float, default=0.0),
          cuda_id:Param(help="Which cuda device to use", type=int, default=0),
          seed:Param(help="Set seed for reproducibiltiy, passing anything except 0 will use fastai's set_seed", type=int, default=0),
-         distrib:Param(help="Set to True if using distributed training", type=bool_arg, default=False)
-#          verbose:Param(help="Print script logs", type=bool_arg, default=False)
+         distrib:Param(help="Set to True if using distributed training", type=bool_arg, default=False),
+         verbose:Param(help="Print script logs", type=bool_arg, default=True),
+         tiny:Param(help="Use 5% of data, for quick iteration and testings", type=bool_arg, default=False),
         ):
 
     """Task options: 'synt','lm_base','lm_rev',lm_shared_qk, trans"""
@@ -166,6 +174,7 @@ def run_exp(task:Param(help="Task options: 'synt','lm_base','lm_rev',lm_shared_q
 
         print('Getting model ...')
         config = SyntheticConfig(warn=False, verbose=verbose, n_hashes=n_hashes, use_lsh=use_lsh)
+        if verbose: print(config)
         config.save(run_name, add_tstmp=True)
         model = LSHLM.from_config(config)
         print('done!')
@@ -207,34 +216,36 @@ def run_exp(task:Param(help="Task options: 'synt','lm_base','lm_rev',lm_shared_q
 
         if task == 'lm_base':
             if run_name == '': run_name = f'{task}_enwik8_sl-{max_seq_len}_bs-{bs}_n_eps-{n_epochs}'
-            config = TransformerLMConfigEnwik8(warn=False, verbose=False,
+            config = TransformerLMConfigEnwik8(warn=False, verbose=verbose,
                                                axial_shape=axial_shape, max_seq_len=max_seq_len)
             print('Getting model ...')
             model = TransformerLM.from_config(config)
             print('done!')
         elif task == 'lm_rev':
             if run_name == '': run_name = f'{task}_enwik8_sl-{max_seq_len}_bs-{bs}_n_eps-{n_epochs}'
-            config = ReversibleLMConfigEnwik8(warn=False, verbose=False,
+            config = ReversibleLMConfigEnwik8(warn=False, verbose=verbose,
                                               axial_shape=axial_shape, max_seq_len=max_seq_len)
             print('Getting model ...')
             model = ReversibleLM.from_config(config)
             print('done!')
         elif task == 'lm_shared_qk':
             if run_name == '': run_name = f'{task}_enwik8_sl-{max_seq_len}_bs-{bs}_n_eps-{n_epochs}'
-            config = TransformerLMConfigEnwik8(warn=False, verbose=False, shared_qk=True,
+            config = TransformerLMConfigEnwik8(warn=False, verbose=verbose, shared_qk=True,
                                                axial_shape=axial_shape, max_seq_len=max_seq_len)
             print('Getting model ...')
             model = TransformerLM.from_config(config)
             print('done!')
 
+        if verbose: print(config)
         config.save(run_name, add_tstmp=True)
 
         print('Checking data')
-        _wrapper(download_enwik8_data, dest='./data')
+        _wrapper(download_enwik8_data, data_path=data_path)
         print('done')
 
         print('Getting dataloaders ...')
-        dls = get_enwik8_dataloader(data_path=data_path, bs=bs, val_bs=bs, sl=max_seq_len, verbose=True)
+        dls = get_enwik8_dataloader(data_path=data_path, bs=bs, val_bs=bs, sl=max_seq_len,
+                                    verbose=verbose, tiny=tiny)
         print('done')
 
         print('Getting learner ...')
@@ -280,6 +291,7 @@ def run_exp(task:Param(help="Task options: 'synt','lm_base','lm_rev',lm_shared_q
 
     elif task == 'test':
         print('testing testing :)')
+        print(verbose)
 
     else:
         print('No task run')
