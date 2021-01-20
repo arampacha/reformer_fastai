@@ -26,21 +26,6 @@ nb_path: "nbs/03_transformer.ipynb"
     
 <div class="cell border-box-sizing code_cell rendered">
 
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stderr output_text">
-<pre>/home/arto/anaconda3/envs/torchenv/lib/python3.8/site-packages/torch/cuda/__init__.py:52: UserWarning: CUDA initialization: CUDA unknown error - this may be due to an incorrectly set up environment, e.g. changing env variable CUDA_VISIBLE_DEVICES after program start. Setting the available devices to be zero. (Triggered internally at  /opt/conda/conda-bld/pytorch_1607369981906/work/c10/cuda/CUDAFunctions.cpp:100.)
-  return torch._C._cuda_getDeviceCount() &gt; 0
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
 </div>
     {% endraw %}
 
@@ -68,7 +53,7 @@ nb_path: "nbs/03_transformer.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="LMMixin" class="doc_header"><code>class</code> <code>LMMixin</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/transformer.py#L14" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>LMMixin</code>()</p>
+<h2 id="LMMixin" class="doc_header"><code>class</code> <code>LMMixin</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/transformer.py#L15" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>LMMixin</code>()</p>
 </blockquote>
 
 </div>
@@ -99,7 +84,7 @@ nb_path: "nbs/03_transformer.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="EncDecMixin" class="doc_header"><code>class</code> <code>EncDecMixin</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/transformer.py#L73" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>EncDecMixin</code>()</p>
+<h2 id="EncDecMixin" class="doc_header"><code>class</code> <code>EncDecMixin</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/transformer.py#L74" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>EncDecMixin</code>()</p>
 </blockquote>
 
 </div>
@@ -142,7 +127,7 @@ nb_path: "nbs/03_transformer.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="TransformerEncoderBlock" class="doc_header"><code>class</code> <code>TransformerEncoderBlock</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/transformer.py#L156" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TransformerEncoderBlock</code>(<strong><code>d_model</code></strong>:<code>int</code>, <strong><code>n_heads</code></strong>:<code>int</code>=<em><code>8</code></em>, <strong><code>d_ff</code></strong>:<code>int</code>=<em><code>None</code></em>, <strong><code>attn_dropout</code></strong>:<code>float</code>=<em><code>0.1</code></em>, <strong><code>ff_dropout</code></strong>:<code>float</code>=<em><code>0.1</code></em>, <strong><code>causal</code></strong>:<code>bool</code>=<em><code>False</code></em>, <strong><code>attn_bias</code></strong>:<code>bool</code>=<em><code>False</code></em>, <strong><code>prenorm</code></strong>:<code>bool</code>=<em><code>False</code></em>, <strong><code>shared_qk</code></strong>:<code>bool</code>=<em><code>False</code></em>) :: <code>Module</code></p>
+<h2 id="TransformerEncoderBlock" class="doc_header"><code>class</code> <code>TransformerEncoderBlock</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/transformer.py#L157" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TransformerEncoderBlock</code>(<strong><code>d_model</code></strong>:<code>int</code>, <strong><code>n_heads</code></strong>:<code>int</code>=<em><code>8</code></em>, <strong><code>d_ff</code></strong>:<code>int</code>=<em><code>None</code></em>, <strong><code>attn_dropout</code></strong>:<code>float</code>=<em><code>0.1</code></em>, <strong><code>ff_dropout</code></strong>:<code>float</code>=<em><code>0.1</code></em>, <strong><code>causal</code></strong>:<code>bool</code>=<em><code>False</code></em>, <strong><code>attn_bias</code></strong>:<code>bool</code>=<em><code>False</code></em>, <strong><code>prenorm</code></strong>:<code>bool</code>=<em><code>False</code></em>, <strong><code>shared_qk</code></strong>:<code>bool</code>=<em><code>False</code></em>) :: <code>Module</code></p>
 </blockquote>
 <p>Bacis transformer encoder block. Consists of multi-head attention and positional
 feedforward layers</p>
@@ -215,7 +200,7 @@ feedforward layers</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="TransformerEncoder" class="doc_header"><code>class</code> <code>TransformerEncoder</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/transformer.py#L184" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TransformerEncoder</code>(<strong><code>d_model</code></strong>, <strong><code>n_layers</code></strong>=<em><code>6</code></em>, <strong><code>n_heads</code></strong>=<em><code>8</code></em>, <strong><code>d_ff</code></strong>=<em><code>None</code></em>, <strong><code>ff_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>attn_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>attn_bias</code></strong>=<em><code>False</code></em>, <strong><code>causal</code></strong>=<em><code>False</code></em>, <strong><code>prenorm</code></strong>=<em><code>False</code></em>, <strong><code>shared_qk</code></strong>:<code>bool</code>=<em><code>False</code></em>, <strong><code>final_norm</code></strong>=<em><code>None</code></em>) :: <code>Module</code></p>
+<h2 id="TransformerEncoder" class="doc_header"><code>class</code> <code>TransformerEncoder</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/transformer.py#L185" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TransformerEncoder</code>(<strong><code>d_model</code></strong>, <strong><code>n_layers</code></strong>=<em><code>6</code></em>, <strong><code>n_heads</code></strong>=<em><code>8</code></em>, <strong><code>d_ff</code></strong>=<em><code>None</code></em>, <strong><code>ff_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>attn_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>attn_bias</code></strong>=<em><code>False</code></em>, <strong><code>causal</code></strong>=<em><code>False</code></em>, <strong><code>prenorm</code></strong>=<em><code>False</code></em>, <strong><code>shared_qk</code></strong>:<code>bool</code>=<em><code>False</code></em>, <strong><code>final_norm</code></strong>=<em><code>None</code></em>) :: <code>Module</code></p>
 </blockquote>
 <p>Stack of TransformerEncoderBlocks</p>
 
@@ -290,7 +275,7 @@ feedforward layers</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="TransformerDecoderBlock" class="doc_header"><code>class</code> <code>TransformerDecoderBlock</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/transformer.py#L212" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TransformerDecoderBlock</code>(<strong><code>d_model</code></strong>, <strong><code>n_heads</code></strong>=<em><code>8</code></em>, <strong><code>d_ff</code></strong>=<em><code>None</code></em>, <strong><code>attn_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>ff_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>mask</code></strong>=<em><code>None</code></em>, <strong><code>attn_bias</code></strong>=<em><code>False</code></em>, <strong><code>prenorm</code></strong>=<em><code>False</code></em>) :: <code>Module</code></p>
+<h2 id="TransformerDecoderBlock" class="doc_header"><code>class</code> <code>TransformerDecoderBlock</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/transformer.py#L213" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TransformerDecoderBlock</code>(<strong><code>d_model</code></strong>, <strong><code>n_heads</code></strong>=<em><code>8</code></em>, <strong><code>d_ff</code></strong>=<em><code>None</code></em>, <strong><code>attn_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>ff_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>mask</code></strong>=<em><code>None</code></em>, <strong><code>attn_bias</code></strong>=<em><code>False</code></em>, <strong><code>prenorm</code></strong>=<em><code>False</code></em>) :: <code>Module</code></p>
 </blockquote>
 <p>Standart transformer decoder block. Consist of self-attention, encoder-decoder attention
 and positiona feed-forward alyers</p>
@@ -323,7 +308,7 @@ and positiona feed-forward alyers</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="TransformerDecoderBlockV2" class="doc_header"><code>class</code> <code>TransformerDecoderBlockV2</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/transformer.py#L242" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TransformerDecoderBlockV2</code>(<strong><code>d_model</code></strong>, <strong><code>n_heads</code></strong>=<em><code>8</code></em>, <strong><code>mask</code></strong>=<em><code>None</code></em>, <strong><code>d_ff</code></strong>=<em><code>None</code></em>, <strong><code>attn_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>ff_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>attn_bias</code></strong>=<em><code>False</code></em>, <strong><code>prenorm</code></strong>=<em><code>False</code></em>) :: <code>Module</code></p>
+<h2 id="TransformerDecoderBlockV2" class="doc_header"><code>class</code> <code>TransformerDecoderBlockV2</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/transformer.py#L243" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TransformerDecoderBlockV2</code>(<strong><code>d_model</code></strong>, <strong><code>n_heads</code></strong>=<em><code>8</code></em>, <strong><code>mask</code></strong>=<em><code>None</code></em>, <strong><code>d_ff</code></strong>=<em><code>None</code></em>, <strong><code>attn_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>ff_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>attn_bias</code></strong>=<em><code>False</code></em>, <strong><code>prenorm</code></strong>=<em><code>False</code></em>) :: <code>Module</code></p>
 </blockquote>
 <p>Transformer decoder block using additive attention layer instead of self-attention
 followed by cross-attention</p>
@@ -356,7 +341,7 @@ followed by cross-attention</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="TransformerDecoder" class="doc_header"><code>class</code> <code>TransformerDecoder</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/transformer.py#L267" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TransformerDecoder</code>(<strong><code>d_model</code></strong>, <strong><code>n_layers</code></strong>=<em><code>6</code></em>, <strong><code>n_heads</code></strong>=<em><code>8</code></em>, <strong><code>d_ff</code></strong>=<em><code>None</code></em>, <strong><code>attn_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>ff_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>prenorm</code></strong>=<em><code>False</code></em>, <strong><code>comb_attn</code></strong>=<em><code>False</code></em>, <strong><code>attn_bias</code></strong>=<em><code>False</code></em>, <strong><code>final_norm</code></strong>=<em><code>None</code></em>) :: <code>Module</code></p>
+<h2 id="TransformerDecoder" class="doc_header"><code>class</code> <code>TransformerDecoder</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/transformer.py#L268" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TransformerDecoder</code>(<strong><code>d_model</code></strong>, <strong><code>n_layers</code></strong>=<em><code>6</code></em>, <strong><code>n_heads</code></strong>=<em><code>8</code></em>, <strong><code>d_ff</code></strong>=<em><code>None</code></em>, <strong><code>attn_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>ff_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>prenorm</code></strong>=<em><code>False</code></em>, <strong><code>comb_attn</code></strong>=<em><code>False</code></em>, <strong><code>attn_bias</code></strong>=<em><code>False</code></em>, <strong><code>final_norm</code></strong>=<em><code>None</code></em>) :: <code>Module</code></p>
 </blockquote>
 <p>Stack of TransformerDecoder layers</p>
 
@@ -432,7 +417,7 @@ followed by cross-attention</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="TransformerLM" class="doc_header"><code>class</code> <code>TransformerLM</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/transformer.py#L295" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TransformerLM</code>(<strong><code>vocab_sz</code></strong>:<code>int</code>, <strong><code>d_model</code></strong>:<code>int</code>, <strong><code>n_layers</code></strong>:<code>int</code>=<em><code>6</code></em>, <strong><code>n_heads</code></strong>:<code>int</code>=<em><code>8</code></em>, <strong><code>d_ff</code></strong>:<code>int</code>=<em><code>None</code></em>, <strong><code>attn_dropout</code></strong>:<code>float</code>=<em><code>0.1</code></em>, <strong><code>ff_dropout</code></strong>:<code>float</code>=<em><code>0.1</code></em>, <strong><code>emb_dropout</code></strong>:<code>float</code>=<em><code>0.1</code></em>, <strong><code>tie_weights</code></strong>:<code>bool</code>=<em><code>True</code></em>, <strong><code>causal</code></strong>:<code>bool</code>=<em><code>True</code></em>, <strong><code>pos_enc</code></strong>:<code>str</code>=<em><code>'absolute'</code></em>, <strong><code>max_seq_len</code></strong>:<code>int</code>=<em><code>512</code></em>, <strong><code>axial_shape</code></strong>:<code>tuple</code>=<em><code>None</code></em>, <strong><code>axial_emb_dims</code></strong>:<code>tuple</code>=<em><code>None</code></em>, <strong><code>pad_idx</code></strong>:<code>int</code>=<em><code>None</code></em>, <strong><code>prenorm</code></strong>:<code>bool</code>=<em><code>False</code></em>, <strong><code>attn_bias</code></strong>:<code>bool</code>=<em><code>False</code></em>, <strong><code>shared_qk</code></strong>:<code>bool</code>=<em><code>False</code></em>) :: <code>Module</code></p>
+<h2 id="TransformerLM" class="doc_header"><code>class</code> <code>TransformerLM</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/transformer.py#L296" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TransformerLM</code>(<strong><code>vocab_sz</code></strong>:<code>int</code>, <strong><code>d_model</code></strong>:<code>int</code>, <strong><code>n_layers</code></strong>:<code>int</code>=<em><code>6</code></em>, <strong><code>n_heads</code></strong>:<code>int</code>=<em><code>8</code></em>, <strong><code>d_ff</code></strong>:<code>int</code>=<em><code>None</code></em>, <strong><code>attn_dropout</code></strong>:<code>float</code>=<em><code>0.1</code></em>, <strong><code>ff_dropout</code></strong>:<code>float</code>=<em><code>0.1</code></em>, <strong><code>emb_dropout</code></strong>:<code>float</code>=<em><code>0.1</code></em>, <strong><code>tie_weights</code></strong>:<code>bool</code>=<em><code>True</code></em>, <strong><code>causal</code></strong>:<code>bool</code>=<em><code>True</code></em>, <strong><code>pos_enc</code></strong>:<code>str</code>=<em><code>'absolute'</code></em>, <strong><code>max_seq_len</code></strong>:<code>int</code>=<em><code>512</code></em>, <strong><code>axial_shape</code></strong>:<code>tuple</code>=<em><code>None</code></em>, <strong><code>axial_emb_dims</code></strong>:<code>tuple</code>=<em><code>None</code></em>, <strong><code>pad_idx</code></strong>:<code>int</code>=<em><code>None</code></em>, <strong><code>prenorm</code></strong>:<code>bool</code>=<em><code>False</code></em>, <strong><code>attn_bias</code></strong>:<code>bool</code>=<em><code>False</code></em>, <strong><code>shared_qk</code></strong>:<code>bool</code>=<em><code>False</code></em>) :: <code>Module</code></p>
 </blockquote>
 <p>Basic Transformer for language modelling</p>
 <p>Parameters:</p>
@@ -452,8 +437,7 @@ followed by cross-attention</p>
 * attn_bias: bool - wether to allow biases in attention projection layers
 * pad_idx: int - padding token id, required for autogeneration of padding mask
 * pos_enc: str from {'absolute', 'fixed', 'axial'} - type of positional encoding to use
-* axial_shape: tuple - required if 'axial' positional encoding are used, should be factors of
-        max_seq_len
+* axial_shape: tuple - [optional] should be factors of max_seq_len
 * axial_emb_dims: tuple - [optional] axial embedding components, should sum to d_model
 </code></pre>
 <p>Inputs:</p>
@@ -523,6 +507,38 @@ followed by cross-attention</p>
 </div>
     {% endraw %}
 
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="transformer_lm_splits" class="doc_header"><code>transformer_lm_splits</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/transformer.py#L362" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>transformer_lm_splits</code>(<strong><code>model</code></strong>)</p>
+</blockquote>
+<p>Splits TransformerLM <code>model</code> into groups for differential learning rates.</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    {% endraw %}
+
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Encoder-Decoder-model">Encoder-Decoder model<a class="anchor-link" href="#Encoder-Decoder-model"> </a></h2>
@@ -540,7 +556,7 @@ followed by cross-attention</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="Transformer" class="doc_header"><code>class</code> <code>Transformer</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/transformer.py#L366" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Transformer</code>(<strong><code>enc_vocab_sz</code></strong>, <strong><code>dec_vocab_sz</code></strong>, <strong><code>d_model</code></strong>, <strong><code>n_enc_layers</code></strong>=<em><code>6</code></em>, <strong><code>n_dec_layers</code></strong>=<em><code>6</code></em>, <strong><code>heads</code></strong>=<em><code>8</code></em>, <strong><code>d_ff</code></strong>=<em><code>None</code></em>, <strong><code>pad_idx</code></strong>=<em><code>None</code></em>, <strong><code>tie_weights</code></strong>=<em><code>True</code></em>, <strong><code>shared_emb</code></strong>=<em><code>False</code></em>, <strong><code>attn_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>ff_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>emb_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>prenorm</code></strong>=<em><code>False</code></em>, <strong><code>attn_bias</code></strong>=<em><code>False</code></em>, <strong><code>comb_attn</code></strong>=<em><code>False</code></em>, <strong><code>pos_enc</code></strong>=<em><code>'absolute'</code></em>, <strong><code>max_seq_len</code></strong>=<em><code>512</code></em>, <strong><code>axial_shape</code></strong>=<em><code>None</code></em>, <strong><code>axial_emb_dims</code></strong>=<em><code>None</code></em>) :: <code>Module</code></p>
+<h2 id="Transformer" class="doc_header"><code>class</code> <code>Transformer</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/transformer.py#L372" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Transformer</code>(<strong><code>enc_vocab_sz</code></strong>, <strong><code>dec_vocab_sz</code></strong>, <strong><code>d_model</code></strong>, <strong><code>n_enc_layers</code></strong>=<em><code>6</code></em>, <strong><code>n_dec_layers</code></strong>=<em><code>6</code></em>, <strong><code>heads</code></strong>=<em><code>8</code></em>, <strong><code>d_ff</code></strong>=<em><code>None</code></em>, <strong><code>pad_idx</code></strong>=<em><code>None</code></em>, <strong><code>tie_weights</code></strong>=<em><code>True</code></em>, <strong><code>shared_emb</code></strong>=<em><code>False</code></em>, <strong><code>attn_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>ff_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>emb_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>prenorm</code></strong>=<em><code>False</code></em>, <strong><code>attn_bias</code></strong>=<em><code>False</code></em>, <strong><code>comb_attn</code></strong>=<em><code>False</code></em>, <strong><code>pos_enc</code></strong>=<em><code>'absolute'</code></em>, <strong><code>max_seq_len</code></strong>=<em><code>512</code></em>, <strong><code>axial_shape</code></strong>=<em><code>None</code></em>, <strong><code>axial_emb_dims</code></strong>=<em><code>None</code></em>) :: <code>Module</code></p>
 </blockquote>
 <p>Basic Transformer Encoder-Decoder model
 Parameters:</p>
@@ -563,8 +579,7 @@ Parameters:</p>
 * tie_weights: bool - if True target embedding weights are used for computation output projection
 * shared_emb: bool - if True encoder and decoder will use shared embedding layer
 * pos_enc: str from {'absolute', 'fixed', 'axial'} - type of positional encoding to use
-* axial_shape: tuple - required if 'axial' positional encoding are used, should be factors of
-        max_seq_len
+* axial_shape: tuple - [optional] should be factors of max_seq_len
 * axial_emb_dims: tuple - [optional] axial embedding components, should sum to d_model
 </code></pre>
 <p>Inputs:</p>
@@ -635,6 +650,38 @@ Parameters:</p>
 
 </div>
 </div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="transformer_splits" class="doc_header"><code>transformer_splits</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/transformer.py#L456" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>transformer_splits</code>(<strong><code>model</code></strong>)</p>
+</blockquote>
+<p>[v0] Splits Transformer <code>model</code> into groups for differential learning rates.</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
 
 </div>
     {% endraw %}

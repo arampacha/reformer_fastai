@@ -2,7 +2,7 @@
 
 __all__ = ['Chunk', 'ChunkedFeedForward', 'Deterministic', 'ReversibleBlock', 'IrreversibleBlock', 'ReversibleSequence',
            'ReversibleEncoder', 'ReversibleDecoder', 'ReversibleLM', 'ReversibleTransformer', 'LSHEncoderBlock',
-           'LSHEncoder', 'LSHLM', 'ReformerEncoder', 'ReformerLM', 'from_config', 'MODELS']
+           'LSHEncoder', 'LSHLM', 'ReformerEncoder', 'ReformerLM', 'reformer_lm_splits', 'from_config', 'MODELS']
 
 # Cell
 from torch.autograd.function import Function
@@ -760,6 +760,12 @@ class ReformerLM(Module, LMMixin):
         for c in self.children():
             for m in c.modules():
                 if hasattr(m, 'n_hashes'): m.n_hashes=val
+
+# Cell
+def reformer_lm_splits(model):
+    "Splits ReformerLM `model` into groups for differential learning rates."
+    groups = L([model.emb] + [l for l in model.encoder.layers.blocks] + [model.proj])
+    return groups.map(params)
 
 # Cell
 MODELS = (LSHLM, ReversibleLM, ReversibleTransformer, ReformerLM)
