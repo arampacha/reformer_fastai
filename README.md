@@ -4,6 +4,19 @@
 
 ## Installation
 
+### Setup
+
+If you don't already, its a good idea to install the package into a virtual environment
+
+```
+python3 -m venv my_env
+
+source ./my_env/bin/activate
+```
+
+### Run Install
+Then you can install the package by running:
+
 `pip install git+git://github.com/arampacha/reformer_fastai.git`
 
 ## Project Links
