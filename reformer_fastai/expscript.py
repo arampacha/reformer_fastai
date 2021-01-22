@@ -116,7 +116,7 @@ def init_wandb(cbs:list=[], wandb_name:str='', wandb_group:str='', wandb_notes:s
     except Exception as e:
         print(e)
 
-    cbs.append(WandbCallback(log_model=False, log_preds=False))
+    cbs.append(WandbCallback(log_model=True, log_preds=False))
     return wandb_run, cbs
 
 # Cell
@@ -153,7 +153,7 @@ def run_exp(task:Param(help="Task options: 'synt','lm_base','lm_rev',lm_shared_q
     torch.cuda.set_device(cuda_id)
 
     # Callbacks used for training
-    cbs = []
+    cbs = [SaveModelCallback(every_epoch=True)]
 
     #random seeds
     if seed!=0:
