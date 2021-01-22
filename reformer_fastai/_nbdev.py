@@ -101,7 +101,8 @@ index = {"exists": "00_core.ipynb",
          "SyntheticConfig": "21_experiment-configs.ipynb",
          "TransformerLMConfigEnwik8": "21_experiment-configs.ipynb",
          "ReversibleLMConfigEnwik8": "21_experiment-configs.ipynb",
-         "NHashesConfig": "21_experiment-configs.ipynb"}
+         "NHashesConfig": "21_experiment-configs.ipynb",
+         "NLayersConfig": "21_experiment-configs.ipynb"}
 
 modules = ["core.py",
            "layers.py",
