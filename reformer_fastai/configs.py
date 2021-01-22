@@ -213,7 +213,7 @@ class NHashesConfig(ConfigBase):
         'prenorm':False,
         'attn_bias':False,
         'bucket_size':64,
-        'use_lsh':False,
+        'use_lsh':True,
         'n_hashes':2,
         'seed':842,
     }
