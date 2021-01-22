@@ -314,7 +314,8 @@ def run_exp(task:Param(help="Task options: 'synt','lm_base','lm_rev',lm_shared_q
             print(f'Gradient accumulation on, virtual batch size == {grad_accum}')
             cbs.append(GradientAccumulation(n_acc=grad_accum))
             run_name = run_name + f'_grad-accum-{grad_accum}'
-
+        #LSH-specific callback
+        if config.use_lsh: cbs.append(PadBatchCallback(bucket_size=config.bucket_size))
         # Set up Weights & Biases logging, if needed
         if do_wandb_logging and rank_distrib()==0:
             wandb_run, cbs = init_wandb(cbs, wandb_name=run_name, wandb_group=wandb_group,
