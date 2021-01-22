@@ -148,8 +148,9 @@ def run_exp(task:Param(help="Task options: 'synt','lm_base','lm_rev',lm_shared_q
 
     """Task options: 'synt','lm_base','lm_rev',lm_shared_qk, trans"""
     #Set up distributed training
-    _wrapper = rank0_first if distrib else partial
-    if distrib: cuda_id = None
+#     _wrapper = rank0_first if distrib else partial
+#     if distrib: cuda_id = None
+    torch.cuda.set_device(cuda_id)
 
     # Callbacks used for training
     cbs = []
@@ -236,8 +237,8 @@ def run_exp(task:Param(help="Task options: 'synt','lm_base','lm_rev',lm_shared_q
 
         print('Checking data')
 #         _wrapper(download_enwik8_data, data_path=data_path)
-        if distrib: rank0_first(download_enwik8_data, data_path=data_path)
-        else: download_enwik8_data(data_path=data_path)
+#         if distrib: rank0_first(download_enwik8_data, data_path=data_path)
+        download_enwik8_data(data_path=data_path)
         print('done')
 
         print('Getting dataloaders ...')
@@ -266,7 +267,7 @@ def run_exp(task:Param(help="Task options: 'synt','lm_base','lm_rev',lm_shared_q
 
         # Start training
         print('Starting training...')
-        with learn.distrib_ctx(cuda_id=cuda_id): learn.fit(n_epochs, cbs=cbs)
+        learn.fit(n_epochs, cbs=cbs)
         print('done!')
 
         # Close wandb logging for this run
