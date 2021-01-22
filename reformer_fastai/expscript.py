@@ -148,8 +148,9 @@ def run_exp(task:Param(help="Task options: 'synt','lm_base','lm_rev',lm_shared_q
 
     """Task options: 'synt','lm_base','lm_rev',lm_shared_qk, trans"""
     #Set up distributed training
-    _wrapper = rank0_first if distrib else partial
-    if distrib: cuda_id = None
+#     _wrapper = rank0_first if distrib else partial
+#     if distrib: cuda_id = None
+    torch.cuda.set_device(cuda_id)
 
     # Callbacks used for training
     cbs = []
@@ -165,7 +166,7 @@ def run_exp(task:Param(help="Task options: 'synt','lm_base','lm_rev',lm_shared_q
 
 
         if run_name == '':
-            if use_lsh: run_name = f'{task}_lsh-{n_hashes}_bs-{bs}_n_eps-{n_epochs}'
+            if use_lsh: run_name = f'{task}_lsh-{n_hashes}_bs-{bs}_n_eps-{n_epochs}_seed-{seed}'
             else: run_name = f'{task}_full-attn_bs-{bs}_n_eps-{n_epochs}'
 
         print('Getting model ...')
@@ -210,21 +211,21 @@ def run_exp(task:Param(help="Task options: 'synt','lm_base','lm_rev',lm_shared_q
         "Model args that can be changed from command line: axial_shape, max_seq_len"
         axial_shape = get_axial_shape(max_seq_len)
         if task == 'lm_base':
-            if run_name == '': run_name = f'{task}_enwik8_sl-{max_seq_len}_bs-{bs}_n_eps-{n_epochs}'
+            if run_name == '': run_name = f'{task}_enwik8_sl-{max_seq_len}_bs-{bs}_n_eps-{n_epochs}_seed-{seed}'
             config = TransformerLMConfigEnwik8(warn=False, verbose=verbose,
                                                axial_shape=axial_shape, max_seq_len=max_seq_len)
             print('Getting model ...')
             model = TransformerLM.from_config(config)
             print('done!')
         elif task == 'lm_rev':
-            if run_name == '': run_name = f'{task}_enwik8_sl-{max_seq_len}_bs-{bs}_n_eps-{n_epochs}'
+            if run_name == '': run_name = f'{task}_enwik8_sl-{max_seq_len}_bs-{bs}_n_eps-{n_epochs}_seed-{seed}'
             config = ReversibleLMConfigEnwik8(warn=False, verbose=verbose,
                                               axial_shape=axial_shape, max_seq_len=max_seq_len)
             print('Getting model ...')
             model = ReversibleLM.from_config(config)
             print('done!')
         elif task == 'lm_shared_qk':
-            if run_name == '': run_name = f'{task}_enwik8_sl-{max_seq_len}_bs-{bs}_n_eps-{n_epochs}'
+            if run_name == '': run_name = f'{task}_enwik8_sl-{max_seq_len}_bs-{bs}_n_eps-{n_epochs}_seed-{seed}'
             config = TransformerLMConfigEnwik8(warn=False, verbose=verbose, shared_qk=True,
                                                axial_shape=axial_shape, max_seq_len=max_seq_len)
             print('Getting model ...')
@@ -236,8 +237,8 @@ def run_exp(task:Param(help="Task options: 'synt','lm_base','lm_rev',lm_shared_q
 
         print('Checking data')
 #         _wrapper(download_enwik8_data, data_path=data_path)
-        if distrib: rank0_first(download_enwik8_data, data_path=data_path)
-        else: download_enwik8_data(data_path=data_path)
+#         if distrib: rank0_first(download_enwik8_data, data_path=data_path)
+        download_enwik8_data(data_path=data_path)
         print('done')
 
         print('Getting dataloaders ...')
@@ -266,7 +267,7 @@ def run_exp(task:Param(help="Task options: 'synt','lm_base','lm_rev',lm_shared_q
 
         # Start training
         print('Starting training...')
-        with learn.distrib_ctx(cuda_id=cuda_id): learn.fit(n_epochs, cbs=cbs)
+        learn.fit(n_epochs, cbs=cbs)
         print('done!')
 
         # Close wandb logging for this run
