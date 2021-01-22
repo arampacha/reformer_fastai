@@ -278,6 +278,61 @@ def run_exp(task:Param(help="Task options: 'synt','lm_base','lm_rev',lm_shared_q
             now = time.strftime("_%d_%m_%Y_%H:%M", time.gmtime())
             learn.save(f'{task}_{run_name}_{now}')
 
+    elif task == 'n_hashes':
+        "Model args that can be changed from command line: n_hashes, seed"
+
+        if run_name == '': run_name = f'{task}-{n_hashes}_enwik8_sl-{max_seq_len}_bs-{bs}_n_eps-{n_epochs}_seed-{seed}'
+        config = NHashesConfig(warn=False, verbose=verbose, n_hashes=n_hashes, seed=seed)
+        print('Getting model ...')
+        model = LSHLM.from_config(config)
+        print('done!')
+
+        if verbose: print(config)
+        config.save(run_name, add_tstmp=True)
+
+        print('Checking data')
+#         _wrapper(download_enwik8_data, data_path=data_path)
+#         if distrib: rank0_first(download_enwik8_data, data_path=data_path)
+        download_enwik8_data(data_path=data_path)
+        print('done')
+
+        print('Getting dataloaders ...')
+        dls = get_enwik8_dataloader(data_path=data_path, bs=bs, val_bs=bs, sl=max_seq_len,
+                                    verbose=verbose, tiny=tiny)
+        print('done')
+
+        print('Getting learner ...')
+        learn = get_lm_learner(dls, model, opt_func=adafactor)
+        print('done!')
+
+        # CALLBACKS
+        ## Gradient Clipping
+        if clip != 0.0: cbs.append(GradientClip(max_norm=clip))
+
+        ## Gradient Accumulation
+        if grad_accum > 1:
+            print(f'Gradient accumulation on, virtual batch size == {grad_accum}')
+            cbs.append(GradientAccumulation(n_acc=grad_accum))
+            run_name = run_name + f'_grad-accum-{grad_accum}'
+
+        # Set up Weights & Biases logging, if needed
+        if do_wandb_logging and rank_distrib()==0:
+            wandb_run, cbs = init_wandb(cbs, wandb_name=run_name, wandb_group=wandb_group,
+                                        wandb_notes=wandb_notes, wandb_tags=wandb_tags)
+
+        # Start training
+        print('Starting training...')
+        learn.fit(n_epochs, cbs=cbs)
+        print('done!')
+
+        # Close wandb logging for this run
+        if do_wandb_logging: wandb_run.finish()
+
+        # Save model weights if needed, saved in /models relative to where script is run
+        if save_model:
+            now = time.strftime("_%d_%m_%Y_%H:%M", time.gmtime())
+            learn.save(f'{task}_{run_name}_{now}')
+
     elif task == 'test_cfg':
         print('Locals ', locals())
         print()
