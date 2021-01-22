@@ -26,21 +26,6 @@ nb_path: "nbs/06_data.ipynb"
     
 <div class="cell border-box-sizing code_cell rendered">
 
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stderr output_text">
-<pre>/home/arto/anaconda3/envs/torchenv/lib/python3.8/site-packages/torch/cuda/__init__.py:52: UserWarning: CUDA initialization: CUDA unknown error - this may be due to an incorrectly set up environment, e.g. changing env variable CUDA_VISIBLE_DEVICES after program start. Setting the available devices to be zero. (Triggered internally at  /opt/conda/conda-bld/pytorch_1607369981906/work/c10/cuda/CUDAFunctions.cpp:100.)
-  return torch._C._cuda_getDeviceCount() &gt; 0
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
 </div>
     {% endraw %}
 
@@ -336,7 +321,7 @@ We create items on the fly instead of all items up front.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="TwinSequence" class="doc_header"><code>class</code> <code>TwinSequence</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/data.py#L97" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TwinSequence</code>(<strong>*<code>args</code></strong>, <strong>**<code>kwds</code></strong>) :: <code>Dataset</code></p>
+<h2 id="TwinSequence" class="doc_header"><code>class</code> <code>TwinSequence</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/data.py#L97" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TwinSequence</code>(<strong><code>sl</code></strong>=<em><code>1024</code></em>, <strong><code>len</code></strong>=<em><code>100</code></em>, <strong><code>seed</code></strong>=<em><code>None</code></em>) :: <code>Dataset</code></p>
 </blockquote>
 <p>An abstract class representing a :class:<code>Dataset</code>.</p>
 <p>All datasets that represent a map from keys to data samples should subclass
@@ -517,7 +502,7 @@ of :class:<code>~torch.utils.data.DataLoader</code>.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="DeterministicTwinSequence" class="doc_header"><code>class</code> <code>DeterministicTwinSequence</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/data.py#L119" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>DeterministicTwinSequence</code>(<strong>*<code>args</code></strong>, <strong>**<code>kwds</code></strong>) :: <code>Dataset</code></p>
+<h2 id="DeterministicTwinSequence" class="doc_header"><code>class</code> <code>DeterministicTwinSequence</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/data.py#L119" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>DeterministicTwinSequence</code>(<strong><code>sl</code></strong>=<em><code>1024</code></em>, <strong><code>n_items</code></strong>=<em><code>100</code></em>, <strong><code>seed</code></strong>=<em><code>None</code></em>) :: <code>Dataset</code></p>
 </blockquote>
 <p>An abstract class representing a :class:<code>Dataset</code>.</p>
 <p>All datasets that represent a map from keys to data samples should subclass

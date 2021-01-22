@@ -26,21 +26,6 @@ nb_path: "nbs/02_attention.ipynb"
     
 <div class="cell border-box-sizing code_cell rendered">
 
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stderr output_text">
-<pre>/home/arto/anaconda3/envs/torchenv/lib/python3.8/site-packages/torch/cuda/__init__.py:52: UserWarning: CUDA initialization: CUDA unknown error - this may be due to an incorrectly set up environment, e.g. changing env variable CUDA_VISIBLE_DEVICES after program start. Setting the available devices to be zero. (Triggered internally at  /opt/conda/conda-bld/pytorch_1607369981906/work/c10/cuda/CUDAFunctions.cpp:100.)
-  return torch._C._cuda_getDeviceCount() &gt; 0
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
 </div>
     {% endraw %}
 
@@ -1174,7 +1159,7 @@ $$\textbf {Attention}(Q,K,V) = \textbf {softmax}({QK^T\over\sqrt d_k})V $$
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Test LSH-attention layer. Note: <a href="/reformer_fastai/experiment-script.html#d_model"><code>d_model</code></a> is infered from input. Assumes shared key and query, but accepts both as input.</p>
+<p>Test LSH-attention layer. Note: <code>d_model</code> is infered from input. Assumes shared key and query, but accepts both as input.</p>
 
 </div>
 </div>
