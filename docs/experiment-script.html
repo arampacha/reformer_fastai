@@ -26,21 +26,6 @@ nb_path: "nbs/20_experiment-script.ipynb"
     
 <div class="cell border-box-sizing code_cell rendered">
 
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>No module named &#39;wandb&#39;
-cannot import name &#39;WandbCallback&#39; from &#39;reformer_fastai.tracking&#39; (/Users/deanpleban/Project Talos/Code/reformer_fastai/reformer_fastai/tracking.py)
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
 </div>
     {% endraw %}
 
@@ -101,8 +86,7 @@ cannot import name &#39;WandbCallback&#39; from &#39;reformer_fastai.tracking&#3
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>enwik8 Data Download</p>
-
+<h4 id="enwik8-Data-Download">enwik8 Data Download<a class="anchor-link" href="#enwik8-Data-Download"> </a></h4>
 </div>
 </div>
 </div>
@@ -117,7 +101,44 @@ cannot import name &#39;WandbCallback&#39; from &#39;reformer_fastai.tracking&#3
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="download_enwik8_data" class="doc_header"><code>download_enwik8_data</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/expscript.py#L18" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>download_enwik8_data</code>(<strong><code>data_path</code></strong>=<em><code>'./data'</code></em>)</p>
+<h4 id="download_enwik8_data" class="doc_header"><code>download_enwik8_data</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/expscript.py#L441" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>download_enwik8_data</code>(<strong><code>data_path</code></strong>=<em><code>'./data'</code></em>)</p>
+</blockquote>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    {% endraw %}
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="WMT-14-Data-Download">WMT-14 Data Download<a class="anchor-link" href="#WMT-14-Data-Download"> </a></h4>
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="download_wmt14_data" class="doc_header"><code>download_wmt14_data</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/expscript.py#L447" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>download_wmt14_data</code>(<strong><code>data_path</code></strong>=<em><code>'./data'</code></em>)</p>
 </blockquote>
 
 </div>
@@ -160,7 +181,7 @@ cannot import name &#39;WandbCallback&#39; from &#39;reformer_fastai.tracking&#3
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_twin_sequence_dataloaders" class="doc_header"><code>get_twin_sequence_dataloaders</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/expscript.py#L24" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_twin_sequence_dataloaders</code>(<strong><code>bs</code></strong>:<code>int</code>=<em><code>32</code></em>, <strong><code>sl</code></strong>:<code>int</code>=<em><code>1024</code></em>, <strong><code>train_sz</code></strong>:<code>int</code>=<em><code>500</code></em>, <strong><code>valid_sz</code></strong>:<code>int</code>=<em><code>100</code></em>, <strong><code>seed</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="get_twin_sequence_dataloaders" class="doc_header"><code>get_twin_sequence_dataloaders</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/expscript.py#L468" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_twin_sequence_dataloaders</code>(<strong><code>bs</code></strong>:<code>int</code>=<em><code>32</code></em>, <strong><code>sl</code></strong>:<code>int</code>=<em><code>1024</code></em>, <strong><code>train_sz</code></strong>:<code>int</code>=<em><code>500</code></em>, <strong><code>valid_sz</code></strong>:<code>int</code>=<em><code>100</code></em>, <strong><code>seed</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 
 </div>
@@ -198,7 +219,76 @@ cannot import name &#39;WandbCallback&#39; from &#39;reformer_fastai.tracking&#3
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_enwik8_dataloader" class="doc_header"><code>get_enwik8_dataloader</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/expscript.py#L31" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_enwik8_dataloader</code>(<strong><code>data_path</code></strong>=<em><code>'data'</code></em>, <strong><code>bs</code></strong>:<code>int</code>=<em><code>8</code></em>, <strong><code>val_bs</code></strong>:<code>int</code>=<em><code>32</code></em>, <strong><code>sl</code></strong>:<code>int</code>=<em><code>1024</code></em>, <strong><code>n_workers</code></strong>=<em><code>None</code></em>, <strong><code>val_test_chars</code></strong>:<code>int</code>=<em><code>10000000.0</code></em>, <strong><code>verbose</code></strong>=<em><code>False</code></em>, <strong><code>tiny</code></strong>=<em><code>False</code></em>)</p>
+<h4 id="get_enwik8_dataloader" class="doc_header"><code>get_enwik8_dataloader</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/expscript.py#L475" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_enwik8_dataloader</code>(<strong><code>data_path</code></strong>=<em><code>'data'</code></em>, <strong><code>bs</code></strong>:<code>int</code>=<em><code>8</code></em>, <strong><code>val_bs</code></strong>:<code>int</code>=<em><code>32</code></em>, <strong><code>sl</code></strong>:<code>int</code>=<em><code>1024</code></em>, <strong><code>n_workers</code></strong>=<em><code>None</code></em>, <strong><code>val_test_chars</code></strong>:<code>int</code>=<em><code>10000000.0</code></em>, <strong><code>verbose</code></strong>=<em><code>False</code></em>, <strong><code>tiny</code></strong>=<em><code>False</code></em>)</p>
+</blockquote>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    {% endraw %}
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="&#160;WMT-14-Dataloader">&#160;WMT-14 Dataloader<a class="anchor-link" href="#&#160;WMT-14-Dataloader"> </a></h3>
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="add_eos_id" class="doc_header"><code>add_eos_id</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/expscript.py#L532" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>add_eos_id</code>(<strong><code>ids</code></strong>, <strong><code>keep_size</code></strong>=<em><code>True</code></em>)</p>
+</blockquote>
+<p>Adds EOS token id to the tensors. If <code>keep_size==True</code> remove the last id before appending the EOS token id</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="get_wmt14_dataloader" class="doc_header"><code>get_wmt14_dataloader</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/expscript.py#L539" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_wmt14_dataloader</code>(<strong><code>data_path</code></strong>=<em><code>'data'</code></em>, <strong><code>bs</code></strong>:<code>int</code>=<em><code>8</code></em>, <strong><code>val_bs</code></strong>:<code>int</code>=<em><code>8</code></em>, <strong><code>sl</code></strong>:<code>int</code>=<em><code>1024</code></em>, <strong><code>n_workers</code></strong>=<em><code>None</code></em>, <strong><code>erbose</code></strong>=<em><code>False</code></em>, <strong><code>tiny</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 
 </div>
@@ -241,7 +331,7 @@ cannot import name &#39;WandbCallback&#39; from &#39;reformer_fastai.tracking&#3
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_synthetic_learner" class="doc_header"><code>get_synthetic_learner</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/expscript.py#L88" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_synthetic_learner</code>(<strong><code>dls</code></strong>, <strong><code>model</code></strong>)</p>
+<h4 id="get_synthetic_learner" class="doc_header"><code>get_synthetic_learner</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/expscript.py#L592" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_synthetic_learner</code>(<strong><code>dls</code></strong>, <strong><code>model</code></strong>)</p>
 </blockquote>
 
 </div>
@@ -278,7 +368,7 @@ cannot import name &#39;WandbCallback&#39; from &#39;reformer_fastai.tracking&#3
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_lm_learner" class="doc_header"><code>get_lm_learner</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/expscript.py#L95" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_lm_learner</code>(<strong><code>dls</code></strong>, <strong><code>model</code></strong>, <strong><code>opt_func</code></strong>=<em><code>adafactor</code></em>)</p>
+<h4 id="get_lm_learner" class="doc_header"><code>get_lm_learner</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/expscript.py#L599" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_lm_learner</code>(<strong><code>dls</code></strong>, <strong><code>model</code></strong>, <strong><code>opt_func</code></strong>=<em><code>adafactor</code></em>)</p>
 </blockquote>
 
 </div>
@@ -309,7 +399,44 @@ cannot import name &#39;WandbCallback&#39; from &#39;reformer_fastai.tracking&#3
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_reformerlm_learner" class="doc_header"><code>get_reformerlm_learner</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/expscript.py#L102" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_reformerlm_learner</code>(<strong><code>dls</code></strong>, <strong><code>model</code></strong>, <strong><code>opt_func</code></strong>=<em><code>adafactor</code></em>)</p>
+<h4 id="get_reformerlm_learner" class="doc_header"><code>get_reformerlm_learner</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/expscript.py#L606" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_reformerlm_learner</code>(<strong><code>dls</code></strong>, <strong><code>model</code></strong>, <strong><code>opt_func</code></strong>=<em><code>adafactor</code></em>)</p>
+</blockquote>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    {% endraw %}
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="WMT-Seq2Seq-Learner">WMT Seq2Seq Learner<a class="anchor-link" href="#WMT-Seq2Seq-Learner"> </a></h2>
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="get_seq2seq_learner" class="doc_header"><code>get_seq2seq_learner</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/expscript.py#L613" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_seq2seq_learner</code>(<strong><code>dls</code></strong>, <strong><code>model</code></strong>, <strong><code>tok</code></strong>)</p>
 </blockquote>
 
 </div>
@@ -346,7 +473,7 @@ cannot import name &#39;WandbCallback&#39; from &#39;reformer_fastai.tracking&#3
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="init_wandb" class="doc_header"><code>init_wandb</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/expscript.py#L102" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>init_wandb</code>(<strong><code>cbs</code></strong>:<code>list</code>=<em><code>[]</code></em>, <strong><code>wandb_name</code></strong>:<code>str</code>=<em><code>''</code></em>, <strong><code>wandb_group</code></strong>:<code>str</code>=<em><code>''</code></em>, <strong><code>wandb_notes</code></strong>:<code>str</code>=<em><code>''</code></em>, <strong><code>wandb_tags</code></strong>:<code>str</code>=<em><code>'test'</code></em>, <strong><code>save_model</code></strong>=<em><code>False</code></em>)</p>
+<h4 id="init_wandb" class="doc_header"><code>init_wandb</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/expscript.py#L620" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>init_wandb</code>(<strong><code>cbs</code></strong>:<code>list</code>=<em><code>[]</code></em>, <strong><code>wandb_name</code></strong>:<code>str</code>=<em><code>''</code></em>, <strong><code>wandb_group</code></strong>:<code>str</code>=<em><code>''</code></em>, <strong><code>wandb_notes</code></strong>:<code>str</code>=<em><code>''</code></em>, <strong><code>wandb_tags</code></strong>:<code>str</code>=<em><code>'test'</code></em>, <strong><code>save_model</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 
 </div>
@@ -384,7 +511,7 @@ cannot import name &#39;WandbCallback&#39; from &#39;reformer_fastai.tracking&#3
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="run_exp" class="doc_header"><code>run_exp</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/expscript.py#L130" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>run_exp</code>(<strong><code>task</code></strong>:"Task options: 'synt','lm_base','lm_rev',lm_shared_qk, n_hashes, trans", <strong><code>data_path</code></strong>:"Path to data folder", <strong><code>n_epochs</code></strong>:"Number of epochs", <strong><code>lr</code></strong>:"Learning rate", <strong><code>bs</code></strong>:"Batch size", <strong><code>train_sz</code></strong>:"TwinSequence train size", <strong><code>valid_sz</code></strong>:"TwinSequence valid size", <strong><code>n_layers</code></strong>:"Number of layers", <strong><code>n_hashes</code></strong>:"Number of LSH Attention hashes", <strong><code>use_lsh</code></strong>:"Use LSH Attention", <strong><code>max_seq_len</code></strong>:"Max sequence length for model embedding and dataloader", <strong><code>do_wandb_logging</code></strong>:"Use weights and biases logging", <strong><code>run_name</code></strong>:"Run name for wandb tracking and model filename", <strong><code>wandb_group</code></strong>:"wandb group", <strong><code>wandb_notes</code></strong>:"wandb notes", <strong><code>wandb_tags</code></strong>:"wandb tags, add tags in a single string, space separated", <strong><code>save_model</code></strong>:"Save model locally in /models", <strong><code>grad_accum</code></strong>:"Gradient Accumulation, set greater than 1 to implement", <strong><code>clip</code></strong>:"Gradient Clipping, will be set if &gt; 0.0", <strong><code>cuda_id</code></strong>:"Which cuda device to use", <strong><code>seed</code></strong>:"Set seed for reproducibiltiy, passing anything except 0 will use fastai's set_seed", <strong><code>distrib</code></strong>:"Set to True if using distributed training", <strong><code>verbose</code></strong>:"Print script logs", <strong><code>tiny</code></strong>:"Use 5% of data, for quick iteration and testings")</p>
+<h4 id="run_exp" class="doc_header"><code>run_exp</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/expscript.py#L641" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>run_exp</code>(<strong><code>task</code></strong>:"Task options: 'synt','lm_base','lm_rev',lm_shared_qk, n_hashes, trans", <strong><code>data_path</code></strong>:"Path to data folder", <strong><code>n_epochs</code></strong>:"Number of epochs", <strong><code>lr</code></strong>:"Learning rate", <strong><code>bs</code></strong>:"Batch size", <strong><code>train_sz</code></strong>:"TwinSequence train size", <strong><code>valid_sz</code></strong>:"TwinSequence valid size", <strong><code>n_layers</code></strong>:"Number of layers", <strong><code>n_hashes</code></strong>:"Number of LSH Attention hashes", <strong><code>use_lsh</code></strong>:"Use LSH Attention", <strong><code>max_seq_len</code></strong>:"Max sequence length for model embedding and dataloader", <strong><code>do_wandb_logging</code></strong>:"Use weights and biases logging", <strong><code>run_name</code></strong>:"Run name for wandb tracking and model filename", <strong><code>wandb_group</code></strong>:"wandb group", <strong><code>wandb_notes</code></strong>:"wandb notes", <strong><code>wandb_tags</code></strong>:"wandb tags, add tags in a single string, space separated", <strong><code>save_model</code></strong>:"Save model locally in /models", <strong><code>grad_accum</code></strong>:"Gradient Accumulation, set greater than 1 to implement", <strong><code>clip</code></strong>:"Gradient Clipping, will be set if &gt; 0.0", <strong><code>cuda_id</code></strong>:"Which cuda device to use", <strong><code>seed</code></strong>:"Set seed for reproducibiltiy, passing anything except 0 will use fastai's set_seed", <strong><code>distrib</code></strong>:"Set to True if using distributed training", <strong><code>verbose</code></strong>:"Print script logs", <strong><code>tiny</code></strong>:"Use 5% of data, for quick iteration and testings")</p>
 </blockquote>
 <p>Task options: 'synt','lm_base','lm_rev',lm_shared_qk, trans</p>
 

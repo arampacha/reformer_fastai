@@ -534,7 +534,7 @@ sequence length is &gt; rev_thres or else IrreversibleBlocks.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="ReversibleDecoder" class="doc_header"><code>class</code> <code>ReversibleDecoder</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/reformer.py#L251" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ReversibleDecoder</code>(<strong><code>d_model</code></strong>, <strong><code>n_layers</code></strong>=<em><code>6</code></em>, <strong><code>heads</code></strong>=<em><code>8</code></em>, <strong><code>max_seq_len</code></strong>=<em><code>512</code></em>, <strong><code>d_head</code></strong>=<em><code>None</code></em>, <strong><code>bucket_size</code></strong>=<em><code>64</code></em>, <strong><code>n_hashes</code></strong>=<em><code>8</code></em>, <strong><code>ff_chunks</code></strong>=<em><code>100</code></em>, <strong><code>attn_chunks</code></strong>=<em><code>None</code></em>, <strong><code>attn_dropout</code></strong>=<em><code>0.0</code></em>, <strong><code>post_attn_dropout</code></strong>=<em><code>None</code></em>, <strong><code>attn_bias</code></strong>:<code>bool</code>=<em><code>False</code></em>, <strong><code>ff_dropout</code></strong>=<em><code>0.0</code></em>, <strong><code>d_ff</code></strong>=<em><code>None</code></em>, <strong><code>prenorm</code></strong>=<em><code>True</code></em>, <strong><code>final_norm</code></strong>:<code>Module</code>=<em><code>None</code></em>, <strong><code>rev_thres</code></strong>=<em><code>0</code></em>) :: <code>Module</code></p>
+<h2 id="ReversibleDecoder" class="doc_header"><code>class</code> <code>ReversibleDecoder</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/reformer.py#L251" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ReversibleDecoder</code>(<strong><code>d_model</code></strong>, <strong><code>n_layers</code></strong>=<em><code>6</code></em>, <strong><code>n_heads</code></strong>=<em><code>8</code></em>, <strong><code>max_seq_len</code></strong>=<em><code>512</code></em>, <strong><code>d_head</code></strong>=<em><code>None</code></em>, <strong><code>bucket_size</code></strong>=<em><code>64</code></em>, <strong><code>n_hashes</code></strong>=<em><code>8</code></em>, <strong><code>ff_chunks</code></strong>=<em><code>100</code></em>, <strong><code>attn_chunks</code></strong>=<em><code>None</code></em>, <strong><code>attn_dropout</code></strong>=<em><code>0.0</code></em>, <strong><code>post_attn_dropout</code></strong>=<em><code>None</code></em>, <strong><code>attn_bias</code></strong>:<code>bool</code>=<em><code>False</code></em>, <strong><code>ff_dropout</code></strong>=<em><code>0.0</code></em>, <strong><code>d_ff</code></strong>=<em><code>None</code></em>, <strong><code>prenorm</code></strong>=<em><code>True</code></em>, <strong><code>final_norm</code></strong>:<code>Module</code>=<em><code>None</code></em>, <strong><code>rev_thres</code></strong>=<em><code>0</code></em>) :: <code>Module</code></p>
 </blockquote>
 <p>Stack of ReversibleBlocks. Uses AdditiveAttention.</p>
 
@@ -706,7 +706,7 @@ sequence length is &gt; rev_thres or else IrreversibleBlocks.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="ReversibleTransformer" class="doc_header"><code>class</code> <code>ReversibleTransformer</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/reformer.py#L368" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ReversibleTransformer</code>(<strong><code>enc_vocab_sz</code></strong>, <strong><code>dec_vocab_sz</code></strong>, <strong><code>d_model</code></strong>, <strong><code>n_layers</code></strong>:<code>int</code>=<em><code>6</code></em>, <strong><code>n_enc_layers</code></strong>=<em><code>None</code></em>, <strong><code>n_dec_layers</code></strong>=<em><code>None</code></em>, <strong><code>heads</code></strong>=<em><code>8</code></em>, <strong><code>d_ff</code></strong>=<em><code>None</code></em>, <strong><code>pad_idx</code></strong>=<em><code>None</code></em>, <strong><code>tie_weights</code></strong>=<em><code>True</code></em>, <strong><code>shared_emb</code></strong>=<em><code>False</code></em>, <strong><code>attn_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>ff_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>emb_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>prenorm</code></strong>=<em><code>False</code></em>, <strong><code>attn_bias</code></strong>=<em><code>False</code></em>, <strong><code>comb_attn</code></strong>=<em><code>False</code></em>, <strong><code>pos_enc</code></strong>=<em><code>'absolute'</code></em>, <strong><code>max_seq_len</code></strong>=<em><code>512</code></em>, <strong><code>axial_shape</code></strong>=<em><code>None</code></em>, <strong><code>axial_emb_dims</code></strong>=<em><code>None</code></em>) :: <code>Module</code></p>
+<h2 id="ReversibleTransformer" class="doc_header"><code>class</code> <code>ReversibleTransformer</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/reformer.py#L368" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ReversibleTransformer</code>(<strong><code>enc_vocab_sz</code></strong>, <strong><code>dec_vocab_sz</code></strong>, <strong><code>d_model</code></strong>, <strong><code>n_layers</code></strong>:<code>int</code>=<em><code>6</code></em>, <strong><code>n_enc_layers</code></strong>=<em><code>None</code></em>, <strong><code>n_dec_layers</code></strong>=<em><code>None</code></em>, <strong><code>n_heads</code></strong>=<em><code>8</code></em>, <strong><code>d_ff</code></strong>=<em><code>None</code></em>, <strong><code>pad_idx</code></strong>=<em><code>None</code></em>, <strong><code>tie_weights</code></strong>=<em><code>True</code></em>, <strong><code>shared_emb</code></strong>=<em><code>False</code></em>, <strong><code>attn_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>ff_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>emb_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>prenorm</code></strong>=<em><code>False</code></em>, <strong><code>attn_bias</code></strong>=<em><code>False</code></em>, <strong><code>comb_attn</code></strong>=<em><code>False</code></em>, <strong><code>pos_enc</code></strong>=<em><code>'absolute'</code></em>, <strong><code>max_seq_len</code></strong>=<em><code>512</code></em>, <strong><code>axial_shape</code></strong>=<em><code>None</code></em>, <strong><code>axial_emb_dims</code></strong>=<em><code>None</code></em>) :: <code>Module</code></p>
 </blockquote>
 <p>Basic Transformer Encoder-Decoder model
 Parameters:</p>
@@ -716,7 +716,7 @@ Parameters:</p>
 * d_model: int - inner dimension of the model
 * n_enc_layers: int (default: 6)
 * n_dec_layers: int (default: 6)
-* heads: int (default: 8)
+* n_heads: int (default: 8)
 * d_ff: int - inner dimension of the pointwise FeedForward net, if None defaults to 4*d_model
 * attn_dropout: float - attention dropout
 * ff_dropout: float - feed-forward dropout
@@ -1012,7 +1012,7 @@ Parameters:</p>
 <pre><code>* vocab_sz: int
 * d_model: int - inner dimension of the model
 * n_layers: int (default: 6)
-* heads: int (default: 8)
+* n_heads: int (default: 8)
 * d_ff: int - inner dimension of the pointwise FeedForward net, if None defaults to 4*d_model
 * attn_dropout: float - attention dropout
 * ff_dropout: float - feed-forward dropout
@@ -1124,7 +1124,7 @@ Parameters:</p>
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>291 ms ± 12.6 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+<pre>236 ms ± 597 µs per loop (mean ± std. dev. of 7 runs, 1 loop each)
 </pre>
 </div>
 </div>
@@ -1158,7 +1158,7 @@ Parameters:</p>
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>7.67 ms ± 36.8 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)
+<pre>5.66 ms ± 145 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)
 </pre>
 </div>
 </div>
@@ -1266,7 +1266,7 @@ Parameters:</p>
 <pre><code>* vocab_sz: int
 * d_model: int - inner dimension of the model
 * n_layers: int (default: 6)
-* heads: int (default: 8)
+* n_heads: int (default: 8)
 * d_ff: int - inner dimension of the pointwise FeedForward net, if None defaults to 4*d_model
 * attn_dropout: float - attention dropout
 * ff_dropout: float - feed-forward dropout
@@ -1373,15 +1373,15 @@ Parameters:</p>
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>{&#39;buckets:0&#39;: tensor([[ 0,  0,  1,  ..., 14, 14, 15],
-        [ 0,  0,  1,  ..., 15, 15, 15],
-        [ 0,  0,  1,  ..., 15, 15, 14],
-        [ 1,  0,  1,  ..., 15, 15, 15]])}
+<pre>{&#39;buckets:0&#39;: tensor([[ 1,  0,  1,  ..., 14, 15, 15],
+        [ 1,  0,  0,  ..., 14, 14, 15],
+        [ 1,  0,  0,  ..., 14, 14, 15],
+        [ 1,  0,  0,  ..., 14, 14, 15]])}
 torch.Size([4, 1024])
-{&#39;buckets:1&#39;: tensor([[ 1,  1,  0,  ..., 14, 14, 14],
-        [ 1,  0,  0,  ..., 15, 14, 15],
-        [ 1,  0,  1,  ..., 14, 14, 15],
-        [ 1,  1,  0,  ..., 15, 14, 14]])}
+{&#39;buckets:1&#39;: tensor([[ 1,  0,  1,  ..., 15, 14, 14],
+        [ 1,  1,  1,  ..., 14, 15, 15],
+        [ 1,  0,  1,  ..., 15, 15, 15],
+        [ 1,  0,  1,  ..., 15, 15, 14]])}
 torch.Size([4, 1024])
 </pre>
 </div>
@@ -1440,7 +1440,7 @@ torch.Size([4, 1024])
 
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>Number of hashing rounds 8
-272 ms ± 2.82 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+206 ms ± 15.3 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
 </pre>
 </div>
 </div>
@@ -1474,7 +1474,7 @@ torch.Size([4, 1024])
 
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>Number of hashing rounds 1
-73.4 ms ± 1.6 ms per loop (mean ± std. dev. of 7 runs, 10 loops each)
+80.1 ms ± 2.56 ms per loop (mean ± std. dev. of 7 runs, 10 loops each)
 </pre>
 </div>
 </div>

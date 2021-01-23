@@ -253,7 +253,7 @@ class ReversibleDecoder(Module):
     def __init__(self,
                  d_model,
                  n_layers = 6,
-                 heads = 8,
+                 n_heads = 8,
                  max_seq_len = 512,
                  d_head = None,
                  bucket_size = 64,
@@ -271,7 +271,7 @@ class ReversibleDecoder(Module):
                  ):
         store_attr('d_model,n_layers')
 
-        get_attn = lambda: AdditiveAttention(d_model, heads, causal=True, dropout=attn_dropout, out_dropout=post_attn_dropout, bias=attn_bias)
+        get_attn = lambda: AdditiveAttention(d_model, n_heads, causal=True, dropout=attn_dropout, out_dropout=post_attn_dropout, bias=attn_bias)
         get_ff = lambda: ChunkedFeedForward(d_model, d_ff, chunks=ff_chunks, dropout=ff_dropout, dim=1)
         norm_wrapper = PreNorm if prenorm else PostNorm
         blocks = []
@@ -374,7 +374,7 @@ class ReversibleTransformer(Module):
         * d_model: int - inner dimension of the model
         * n_enc_layers: int (default: 6)
         * n_dec_layers: int (default: 6)
-        * heads: int (default: 8)
+        * n_heads: int (default: 8)
         * d_ff: int - inner dimension of the pointwise FeedForward net, if None defaults to 4*d_model
         * attn_dropout: float - attention dropout
         * ff_dropout: float - feed-forward dropout
@@ -405,7 +405,7 @@ class ReversibleTransformer(Module):
                  n_layers:int=6,
                  n_enc_layers=None,
                  n_dec_layers=None,
-                 heads=8,
+                 n_heads=8,
                  d_ff=None,
                  pad_idx=None,
                  tie_weights=True,
@@ -427,14 +427,14 @@ class ReversibleTransformer(Module):
                                             axial_shape=axial_shape, axial_emb_dims=axial_emb_dims)
         if shared_emb:
             assert (enc_vocab_sz == dec_vocab_sz), "Encoder and decoder vocab size doesn't match"
-            self.dec_emb = self.emc_emb
+            self.dec_emb = self.enc_emb
         else:
             self.dec_emb = TransformerEmbedding(dec_vocab_sz, d_model, max_seq_len, dropout=emb_dropout, pos_enc=pos_enc,
                                                 axial_shape=axial_shape, axial_emb_dims=axial_emb_dims)
 
-        self.encoder = ReversibleEncoder(d_model, n_enc_layers, heads, d_ff=d_ff, attn_dropout=attn_dropout, ff_dropout=ff_dropout,
+        self.encoder = ReversibleEncoder(d_model, n_enc_layers, n_heads, d_ff=d_ff, attn_dropout=attn_dropout, ff_dropout=ff_dropout,
                                           prenorm=prenorm, attn_bias=attn_bias, final_norm=nn.LayerNorm, causal=False)
-        self.decoder = ReversibleDecoder(d_model, n_dec_layers, heads, d_ff=d_ff, attn_dropout=attn_dropout, ff_dropout=ff_dropout,
+        self.decoder = ReversibleDecoder(d_model, n_dec_layers, n_heads, d_ff=d_ff, attn_dropout=attn_dropout, ff_dropout=ff_dropout,
                                           prenorm=prenorm, attn_bias=attn_bias, final_norm=nn.LayerNorm)
         self.proj = nn.Linear(d_model, dec_vocab_sz)
         if tie_weights: self.proj.weight = self.dec_emb.emb.weight
@@ -527,7 +527,7 @@ class LSHLM(Module, LMMixin):
         * vocab_sz: int
         * d_model: int - inner dimension of the model
         * n_layers: int (default: 6)
-        * heads: int (default: 8)
+        * n_heads: int (default: 8)
         * d_ff: int - inner dimension of the pointwise FeedForward net, if None defaults to 4*d_model
         * attn_dropout: float - attention dropout
         * ff_dropout: float - feed-forward dropout
@@ -670,7 +670,7 @@ class ReformerLM(Module, LMMixin):
         * vocab_sz: int
         * d_model: int - inner dimension of the model
         * n_layers: int (default: 6)
-        * heads: int (default: 8)
+        * n_heads: int (default: 8)
         * d_ff: int - inner dimension of the pointwise FeedForward net, if None defaults to 4*d_model
         * attn_dropout: float - attention dropout
         * ff_dropout: float - feed-forward dropout
