@@ -224,8 +224,8 @@ class NHashesConfig(ConfigBase):
 # Cell
 class NLayersConfig(ConfigBase):
     """
-    Config for evaluating performance as function of `n_hashes`.
-    See https://arampacha.github.io/reformer_fastai/experiment.enwik8-n_hashes.html for details
+    Config for evaluating performance as function of `n_layers`.
+    See https://arampacha.github.io/reformer_fastai/experiment.enwik8-n_layers.html for details
     """
     _model = ReformerLM
     _d = {
