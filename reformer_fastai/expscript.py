@@ -28,7 +28,10 @@ def download_wmt14_data(data_path='./data'):
 
     if not os.path.isfile(f'{data_path}/wmt14_test'):
         print('Downloading data')
-        from datasets import load_dataset
+        try:
+            from datasets import load_dataset
+        except ImportError as e:
+            print(e)
         dataset = load_dataset('wmt_t2t', 'de-en')
 
         train_df = pd.DataFrame(dataset['train']['translation'])
