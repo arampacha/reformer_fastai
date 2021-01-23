@@ -40,7 +40,7 @@ def download_wmt14_data(data_path='./data'):
         train_df = pd.DataFrame(dataset['train']['translation'])
         train_df['is_valid'] = False
         valid_df = pd.DataFrame(dataset['validation']['translation'])
-        train_df['is_valid'] = True
+        valid_df['is_valid'] = True
         test_df = pd.DataFrame(dataset['test']['translation'])
         test_df['is_test'] = True
 
@@ -50,6 +50,7 @@ def download_wmt14_data(data_path='./data'):
 
         url="https://raw.githubusercontent.com/tensorflow/tensor2tensor/master/tensor2tensor/test_data/vocab.translate_ende_wmt32k.32768.subwords"
         download_url(url, f'{data_path}/swe_wmt_vocab')
+    else: print('Using saved data')
 
 # Cell
 def get_twin_sequence_dataloaders(bs:int=32, sl:int=1024, train_sz:int=500, valid_sz:int=100, seed=None):
@@ -125,7 +126,7 @@ def get_wmt14_dataloader(data_path='data', bs:int=8, val_bs:int=8, sl:int=1024, 
     if verbose: print('Reading data into dataframe ...')
     train_df = pd.read_feather(f'{data_path}/wmt14_train')
     valid_df = pd.read_feather(f'{data_path}/wmt14_valid')
-    test_df = pd.read_feather(f'{data_path}/wmt14_test')
+    #     test_df = pd.read_feather(f'{data_path}/wmt14_test')
 
     if tiny:
         train_df = train_df.sample(frac=0.02)
@@ -133,14 +134,15 @@ def get_wmt14_dataloader(data_path='data', bs:int=8, val_bs:int=8, sl:int=1024, 
 
     # Merge Train and Validation datasets
     df = pd.concat([train_df, valid_df])
+    df.reset_index(inplace=True, drop=True)
     if verbose: print('done')
 
     # TOKENIZER + DATASETS
     if verbose: print('Setting up Datasets ...')
     tok = SubwordTextEncoder(filename=f'{data_path}/swe_wmt_vocab', add_bos=True, seq_len=sl)
 
-    train_split = df.loc[df.is_valid].index.values
-    valid_split = df.loc[df.is_valid].index.values
+    train_split = df.loc[df.is_valid == False].index.values
+    valid_split = df.loc[df.is_valid == True].index.values
     splits = train_split, valid_split
 
     # Get text lengths to enable faster init with SortedDL
