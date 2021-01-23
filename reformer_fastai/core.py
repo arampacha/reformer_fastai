@@ -233,10 +233,10 @@ class PadBatchCallback(Callback):
             self.learn.yb = (F.pad(self.y, (0,pad_), 'constant', self.y_val), )
 
 # Cell
-def add_eos_id(ids, keep_size=True):
+def add_eos_id(ids, eos_id, keep_size=True):
     "Adds EOS token id to the tensors. If `keep_size==True` remove the last id before appending the EOS token id"
     if keep_size:
-        return torch.cat([ids[:-1], LMTensorText(tok.EOS_ID).unsqueeze(0)])
+        return torch.cat([ids[:-1], LMTensorText().unsqueeze(0)])
     else: return torch.cat([ids, LMTensorText(tok.EOS_ID).unsqueeze(0)])
 
 # Cell

@@ -149,8 +149,8 @@ def get_wmt14_dataloader(data_path='data', bs:int=8, val_bs:int=8, sl:int=1024, 
     df['de_lens'] = df['de'].str.len()
 
     # Transforms
-    en_tfms = [ColReader("en"), tok, add_eos_id]
-    de_tfms = [ColReader("de"), tok, add_eos_id]
+    en_tfms = [ColReader("en"), tok, partial(add_eos_id, eos_id=tok.EOS_ID)]
+    de_tfms = [ColReader("de"), tok, partial(add_eos_id, eos_id=tok.EOS_ID)]
 
     # Set up datsets
     dsets = Datasets(df, [en_tfms, de_tfms], splits=splits)
