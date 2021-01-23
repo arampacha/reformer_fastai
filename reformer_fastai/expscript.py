@@ -135,6 +135,7 @@ def run_exp(task:Param(help="Task options: 'synt','lm_base','lm_rev',lm_shared_q
          bs:Param(help="Batch size", type=int, default=64),
          train_sz:Param(help="TwinSequence train size", type=int, default=12800),
          valid_sz:Param(help="TwinSequence valid size", type=int, default=1280),
+         n_layers:Param(help="Number of layers", type=int, default=3),
          n_hashes:Param(help="Number of LSH Attention hashes", type=int, default=1),
          use_lsh:Param(help="Use LSH Attention", type=bool_arg, default=False),
          max_seq_len:Param(help="Max sequence length for model embedding and dataloader", type=int, default=2048),
@@ -362,7 +363,7 @@ def run_exp(task:Param(help="Task options: 'synt','lm_base','lm_rev',lm_shared_q
         print('done')
         pad_id = dls.byte_text_tokenizer.pad_token_id
 
-        config = NLayersConfig(warn=False, verbose=verbose, n_hashes=n_hashes,
+        config = NLayersConfig(warn=False, verbose=verbose, n_layers=n_layers,
                                seed=seed, pad_idx=pad_idx)
         print('Getting model ...')
         model = ReformerLM.from_config(config)
