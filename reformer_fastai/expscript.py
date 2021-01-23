@@ -109,7 +109,7 @@ def get_reformerlm_learner(dls, model, opt_func=adafactor):
     return learn
 
 # Cell
-def init_wandb(cbs:list=[], wandb_name:str='', wandb_group:str='', wandb_notes:str='', wandb_tags:str='test'):
+def init_wandb(cbs:list=[], wandb_name:str='', wandb_group:str='', wandb_notes:str='', wandb_tags:str='test', save_model=False):
     wandb_tags_ls = wandb_tags.split(' ')
 
     try:
@@ -126,7 +126,7 @@ def init_wandb(cbs:list=[], wandb_name:str='', wandb_group:str='', wandb_notes:s
     except Exception as e:
         print(e)
 
-    cbs.append(WandbCallback(log_model=False, log_preds=False))
+    cbs.append(WandbCallback(log_model=save_model, log_preds=False))
     return wandb_run, cbs
 
 # Cell
@@ -165,6 +165,7 @@ def run_exp(task:Param(help="Task options: 'synt','lm_base','lm_rev',lm_shared_q
 
     # Callbacks used for training
     cbs = []
+    if save_model: cbs.append(SaveModelCallback(every_epoch=True))
 
     #random seeds
     if seed!=0:
@@ -200,7 +201,7 @@ def run_exp(task:Param(help="Task options: 'synt','lm_base','lm_rev',lm_shared_q
         # Set up Weights & Biases logging, if needed
         if do_wandb_logging and rank_distrib()==0:
             wandb_run, cbs = init_wandb(cbs, wandb_name=run_name, wandb_group=wandb_group,
-                                        wandb_notes=wandb_notes, wandb_tags=wandb_tags)
+                                        wandb_notes=wandb_notes, wandb_tags=wandb_tags, save_model=save_model)
 
         # Append training callbacks needed
         cbs.append(MaskTargCallback())
