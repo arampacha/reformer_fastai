@@ -26,7 +26,10 @@ def download_wmt14_data(data_path='./data'):
     dest = Path(data_path)
     if not dest.exists(): dest.mkdir()
 
-    if not os.path.isfile(f'{data_path}/wmt14_test'):
+    if not os.path.isfile(f'{data_path}/wmt14_train') \
+        or not os.path.isfile(f'{data_path}/wmt14_valid') \
+        or not os.path.isfile(f'{data_path}/swe_wmt_vocab'):
+
         print('Downloading data')
         try:
             from datasets import load_dataset
@@ -44,6 +47,9 @@ def download_wmt14_data(data_path='./data'):
         train_df.to_feather(f'{data_path}/wmt14_train')
         valid_df.to_feather(f'{data_path}/wmt14_valid')
         test_df.to_feather(f'{data_path}/wmt14_test')
+
+        url="https://raw.githubusercontent.com/tensorflow/tensor2tensor/master/tensor2tensor/test_data/vocab.translate_ende_wmt32k.32768.subwords"
+        download_url(url, f'{data_path}/swe_wmt_vocab')
 
 # Cell
 def get_twin_sequence_dataloaders(bs:int=32, sl:int=1024, train_sz:int=500, valid_sz:int=100, seed=None):
@@ -131,7 +137,7 @@ def get_wmt14_dataloader(data_path='data', bs:int=8, val_bs:int=8, sl:int=1024, 
 
     # TOKENIZER + DATASETS
     if verbose: print('Setting up Datasets ...')
-    tok = SubwordTextEncoder(filename=f'{data_path}/swe_vocab', add_bos=True, seq_len=sl)
+    tok = SubwordTextEncoder(filename=f'{data_path}/swe_wmt_vocab', add_bos=True, seq_len=sl)
 
     train_split = df.loc[df.is_valid].index.values
     valid_split = df.loc[df.is_valid].index.values
