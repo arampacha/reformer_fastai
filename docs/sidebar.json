@@ -20,6 +20,8 @@
         "enwik8 baseline": "/experiment.enwik8_baseline.html",
         "enwik8 SharedQK": "/experiment.enwik8_sharedQK.html",
         "enwik8 Reversible": "/experiment.enwik8_reversible.html",
+        "Performance: n_hashes": "/experiment.enwik8-n_hashes.html",
+        "Performance: n_layers": "/experiment.enwik8-n_layerss.html",
         "Script": "/experiment-script.html", 
         "Configs": "/experiment-configs.html"
       }
