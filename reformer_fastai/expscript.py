@@ -364,7 +364,7 @@ def run_exp(task:Param(help="Task options: 'synt','lm_base','lm_rev',lm_shared_q
         pad_id = dls.byte_text_tokenizer.pad_token_id
 
         config = NLayersConfig(warn=False, verbose=verbose, n_layers=n_layers,
-                               seed=seed, pad_idx=pad_idx)
+                               seed=seed, pad_idx=pad_id)
         print('Getting model ...')
         model = ReformerLM.from_config(config)
         print('done!')
