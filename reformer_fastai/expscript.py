@@ -536,7 +536,7 @@ def run_exp(task:Param(help="Task options: 'synt','lm_base','lm_rev',lm_shared_q
         print('done!')
 
         # CALLBACKS
-        cbs.append(CombineInputOutputCallback(), LossTargetShiftCallback(), RemoveEOSCallback(eos_idx=tok.EOS_ID))
+        cbs += [CombineInputOutputCallback(), LossTargetShiftCallback(), RemoveEOSCallback(eos_idx=tok.EOS_ID)]
 
         ## Gradient Clipping Callback
         if clip != 0.0: cbs.append(GradientClip(max_norm=clip))
