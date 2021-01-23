@@ -114,7 +114,7 @@ def get_enwik8_dataloader(data_path='data', bs:int=8, val_bs:int=16, sl:int=1024
 
 # Cell
 def get_wmt14_dataloader(data_path='data', bs:int=8, val_bs:int=8, sl:int=1024, n_workers=None,
-                         erbose=False, tiny=False):
+                         verbose=False, tiny=False):
 
     if verbose: print('Reading data into dataframe ...')
     train_df = pd.read_feather(f'{data_path}/wmt14_train')
