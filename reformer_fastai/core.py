@@ -3,7 +3,7 @@
 __all__ = ['exists', 'default', 'expand_dim1', 'max_neg_value', 'setattr_on', 'top_p_filter', 'top_k_filter',
            'cache_method_decorator', 'look_one_back', 'chunked_sum', 'sort_key_val', 'batched_index_select',
            'do_cuda_timing', 'model_performance', 'total_params', 'CombineInputOutputCallback', 'RemoveEOSCallback',
-           'LossTargetShiftCallback', 'PadBatchCallback', 'LabelSmoothingCrossEntropy',
+           'LossTargetShiftCallback', 'PadBatchCallback', 'add_eos_id', 'LabelSmoothingCrossEntropy',
            'LabelSmoothingCrossEntropyFlat']
 
 # Cell
@@ -231,6 +231,13 @@ class PadBatchCallback(Callback):
             pad_ = self.mult - sl%self.mult
             self.learn.xb = (F.pad(self.x, (0,pad_), 'constant', self.val), )
             self.learn.yb = (F.pad(self.y, (0,pad_), 'constant', self.y_val), )
+
+# Cell
+def add_eos_id(ids, keep_size=True):
+    "Adds EOS token id to the tensors. If `keep_size==True` remove the last id before appending the EOS token id"
+    if keep_size:
+        return torch.cat([ids[:-1], LMTensorText(tok.EOS_ID).unsqueeze(0)])
+    else: return torch.cat([ids, LMTensorText(tok.EOS_ID).unsqueeze(0)])
 
 # Cell
 class LabelSmoothingCrossEntropy(Module):
