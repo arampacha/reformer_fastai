@@ -273,6 +273,42 @@ nb_path: "nbs/20_experiment-script.ipynb"
     
 <div class="cell border-box-sizing code_cell rendered">
 
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>[autoreload of reformer_fastai.reformer failed: Traceback (most recent call last):
+  File &#34;/home/morgan/anaconda3/envs/fastai_env/lib/python3.7/site-packages/IPython/extensions/autoreload.py&#34;, line 245, in check
+    superreload(m, reload, self.old_objects)
+  File &#34;/home/morgan/anaconda3/envs/fastai_env/lib/python3.7/site-packages/IPython/extensions/autoreload.py&#34;, line 410, in superreload
+    update_generic(old_obj, new_obj)
+  File &#34;/home/morgan/anaconda3/envs/fastai_env/lib/python3.7/site-packages/IPython/extensions/autoreload.py&#34;, line 347, in update_generic
+    update(a, b)
+  File &#34;/home/morgan/anaconda3/envs/fastai_env/lib/python3.7/site-packages/IPython/extensions/autoreload.py&#34;, line 302, in update_class
+    if update_generic(old_obj, new_obj): continue
+  File &#34;/home/morgan/anaconda3/envs/fastai_env/lib/python3.7/site-packages/IPython/extensions/autoreload.py&#34;, line 347, in update_generic
+    update(a, b)
+  File &#34;/home/morgan/anaconda3/envs/fastai_env/lib/python3.7/site-packages/IPython/extensions/autoreload.py&#34;, line 302, in update_class
+    if update_generic(old_obj, new_obj): continue
+  File &#34;/home/morgan/anaconda3/envs/fastai_env/lib/python3.7/site-packages/IPython/extensions/autoreload.py&#34;, line 347, in update_generic
+    update(a, b)
+  File &#34;/home/morgan/anaconda3/envs/fastai_env/lib/python3.7/site-packages/IPython/extensions/autoreload.py&#34;, line 302, in update_class
+    if update_generic(old_obj, new_obj): continue
+  File &#34;/home/morgan/anaconda3/envs/fastai_env/lib/python3.7/site-packages/IPython/extensions/autoreload.py&#34;, line 347, in update_generic
+    update(a, b)
+  File &#34;/home/morgan/anaconda3/envs/fastai_env/lib/python3.7/site-packages/IPython/extensions/autoreload.py&#34;, line 302, in update_class
+    if update_generic(old_obj, new_obj): continue
+RecursionError: maximum recursion depth exceeded
+]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
 </div>
     {% endraw %}
 
@@ -299,7 +335,7 @@ nb_path: "nbs/20_experiment-script.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_synthetic_learner" class="doc_header"><code>get_synthetic_learner</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/expscript.py#L177" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_synthetic_learner</code>(<strong><code>dls</code></strong>, <strong><code>model</code></strong>)</p>
+<h4 id="get_synthetic_learner" class="doc_header"><code>get_synthetic_learner</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/expscript.py#L178" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_synthetic_learner</code>(<strong><code>dls</code></strong>, <strong><code>model</code></strong>)</p>
 </blockquote>
 
 </div>
@@ -336,7 +372,7 @@ nb_path: "nbs/20_experiment-script.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_lm_learner" class="doc_header"><code>get_lm_learner</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/expscript.py#L184" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_lm_learner</code>(<strong><code>dls</code></strong>, <strong><code>model</code></strong>, <strong><code>opt_func</code></strong>=<em><code>adafactor</code></em>)</p>
+<h4 id="get_lm_learner" class="doc_header"><code>get_lm_learner</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/expscript.py#L185" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_lm_learner</code>(<strong><code>dls</code></strong>, <strong><code>model</code></strong>, <strong><code>opt_func</code></strong>=<em><code>adafactor</code></em>)</p>
 </blockquote>
 
 </div>
@@ -373,7 +409,7 @@ nb_path: "nbs/20_experiment-script.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_reformerlm_learner" class="doc_header"><code>get_reformerlm_learner</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/expscript.py#L191" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_reformerlm_learner</code>(<strong><code>dls</code></strong>, <strong><code>model</code></strong>, <strong><code>opt_func</code></strong>=<em><code>adafactor</code></em>)</p>
+<h4 id="get_reformerlm_learner" class="doc_header"><code>get_reformerlm_learner</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/expscript.py#L192" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_reformerlm_learner</code>(<strong><code>dls</code></strong>, <strong><code>model</code></strong>, <strong><code>opt_func</code></strong>=<em><code>adafactor</code></em>)</p>
 </blockquote>
 
 </div>
@@ -410,7 +446,7 @@ nb_path: "nbs/20_experiment-script.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_seq2seq_learner" class="doc_header"><code>get_seq2seq_learner</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/expscript.py#L198" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_seq2seq_learner</code>(<strong><code>dls</code></strong>, <strong><code>model</code></strong>, <strong><code>tok</code></strong>)</p>
+<h4 id="get_seq2seq_learner" class="doc_header"><code>get_seq2seq_learner</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/expscript.py#L199" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_seq2seq_learner</code>(<strong><code>dls</code></strong>, <strong><code>model</code></strong>, <strong><code>tok</code></strong>)</p>
 </blockquote>
 
 </div>
@@ -447,7 +483,7 @@ nb_path: "nbs/20_experiment-script.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="init_wandb" class="doc_header"><code>init_wandb</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/expscript.py#L205" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>init_wandb</code>(<strong><code>cbs</code></strong>:<code>list</code>=<em><code>[]</code></em>, <strong><code>wandb_name</code></strong>:<code>str</code>=<em><code>''</code></em>, <strong><code>wandb_group</code></strong>:<code>str</code>=<em><code>''</code></em>, <strong><code>wandb_notes</code></strong>:<code>str</code>=<em><code>''</code></em>, <strong><code>wandb_tags</code></strong>:<code>str</code>=<em><code>'test'</code></em>, <strong><code>save_model</code></strong>=<em><code>False</code></em>)</p>
+<h4 id="init_wandb" class="doc_header"><code>init_wandb</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/expscript.py#L206" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>init_wandb</code>(<strong><code>cbs</code></strong>:<code>list</code>=<em><code>[]</code></em>, <strong><code>wandb_name</code></strong>:<code>str</code>=<em><code>''</code></em>, <strong><code>wandb_group</code></strong>:<code>str</code>=<em><code>''</code></em>, <strong><code>wandb_notes</code></strong>:<code>str</code>=<em><code>''</code></em>, <strong><code>wandb_tags</code></strong>:<code>str</code>=<em><code>'test'</code></em>, <strong><code>save_model</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 
 </div>
@@ -485,7 +521,7 @@ nb_path: "nbs/20_experiment-script.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="run_exp" class="doc_header"><code>run_exp</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/expscript.py#L226" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>run_exp</code>(<strong><code>task</code></strong>:"Task options: 'synt','lm_base','lm_rev',lm_shared_qk, n_hashes, trans", <strong><code>data_path</code></strong>:"Path to data folder", <strong><code>n_epochs</code></strong>:"Number of epochs", <strong><code>lr</code></strong>:"Learning rate", <strong><code>bs</code></strong>:"Batch size", <strong><code>train_sz</code></strong>:"TwinSequence train size", <strong><code>valid_sz</code></strong>:"TwinSequence valid size", <strong><code>n_layers</code></strong>:"Number of layers", <strong><code>n_hashes</code></strong>:"Number of LSH Attention hashes", <strong><code>use_lsh</code></strong>:"Use LSH Attention", <strong><code>max_seq_len</code></strong>:"Max sequence length for model embedding and dataloader", <strong><code>do_wandb_logging</code></strong>:"Use weights and biases logging", <strong><code>run_name</code></strong>:"Run name for wandb tracking and model filename", <strong><code>wandb_group</code></strong>:"wandb group", <strong><code>wandb_notes</code></strong>:"wandb notes", <strong><code>wandb_tags</code></strong>:"wandb tags, add tags in a single string, space separated", <strong><code>save_model</code></strong>:"Save model locally in /models", <strong><code>grad_accum</code></strong>:"Gradient Accumulation, set greater than 1 to implement", <strong><code>clip</code></strong>:"Gradient Clipping, will be set if &gt; 0.0", <strong><code>cuda_id</code></strong>:"Which cuda device to use", <strong><code>seed</code></strong>:"Set seed for reproducibiltiy, passing anything except 0 will use fastai's set_seed", <strong><code>distrib</code></strong>:"Set to True if using distributed training", <strong><code>verbose</code></strong>:"Print script logs", <strong><code>tiny</code></strong>:"Use 5% of data, for quick iteration and testings")</p>
+<h4 id="run_exp" class="doc_header"><code>run_exp</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/expscript.py#L227" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>run_exp</code>(<strong><code>task</code></strong>:"Task options: 'synt','lm_base','lm_rev',lm_shared_qk, n_hashes, trans", <strong><code>data_path</code></strong>:"Path to data folder", <strong><code>n_epochs</code></strong>:"Number of epochs", <strong><code>lr</code></strong>:"Learning rate", <strong><code>bs</code></strong>:"Batch size", <strong><code>train_sz</code></strong>:"TwinSequence train size", <strong><code>valid_sz</code></strong>:"TwinSequence valid size", <strong><code>n_layers</code></strong>:"Number of layers", <strong><code>n_hashes</code></strong>:"Number of LSH Attention hashes", <strong><code>use_lsh</code></strong>:"Use LSH Attention", <strong><code>max_seq_len</code></strong>:"Max sequence length for model embedding and dataloader", <strong><code>do_wandb_logging</code></strong>:"Use weights and biases logging", <strong><code>run_name</code></strong>:"Run name for wandb tracking and model filename", <strong><code>wandb_group</code></strong>:"wandb group", <strong><code>wandb_notes</code></strong>:"wandb notes", <strong><code>wandb_tags</code></strong>:"wandb tags, add tags in a single string, space separated", <strong><code>save_model</code></strong>:"Save model locally in /models", <strong><code>grad_accum</code></strong>:"Gradient Accumulation, set greater than 1 to implement", <strong><code>clip</code></strong>:"Gradient Clipping, will be set if &gt; 0.0", <strong><code>cuda_id</code></strong>:"Which cuda device to use", <strong><code>seed</code></strong>:"Set seed for reproducibiltiy, passing anything except 0 will use fastai's set_seed", <strong><code>distrib</code></strong>:"Set to True if using distributed training", <strong><code>verbose</code></strong>:"Print script logs", <strong><code>tiny</code></strong>:"Use 5% of data, for quick iteration and testings")</p>
 </blockquote>
 <p>Task options: 'synt','lm_base','lm_rev',lm_shared_qk, trans</p>
 
