@@ -506,7 +506,7 @@ def run_exp(task:Param(help="Task options: 'synt','lm_base','lm_rev',lm_shared_q
         print('done')
 
         print('Getting dataloaders and tokenizer ...')
-        dls, tok = get_wmt14_dataloader(data_path=data_path, b=bs, val_bs=bs, sl=max_seq_len,
+        dls, tok = get_wmt14_dataloader(data_path=data_path, bs=bs, val_bs=bs, sl=max_seq_len,
                                            verbose=verbose, tiny=tiny)
         print('done')
 
