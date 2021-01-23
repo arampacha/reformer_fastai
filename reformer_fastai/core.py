@@ -3,7 +3,7 @@
 __all__ = ['exists', 'default', 'expand_dim1', 'max_neg_value', 'setattr_on', 'top_p_filter', 'top_k_filter',
            'cache_method_decorator', 'look_one_back', 'chunked_sum', 'sort_key_val', 'batched_index_select',
            'do_cuda_timing', 'model_performance', 'total_params', 'CombineInputOutputCallback', 'RemoveEOSCallback',
-           'LossTargetShiftCallback', 'PadBatchCallback', 'LabelSmoothingCrossEntropy',
+           'LossTargetShiftCallback', 'PadBatchCallback', 'AddEOSID', 'LabelSmoothingCrossEntropy',
            'LabelSmoothingCrossEntropyFlat']
 
 # Cell
@@ -12,6 +12,7 @@ from torch import nn, einsum
 import torch.nn.functional as F
 import torch.autograd.profiler as profiler
 
+from fastcore.basics import *
 from fastai.basics import *
 from fastai.text.all import *
 from fastai.test_utils import *
@@ -231,6 +232,15 @@ class PadBatchCallback(Callback):
             pad_ = self.mult - sl%self.mult
             self.learn.xb = (F.pad(self.x, (0,pad_), 'constant', self.val), )
             self.learn.yb = (F.pad(self.y, (0,pad_), 'constant', self.y_val), )
+
+# Cell
+class AddEOSID:
+    def __init__(self, eos_id, keep_size=True): store_attr()
+    def __call__(self, ids):
+        "Adds EOS token id to the tensors. If `keep_size==True` remove the last id before appending the EOS token id"
+        if self.keep_size:
+            return torch.cat([ids[:-1], LMTensorText(self.eos_id).unsqueeze(0)])
+        else: return torch.cat([ids, LMTensorText(self.eos_id).unsqueeze(0)])
 
 # Cell
 class LabelSmoothingCrossEntropy(Module):
