@@ -199,7 +199,7 @@ def get_reformerlm_learner(dls, model, opt_func=adafactor):
 def get_seq2seq_learner(dls, model, tok):
     learn = Learner(dls, model,
                     loss_func=CrossEntropyLossFlat(ignore_index=tok.PAD_ID), # opt_func=adafactor,
-                    metrics=[accuracy, Perplexity(), CorpusBLEUMetric()]).to_native_fp16()
+                    metrics=[accuracy, Perplexity(), CorpusBLEUMetric()]).to_fp16()
     return learn
 
 # Cell
