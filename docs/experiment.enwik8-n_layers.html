@@ -64,6 +64,27 @@ nb_path: "nbs/14_experiment.enwik8-n_layers.ipynb"
 </div>
     {% endraw %}
 
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">n_epochs</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">bs</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">sl</span> <span class="o">=</span> <span class="mi">2</span><span class="o">**</span><span class="mi">14</span>
+<span class="n">n_layers</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">seed</span> <span class="o">=</span> <span class="mi">2</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Experiment-Tracking">Experiment Tracking<a class="anchor-link" href="#Experiment-Tracking"> </a></h2>
@@ -93,11 +114,11 @@ nb_path: "nbs/14_experiment.enwik8-n_layers.ipynb"
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">wandb</span>
 
-<span class="n">WANDB_NAME</span> <span class="o">=</span> <span class="s1">&#39;test_n_layers_enwik8&#39;</span>
-<span class="n">GROUP</span> <span class="o">=</span> <span class="s1">&#39;TEST&#39;</span>
-<span class="n">NOTES</span> <span class="o">=</span> <span class="s1">&#39;ReformerLM on enwik8 sl 32k&#39;</span>
+<span class="n">WANDB_NAME</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;n_layers-</span><span class="si">{</span><span class="n">n_layers</span><span class="si">}</span><span class="s1">_enwik8_sl-</span><span class="si">{</span><span class="n">sl</span><span class="si">}</span><span class="s1">_bs-</span><span class="si">{</span><span class="n">bs</span><span class="si">}</span><span class="s1">_n_eps-</span><span class="si">{</span><span class="n">n_epochs</span><span class="si">}</span><span class="s1">_seed-</span><span class="si">{</span><span class="n">seed</span><span class="si">}</span><span class="s1">&#39;</span>
+<span class="n">GROUP</span> <span class="o">=</span> <span class="s1">&#39;n_layers&#39;</span>
+<span class="n">NOTES</span> <span class="o">=</span> <span class="s1">&#39;ReformerLM on enwik8 sl=32k&#39;</span>
 <span class="n">CONFIG</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="n">TAGS</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;lm&#39;</span><span class="p">,</span><span class="s1">&#39;lsh&#39;</span><span class="p">,</span><span class="s1">&#39;enwik8&#39;</span><span class="p">,</span> <span class="s1">&#39;test&#39;</span><span class="p">]</span>
+<span class="n">TAGS</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;lm&#39;</span><span class="p">,</span><span class="s1">&#39;lsh&#39;</span><span class="p">,</span><span class="s1">&#39;enwik8&#39;</span><span class="p">,</span> <span class="s1">&#39;nlayers&#39;</span><span class="p">]</span>
 </pre></div>
 
     </div>
@@ -179,6 +200,23 @@ nb_path: "nbs/14_experiment.enwik8-n_layers.ipynb"
 
 <div class="inner_cell">
     <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">//</span><span class="mi">4</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="o">%%time</span>
 <span class="n">df</span><span class="p">[</span><span class="s1">&#39;toks&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;text&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">btt</span><span class="p">)</span>
 <span class="n">df</span><span class="p">[</span><span class="s1">&#39;lens&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;toks&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="nb">len</span><span class="p">)</span>
@@ -199,7 +237,7 @@ nb_path: "nbs/14_experiment.enwik8-n_layers.ipynb"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">train_cutoff</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">lens</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">-</span> <span class="mi">10_000_000</span>  <span class="c1"># keep all but 10M characters for val and test</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">train_cutoff</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">lens</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">-</span> <span class="mi">4_000_000</span>  <span class="c1"># keep all but 10M characters for val and test</span>
 <span class="n">train_idxs</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;lens_cum_sum&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">train_cutoff</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span>
 <span class="n">train_idxs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="n">train_idxs</span><span class="p">)))</span>
 
@@ -243,8 +281,6 @@ nb_path: "nbs/14_experiment.enwik8-n_layers.ipynb"
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="o">%%time</span>
-<span class="n">bs</span><span class="p">,</span> <span class="n">sl</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="o">**</span><span class="mi">15</span>
-<span class="c1"># pad_seq2seq = partial(pad_input, pad_idx=bte.pad_token_id, pad_fields=[0,1])</span>
 <span class="n">dl_kwargs</span> <span class="o">=</span> <span class="p">[{</span><span class="s1">&#39;lens&#39;</span><span class="p">:</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;lens&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">train_idxs</span><span class="p">]},</span>
              <span class="p">{</span><span class="s1">&#39;val_lens&#39;</span><span class="p">:</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;lens&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">validation_idxs</span><span class="p">]}]</span>
 <span class="n">dls</span> <span class="o">=</span> <span class="n">dsets</span><span class="o">.</span><span class="n">dataloaders</span><span class="p">(</span><span class="n">bs</span><span class="o">=</span><span class="n">bs</span><span class="p">,</span> <span class="n">seq_len</span><span class="o">=</span><span class="n">sl</span><span class="p">,</span> <span class="n">dl_kwargs</span><span class="o">=</span><span class="n">dl_kwargs</span><span class="p">,</span> <span class="n">shuffle_train</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">n_workers</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
@@ -340,7 +376,8 @@ nb_path: "nbs/14_experiment.enwik8-n_layers.ipynb"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">config</span> <span class="o">=</span> <span class="n">NLayersConfig</span><span class="p">(</span><span class="n">n_layers</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">n_hashes</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">max_seq_len</span><span class="o">=</span><span class="n">sl</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">pad_id</span> <span class="o">=</span> <span class="n">btt</span><span class="o">.</span><span class="n">pad_token_id</span>
+<span class="n">config</span> <span class="o">=</span> <span class="n">NLayersConfig</span><span class="p">(</span><span class="n">n_layers</span><span class="o">=</span><span class="n">n_layers</span><span class="p">,</span> <span class="n">n_hashes</span><span class="o">=</span><span class="n">n_hashes</span><span class="p">,</span> <span class="n">max_seq_len</span><span class="o">=</span><span class="n">sl</span><span class="p">,</span> <span class="n">pad_idx</span><span class="o">=</span><span class="n">pad_id</span><span class="p">)</span>
 <span class="n">config</span>
 </pre></div>
 
@@ -361,7 +398,8 @@ nb_path: "nbs/14_experiment.enwik8-n_layers.ipynb"
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">learn</span> <span class="o">=</span> <span class="n">Learner</span><span class="p">(</span><span class="n">dls</span><span class="p">,</span> <span class="n">ReformerLM</span><span class="o">.</span><span class="n">from_config</span><span class="p">(</span><span class="n">config</span><span class="p">),</span>
                 <span class="n">loss_func</span><span class="o">=</span><span class="n">CrossEntropyLossFlat</span><span class="p">(),</span> <span class="n">opt_func</span><span class="o">=</span><span class="n">adafactor</span><span class="p">,</span>
                 <span class="n">cbs</span> <span class="o">=</span> <span class="p">[</span><span class="n">GradientAccumulation</span><span class="p">(</span><span class="n">n_acc</span><span class="o">=</span><span class="mi">8</span><span class="p">),</span> <span class="n">GradientClip</span><span class="p">(</span><span class="mf">1.0</span><span class="p">),</span>
-                       <span class="n">PadBatchCallback</span><span class="p">(</span><span class="n">bucket_size</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">bucket_size</span><span class="p">)],</span>
+                       <span class="n">PadBatchCallback</span><span class="p">(</span><span class="n">bucket_size</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">bucket_size</span><span class="p">,</span>
+                                        <span class="n">val</span><span class="o">=</span><span class="n">pad_id</span><span class="p">,</span> <span class="n">y_val</span><span class="o">=</span><span class="n">pad_id</span><span class="p">)],</span>
                 <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="n">accuracy</span><span class="p">,</span> <span class="n">perplexity</span><span class="p">,</span> <span class="n">bpc</span><span class="p">])</span>
 </pre></div>
 

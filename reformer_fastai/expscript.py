@@ -28,8 +28,8 @@ def get_twin_sequence_dataloaders(bs:int=32, sl:int=1024, train_sz:int=500, vali
     return dls
 
 # Cell
-def get_enwik8_dataloader(data_path='data', bs:int=8, val_bs:int=32, sl:int=1024, n_workers=None,
-                          val_test_chars:int=10e6, verbose=False, tiny=False):
+def get_enwik8_dataloader(data_path='data', bs:int=8, val_bs:int=16, sl:int=1024, n_workers=None,
+                          val_test_chars:int=10e6, verbose=False, tiny=False, small=False):
 
     if 'google.colab' in sys.modules:
         data_path = '/content' + data_path + '/enwik8'
@@ -42,6 +42,9 @@ def get_enwik8_dataloader(data_path='data', bs:int=8, val_bs:int=32, sl:int=1024
         df = df.sample(frac=0.05)
         df.reset_index(drop=True, inplace=True)
         val_test_chars = 10000
+    elif small:
+        df = df[:len(df)//4]
+        val_test_chars = 4e6
 
     if verbose: print('done')
 
@@ -359,12 +362,12 @@ def run_exp(task:Param(help="Task options: 'synt','lm_base','lm_rev',lm_shared_q
 
         print('Getting dataloaders ...')
         dls = get_enwik8_dataloader(data_path=data_path, bs=bs, val_bs=bs, sl=max_seq_len,
-                                    verbose=verbose, tiny=tiny)
+                                    verbose=verbose, tiny=tiny, small=True)
         print('done')
         pad_id = dls.byte_text_tokenizer.pad_token_id
 
         config = NLayersConfig(warn=False, verbose=verbose, n_layers=n_layers,
-                               seed=seed, pad_idx=pad_id)
+                               max_seq_len=max_seq_len, seed=seed, pad_idx=pad_id)
         print('Getting model ...')
         model = ReformerLM.from_config(config)
         print('done!')
