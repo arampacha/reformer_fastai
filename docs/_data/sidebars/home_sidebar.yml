@@ -64,6 +64,12 @@ entries:
           title: enwik8 Reversible
           url: /experiment.enwik8_reversible.html
         - output: web,pdf
+          title: 'Performance: n_hashes'
+          url: /experiment.enwik8-n_hashes.html
+        - output: web,pdf
+          title: 'Performance: n_layers'
+          url: /experiment.enwik8-n_layerss.html
+        - output: web,pdf
           title: Script
           url: /experiment-script.html
         - output: web,pdf

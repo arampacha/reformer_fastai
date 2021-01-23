@@ -530,7 +530,7 @@ class NLayersConfig(ConfigBase):
         'tie_weights':True,
         'causal':True,
         'pos_enc':'axial',
-        'max_seq_len':2**15,
+        'max_seq_len':2**14,
         'axial_shape':None,
         'axial_emb_dims':None,
         'pad_idx':None,
