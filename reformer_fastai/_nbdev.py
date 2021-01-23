@@ -94,13 +94,16 @@ index = {"exists": "00_core.ipynb",
          "get_enwik8_dataloader": "20_experiment-script.ipynb",
          "get_synthetic_learner": "20_experiment-script.ipynb",
          "get_lm_learner": "20_experiment-script.ipynb",
+         "get_reformerlm_learner": "20_experiment-script.ipynb",
          "init_wandb": "20_experiment-script.ipynb",
          "run_exp": "20_experiment-script.ipynb",
          "update_sig": "21_experiment-configs.ipynb",
          "ConfigBase": "21_experiment-configs.ipynb",
          "SyntheticConfig": "21_experiment-configs.ipynb",
          "TransformerLMConfigEnwik8": "21_experiment-configs.ipynb",
-         "ReversibleLMConfigEnwik8": "21_experiment-configs.ipynb"}
+         "ReversibleLMConfigEnwik8": "21_experiment-configs.ipynb",
+         "NHashesConfig": "21_experiment-configs.ipynb",
+         "NLayersConfig": "21_experiment-configs.ipynb"}
 
 modules = ["core.py",
            "layers.py",
