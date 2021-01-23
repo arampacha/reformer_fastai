@@ -302,7 +302,8 @@ def run_exp(task:Param(help="Task options: 'synt','lm_base','lm_rev',lm_shared_q
         print('done')
         pad_id = dls.byte_text_tokenizer.pad_token_id
 
-        config = NHashesConfig(warn=False, verbose=verbose, n_hashes=n_hashes, seed=seed)
+        config = NHashesConfig(warn=False, verbose=verbose, n_hashes=n_hashes,
+                               seed=seed, pad_idx=pad_id)
         print('Getting model ...')
         model = LSHLM.from_config(config)
         print('done!')
@@ -361,7 +362,8 @@ def run_exp(task:Param(help="Task options: 'synt','lm_base','lm_rev',lm_shared_q
         print('done')
         pad_id = dls.byte_text_tokenizer.pad_token_id
 
-        config = NLayersConfig(warn=False, verbose=verbose, n_hashes=n_hashes, seed=seed)
+        config = NLayersConfig(warn=False, verbose=verbose, n_hashes=n_hashes,
+                               seed=seed, pad_idx=pad_idx)
         print('Getting model ...')
         model = ReformerLM.from_config(config)
         print('done!')
