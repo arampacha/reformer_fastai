@@ -43,7 +43,7 @@ def get_enwik8_dataloader(data_path='data', bs:int=8, val_bs:int=16, sl:int=1024
         df.reset_index(drop=True, inplace=True)
         val_test_chars = 10000
     elif small:
-        df = df[:len(df)//4]
+        df = df[:len(df)//4].copy()
         val_test_chars = 4e6
 
     if verbose: print('done')
