@@ -457,7 +457,7 @@ def run_exp(task:Param(help="Task options: 'synt','lm_base','lm_rev',lm_shared_q
 
         print('Getting dataloaders ...')
         dls = get_enwik8_dataloader(data_path=data_path, bs=bs, val_bs=bs, sl=max_seq_len,
-                                    verbose=verbose, tiny=tiny, small=True)
+                                    verbose=verbose, tiny=tiny)
         print('done')
         pad_id = dls.byte_text_tokenizer.pad_token_id
 
