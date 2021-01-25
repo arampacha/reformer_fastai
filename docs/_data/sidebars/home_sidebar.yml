@@ -68,7 +68,7 @@ entries:
           url: /experiment.enwik8-n_hashes.html
         - output: web,pdf
           title: 'Performance: n_layers'
-          url: /experiment.enwik8-n_layerss.html
+          url: /experiment.enwik8-n_layers.html
         - output: web,pdf
           title: Script
           url: /experiment-script.html
@@ -81,6 +81,9 @@ entries:
         - output: web,pdf
           title: LSH walkthru
           url: /exploration.LSH.html
+        - output: web,pdf
+          title: Memory usage and timing
+          url: /exploration.memory_and_timing.html
         title: Exploration
       - output: web
         subfolderitems:
