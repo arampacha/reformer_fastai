@@ -180,7 +180,7 @@ def get_synthetic_learner(dls, model, precision=0):
                     loss_func=CrossEntropyLossFlat(ignore_index=-100),
                     metrics=[MaskedAccuracy()])
     if precision==0: learn.to_fp16()
-    elif precision==1: learn.to_non_native_fp16()
+    elif precision==1: learn.to_to_non_native_fp16()
     return learn
 
 # Cell
@@ -189,7 +189,7 @@ def get_lm_learner(dls, model, opt_func=adafactor, precision=0):
                     loss_func=CrossEntropyLossFlat(ignore_index=dls.byte_text_tokenizer.pad_token_id),
                     opt_func=opt_func, metrics=[accuracy, perplexity, bpc])
     if precision==0: learn.to_fp16()
-    elif precision==1: learn.to_non_native_fp16()
+    elif precision==1: learn.to_to_non_native_fp16()
     return learn
 
 # Cell
@@ -198,7 +198,7 @@ def get_reformerlm_learner(dls, model, opt_func=adafactor, precision=2):
                     loss_func=CrossEntropyLossFlat(ignore_index=dls.byte_text_tokenizer.pad_token_id),
                     opt_func=opt_func, metrics=[accuracy, perplexity, bpc])
     if precision==0: learn.to_fp16()
-    elif precision==1: learn.to_non_native_fp16()
+    elif precision==1: learn.to_to_non_native_fp16()
     return learn
 
 # Cell
@@ -207,7 +207,7 @@ def get_seq2seq_learner(dls, model, tok, precision=0):
                     loss_func=CrossEntropyLossFlat(ignore_index=tok.PAD_ID), # opt_func=adafactor,
                     metrics=[accuracy, Perplexity(), CorpusBLEUMetric()])
     if precision==0: learn.to_fp16()
-    elif precision==1: learn.to_non_native_fp16()
+    elif precision==1: learn.to_to_non_native_fp16()
     return learn
 
 # Cell
@@ -362,7 +362,7 @@ def run_exp(task:Param(help="Task options: 'synt','lm_base','lm_rev',lm_shared_q
         print('done')
 
         print('Getting learner ...')
-        learn = get_lm_learner(dls, model, opt_func=adafactor, precision)
+        learn = get_lm_learner(dls, model, opt_func=adafactor, precision=precision)
         print('done!')
 
         # CALLBACKS
@@ -420,7 +420,7 @@ def run_exp(task:Param(help="Task options: 'synt','lm_base','lm_rev',lm_shared_q
         config.save(run_name, add_tstmp=True)
 
         print('Getting learner ...')
-        learn = get_lm_learner(dls, model, opt_func=adafactor, precision)
+        learn = get_lm_learner(dls, model, opt_func=adafactor, precision=precision)
         print('done!')
 
         # CALLBACKS
@@ -480,7 +480,7 @@ def run_exp(task:Param(help="Task options: 'synt','lm_base','lm_rev',lm_shared_q
         config.save(run_name, add_tstmp=True)
 
         print('Getting learner ...')
-        learn = get_reformerlm_learner(dls, model, opt_func=adafactor, precision)
+        learn = get_reformerlm_learner(dls, model, opt_func=adafactor, precision=precision)
         print('done!')
 
         # CALLBACKS
