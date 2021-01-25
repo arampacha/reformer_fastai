@@ -175,31 +175,39 @@ def get_wmt14_dataloader(data_path='data', bs:int=8, val_bs:int=8, sl:int=1024, 
     return dls, tok
 
 # Cell
-def get_synthetic_learner(dls, model):
+def get_synthetic_learner(dls, model, precision=0):
     learn = Learner(dls, model,
                     loss_func=CrossEntropyLossFlat(ignore_index=-100),
-                    metrics=[MaskedAccuracy()]).to_fp16()
+                    metrics=[MaskedAccuracy()])
+    if precision==0: learn.to_fp16()
+    elif precision==1: learn.to_to_non_native_fp16()
     return learn
 
 # Cell
-def get_lm_learner(dls, model, opt_func=adafactor):
-    learn = Learner(dls, model,
-                    loss_func=CrossEntropyLossFlat(ignore_index=dls.byte_text_tokenizer.pad_token_id),
-                    opt_func=opt_func, metrics=[accuracy, perplexity, bpc]).to_fp16()
-    return learn
-
-# Cell
-def get_reformerlm_learner(dls, model, opt_func=adafactor):
+def get_lm_learner(dls, model, opt_func=adafactor, precision=0):
     learn = Learner(dls, model,
                     loss_func=CrossEntropyLossFlat(ignore_index=dls.byte_text_tokenizer.pad_token_id),
                     opt_func=opt_func, metrics=[accuracy, perplexity, bpc])
+    if precision==0: learn.to_fp16()
+    elif precision==1: learn.to_to_non_native_fp16()
     return learn
 
 # Cell
-def get_seq2seq_learner(dls, model, tok):
+def get_reformerlm_learner(dls, model, opt_func=adafactor, precision=2):
+    learn = Learner(dls, model,
+                    loss_func=CrossEntropyLossFlat(ignore_index=dls.byte_text_tokenizer.pad_token_id),
+                    opt_func=opt_func, metrics=[accuracy, perplexity, bpc])
+    if precision==0: learn.to_fp16()
+    elif precision==1: learn.to_to_non_native_fp16()
+    return learn
+
+# Cell
+def get_seq2seq_learner(dls, model, tok, precision=0):
     learn = Learner(dls, model,
                     loss_func=CrossEntropyLossFlat(ignore_index=tok.PAD_ID), # opt_func=adafactor,
-                    metrics=[accuracy, Perplexity(), CorpusBLEUMetric()]).to_fp16()
+                    metrics=[accuracy, Perplexity(), CorpusBLEUMetric()])
+    if precision==0: learn.to_fp16()
+    elif precision==1: learn.to_to_non_native_fp16()
     return learn
 
 # Cell
@@ -249,6 +257,7 @@ def run_exp(task:Param(help="Task options: 'synt','lm_base','lm_rev',lm_shared_q
          distrib:Param(help="Set to True if using distributed training", type=bool_arg, default=False),
          verbose:Param(help="Print script logs", type=bool_arg, default=True),
          tiny:Param(help="Use 5% of data, for quick iteration and testings", type=bool_arg, default=False),
+         precision:Param(help="0:fp16, 1:non native fp16, 2:fp32", type=int, default=0)
         ):
 
     """Task options: 'synt','lm_base','lm_rev',lm_shared_qk, trans"""
@@ -289,7 +298,7 @@ def run_exp(task:Param(help="Task options: 'synt','lm_base','lm_rev',lm_shared_q
         print('done!')
 
         print('Getting learner ...')
-        learn = get_synthetic_learner(dls, model)
+        learn = get_synthetic_learner(dls, model, precision)
         print('done!')
 
         # Set up Weights & Biases logging, if needed
@@ -353,7 +362,7 @@ def run_exp(task:Param(help="Task options: 'synt','lm_base','lm_rev',lm_shared_q
         print('done')
 
         print('Getting learner ...')
-        learn = get_lm_learner(dls, model, opt_func=adafactor)
+        learn = get_lm_learner(dls, model, opt_func=adafactor, precision=precision)
         print('done!')
 
         # CALLBACKS
@@ -411,7 +420,7 @@ def run_exp(task:Param(help="Task options: 'synt','lm_base','lm_rev',lm_shared_q
         config.save(run_name, add_tstmp=True)
 
         print('Getting learner ...')
-        learn = get_lm_learner(dls, model, opt_func=adafactor)
+        learn = get_lm_learner(dls, model, opt_func=adafactor, precision=precision)
         print('done!')
 
         # CALLBACKS
@@ -471,7 +480,7 @@ def run_exp(task:Param(help="Task options: 'synt','lm_base','lm_rev',lm_shared_q
         config.save(run_name, add_tstmp=True)
 
         print('Getting learner ...')
-        learn = get_reformerlm_learner(dls, model, opt_func=adafactor)
+        learn = get_reformerlm_learner(dls, model, opt_func=adafactor, precision=precision)
         print('done!')
 
         # CALLBACKS
@@ -532,7 +541,7 @@ def run_exp(task:Param(help="Task options: 'synt','lm_base','lm_rev',lm_shared_q
 
         print('Getting learner ...')
         # Use AdaFactor?
-        learn = get_seq2seq_learner(dls, model, tok)
+        learn = get_seq2seq_learner(dls, model, tok, precision)
         print('done!')
 
         # CALLBACKS
