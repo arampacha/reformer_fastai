@@ -378,7 +378,7 @@ def run_exp(task:Param(help="Task options: 'synt','lm_base','lm_rev',lm_shared_q
         # Set up Weights & Biases logging, if needed
         if do_wandb_logging and rank_distrib()==0:
             wandb_run, cbs = init_wandb(cbs, wandb_name=run_name, wandb_group=wandb_group,
-                                        wandb_notes=wandb_notes, wandb_tags=wandb_tags)
+                                        wandb_notes=wandb_notes, wandb_tags=wandb_tags, save_model=save_model)
 
         # Start training
         print('Starting training...')
@@ -438,7 +438,7 @@ def run_exp(task:Param(help="Task options: 'synt','lm_base','lm_rev',lm_shared_q
         # Set up Weights & Biases logging, if needed
         if do_wandb_logging and rank_distrib()==0:
             wandb_run, cbs = init_wandb(cbs, wandb_name=run_name, wandb_group=wandb_group,
-                                        wandb_notes=wandb_notes, wandb_tags=wandb_tags)
+                                        wandb_notes=wandb_notes, wandb_tags=wandb_tags, save_model=save_model)
 
         # Start training
         print('Starting training...')
@@ -498,7 +498,7 @@ def run_exp(task:Param(help="Task options: 'synt','lm_base','lm_rev',lm_shared_q
         # Set up Weights & Biases logging, if needed
         if do_wandb_logging and rank_distrib()==0:
             wandb_run, cbs = init_wandb(cbs, wandb_name=run_name, wandb_group=wandb_group,
-                                        wandb_notes=wandb_notes, wandb_tags=wandb_tags)
+                                        wandb_notes=wandb_notes, wandb_tags=wandb_tags, save_model=save_model)
 
         # Start training
         print('Starting training...')
@@ -515,7 +515,7 @@ def run_exp(task:Param(help="Task options: 'synt','lm_base','lm_rev',lm_shared_q
 
 
     elif 'wmt' in task:
-        "Model args that can be changed from command line: n_layers, max_seq_len and comb_attn (base only)"
+        "Model args that can be changed from command line: n_layers, max_seq_len"
         axial_shape = get_axial_shape(max_seq_len)
         if run_name == '': run_name = f'{task}_sl-{max_seq_len}_bs-{bs}_n_eps-{n_epochs}_seed-{seed}'
 
@@ -535,7 +535,7 @@ def run_exp(task:Param(help="Task options: 'synt','lm_base','lm_rev',lm_shared_q
                                                     n_enc_layers=n_layers, n_dec_layers=n_layers)
             model = ReversibleTransformer.from_config(config)
         elif task == 'wmt_base':
-            config = TransformerConfigWMT(warn=False, verbose=verbose, comb_attn=comb_attn,
+            config = TransformerConfigWMT(warn=False, verbose=verbose,
                                             enc_vocab_sz=tok.vocab_size, dec_vocab_sz=tok.vocab_size, pad_idx=tok.PAD_ID,
                                             n_enc_layers=n_layers, n_dec_layers=n_layers)
 
@@ -564,7 +564,7 @@ def run_exp(task:Param(help="Task options: 'synt','lm_base','lm_rev',lm_shared_q
         # Set up Weights & Biases logging, if needed
         if do_wandb_logging:
             wandb_run, cbs = init_wandb(cbs, wandb_name=run_name, wandb_group=wandb_group,
-                                        wandb_notes=wandb_notes, wandb_tags=wandb_tags)
+                                        wandb_notes=wandb_notes, wandb_tags=wandb_tags, save_model=save_model)
 
         # Start training
         print('Starting training...')
