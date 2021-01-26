@@ -24,7 +24,7 @@ from einops import rearrange, repeat
 from .core import *
 from .layers import *
 
-from torch.utils.checkpoint import checkpoint
+from torch.utils.checkpoint import *
 
 # Cell
 MASK_VAL = -5e4
@@ -158,6 +158,57 @@ class Attention(Module):
         else: return None #attn_mask is None if both mask and context_mask are None
 
 # Cell
+class _ChunkedAttnCptFunction(Function):
+
+    @staticmethod
+    def forward(ctx, run_function, preserve_rng_state, qc, k, v, i, csz, self, l, attn_mask):
+        check_backward_validity((qc,k,v))
+        ctx.run_function = run_function
+        ctx.preserve_rng_state = preserve_rng_state
+        ctx.extra = (i, csz, self, l, attn_mask)
+        if preserve_rng_state:
+            ctx.fwd_cpu_state = torch.get_rng_state()
+            # Don't eagerly initialize the cuda context by accident.
+            # (If the user intends that the context is initialized later, within their
+            # run_function, we SHOULD actually stash the cuda state here.  Unfortunately,
+            # we have no way to anticipate this will happen before we run the function.)
+            ctx.had_cuda_in_fwd = False
+            if torch.cuda._initialized:
+                ctx.had_cuda_in_fwd = True
+                ctx.fwd_gpu_devices, ctx.fwd_gpu_states = get_device_states(qc,k,v)
+        ctx.save_for_backward(qc, k, v)
+        with torch.no_grad():
+            outputs = run_function(qc, k, v, i, csz, self, l, attn_mask)
+        return outputs
+
+    @staticmethod
+    def backward(ctx, *args):
+        if not torch.autograd._is_checkpoint_valid():
+            raise RuntimeError("Checkpointing is not compatible with .grad(), please use .backward() if possible")
+        inputs = ctx.saved_tensors
+        # Stash the surrounding rng state, and mimic the state that was
+        # present at this time during forward.  Restore the surrounding state
+        # when we're done.
+        rng_devices = []
+        if ctx.preserve_rng_state and ctx.had_cuda_in_fwd:
+            rng_devices = ctx.fwd_gpu_devices
+        with torch.random.fork_rng(devices=rng_devices, enabled=ctx.preserve_rng_state):
+            if ctx.preserve_rng_state:
+                torch.set_rng_state(ctx.fwd_cpu_state)
+                if ctx.had_cuda_in_fwd:
+                    set_device_states(ctx.fwd_gpu_devices, ctx.fwd_gpu_states)
+            detached_inputs = detach_variable(inputs)
+            with torch.enable_grad():
+                outputs = ctx.run_function(*detached_inputs, *ctx.extra)
+
+        if isinstance(outputs, torch.Tensor):
+            outputs = (outputs,)
+        torch.autograd.backward(outputs, args)
+        grads = tuple(inp.grad if isinstance(inp, torch.Tensor) else inp
+                      for inp in detached_inputs)
+        return (None, None) + grads + tuple([None]*5)
+
+# Cell
 #TODO make sure store_attention works
 class MemEfficientAttention(Module):
     """
@@ -195,6 +246,25 @@ class MemEfficientAttention(Module):
         return out
 
 # Cell
+def _chunked_attn(qc, k, v, i, csz, self, l, attn_mask):
+    dots = torch.einsum('bhid, bhjd -> bhij', qc*self.scale, k)
+    #pading masking
+    if exists(attn_mask): raise NotImplementedError
+    #shared qk masking
+    if self.shared_qk:
+        ii, jj = torch.arange(csz), torch.arange(i*csz, (i+1)*csz)
+        dots[:,:,ii,jj] = SELF_ATTN_MASK_VAL
+    #causal masking
+    if self.causal:
+        ii, jj = torch.triu_indices(csz, l, offset=i*csz+1)
+        dots[:,:,ii,jj] = MASK_VAL
+
+    attn = F.softmax(dots, -1)
+    # if self.store_attention: self.attention[:,:,i,:] = attn.detach().cpu()
+    attn = self.dropout(attn)
+    return torch.einsum('bhij, bhjd -> bhid', attn, v)
+
+# Cell
 #TODO make sure store_attention works
 class ChunkedDotProdAttention(Module):
     """
@@ -217,23 +287,8 @@ class ChunkedDotProdAttention(Module):
         outs = []
         if self.store_attention: self.attention = torch.zeros(b, d//self.n_heads, n,l)
         for i, qc in enumerate(qs):
-            dots = torch.einsum('bhid, bhjd -> bhij', qc*self.scale, k)
-            #pading masking
-            if exists(attn_mask): dot.masked_fill_(~attn_mask[:,:,i,:], MASK_VAL)
-            #shared qk masking
-            if self.shared_qk:
-                ii, jj = torch.arange(csz), torch.arange(i*csz, (i+1)*csz)
-                dots[:,:,ii,jj] = SELF_ATTN_MASK_VAL
-            #causal masking
-            if self.causal:
-                ii, jj = torch.triu_indices(csz, l, offset=i*csz+1)
-                dots[:,:,ii,jj] = MASK_VAL
-
-            attn = F.softmax(dots, -1)
-            if self.store_attention: self.attention[:,:,i,:] = attn.detach().cpu()
-            attn = self.dropout(attn)
-            #plt.matshow(attn[0,0]) #mask debug print
-            outs.append(torch.einsum('bhij, bhjd -> bhid', attn, v))
+            res = _checkpoint(_chunked_attn, qc, k, v, i, csz, self, l, attn_mask)
+            outs.append(res)
         del attn_mask
         out = torch.cat(outs, dim=2)
         out = rearrange(out, 'b h n d -> b n (h d)')
@@ -273,7 +328,7 @@ class ChunkedAttention(Module):
         if self.shared_qk: k = F.normalize(k, 2, dim=-1).type_as(k)
 
         attn_mask = None#self._make_attn_mask(mask, context_mask, x, context)
-        out = checkpoint(self.attn, q, k, v, attn_mask)
+        out = self.attn(q, k, v, attn_mask)
 
         out = self.out_proj(out)
         return self.dropout(out)
