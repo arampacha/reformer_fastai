@@ -158,7 +158,7 @@ class Attention(Module):
         else: return None #attn_mask is None if both mask and context_mask are None
 
 # Cell
-class _ChunkedAttnCptFunction(Function):
+class _ChunkedAttnCptFunction(torch.autograd.Function):
 
     @staticmethod
     def forward(ctx, run_function, preserve_rng_state, qc, k, v, i, csz, self, l, attn_mask):
@@ -207,6 +207,13 @@ class _ChunkedAttnCptFunction(Function):
         grads = tuple(inp.grad if isinstance(inp, torch.Tensor) else inp
                       for inp in detached_inputs)
         return (None, None) + grads + tuple([None]*5)
+
+# Cell
+def _checkpoint(function, *args, **kwargs):
+    "Same as torch.utils.checkpoint.checkpoint bu allows kwargs"
+    preserve = kwargs.pop('preserve_rng_state', True)
+    assert not kwargs
+    return _ChunkedAttnCptFunction.apply(function, preserve, *args)
 
 # Cell
 #TODO make sure store_attention works
