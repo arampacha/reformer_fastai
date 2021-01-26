@@ -18,18 +18,19 @@ from .transformer import LMMixin, EncDecMixin
 # Cell
 class Chunk(Module):
     "Applies fn to input chunked along dim"
-    def __init__(self, chunks:int, fn:Module, dim:int=-1):
+    def __init__(self, n_chunks:int, fn:Module, dim:int=-1):
         store_attr()
     def forward(self, x, **kwargs):
-        if self.chunks == 1:
+        if self.n_chunks == 1:
             return self.fn(x, **kwargs)
-        chunks = x.chunk(self.chunks, dim = self.dim)
+        chunks = x.chunk(self.n_chunks, dim = self.dim)
         return torch.cat([self.fn(c, **kwargs) for c in chunks], dim = self.dim)
 
 # Cell
 class ChunkedFeedForward(Module):
     "Applies positionwise feed-forward layer to input chunced along dim"
-    def __init__(self, d:int, d_ff:int=None, chunks:int=1, dropout:float=0., dim:int=-1):
+    def __init__(self, d:int, d_ff:int=None, n_chunks:int=1, dropout:float=0., dim:int=-1):
+        store_attr('n_chunks,dim')
         d_ff = default(d_ff, 4*d)
         self.net = nn.Sequential(
             nn.Linear(d, d_ff),
@@ -38,12 +39,10 @@ class ChunkedFeedForward(Module):
             nn.Linear(d_ff, d),
             nn.Dropout(dropout)
             )
-        self.chunks = chunks
-        self.dim = dim
     def forward(self, x, **kwargs):
-        if self.chunks == 1:
+        if self.n_chunks == 1:
             return self.net(x)
-        chunks = x.chunk(self.chunks, dim = self.dim)
+        chunks = x.chunk(self.n_chunks, dim = self.dim)
         return torch.cat([self.net(c) for c in chunks], dim = self.dim)
 
 # Cell
@@ -228,7 +227,7 @@ class ReversibleEncoder(Module):
         norm_wrapper = PreNorm if prenorm else PostNorm
         for ind in range(n_layers):
             attn = Attention(d_model, n_heads, causal=causal, dropout=attn_dropout, out_dropout=post_attn_dropout, bias=attn_bias)
-            ff = ChunkedFeedForward(d_model, d_ff, chunks=ff_chunks, dropout=ff_dropout, dim=1)
+            ff = ChunkedFeedForward(d_model, d_ff, n_chunks=ff_chunks, dropout=ff_dropout, dim=1)
 
             f = norm_wrapper(d_model, attn)
             g = norm_wrapper(d_model, ff)
@@ -258,7 +257,7 @@ class ReversibleDecoder(Module):
                  d_head = None,
                  bucket_size = 64,
                  n_hashes = 8,
-                 ff_chunks = 100,
+                 ff_chunks = 1,
                  attn_chunks = None, # ??
                  attn_dropout = 0.,
                  post_attn_dropout = None,
@@ -272,7 +271,7 @@ class ReversibleDecoder(Module):
         store_attr('d_model,n_layers')
 
         get_attn = lambda: AdditiveAttention(d_model, heads, causal=True, dropout=attn_dropout, out_dropout=post_attn_dropout, bias=attn_bias)
-        get_ff = lambda: ChunkedFeedForward(d_model, d_ff, chunks=ff_chunks, dropout=ff_dropout, dim=1)
+        get_ff = lambda: ChunkedFeedForward(d_model, d_ff, n_chunks=ff_chunks, dropout=ff_dropout, dim=1)
         norm_wrapper = PreNorm if prenorm else PostNorm
         blocks = []
         for ind in range(n_layers):
@@ -304,6 +303,7 @@ class ReversibleLM(Module, LMMixin):
         * n_layers: int (default: 6)
         * n_heads: int (default: 8)
         * d_ff: int - inner dimension of the pointwise FeedForward net, if None defaults to 4*d_model
+        * ff_chunkes: int - number of chunks for FeedForward layer computation
         * attn_dropout: float - attention dropout
         * ff_dropout: float - feed-forward dropout
         * emb_dropout: float - embedding dropout
@@ -330,6 +330,7 @@ class ReversibleLM(Module, LMMixin):
                  n_layers:int=6,
                  n_heads:int=8,
                  d_ff:int=None,
+                 ff_chunks:int=1,
                  attn_dropout:float=0.1,
                  ff_dropout:float=0.1,
                  emb_dropout:float=0.1,
@@ -349,7 +350,7 @@ class ReversibleLM(Module, LMMixin):
                                         axial_emb_dims=axial_emb_dims)
         self.encoder = ReversibleEncoder(d_model, n_layers, n_heads, causal=causal, d_ff=d_ff,
                                          attn_dropout=attn_dropout, ff_dropout=ff_dropout,
-                                         prenorm=prenorm, attn_bias=attn_bias,
+                                         prenorm=prenorm, attn_bias=attn_bias, ff_chunks=ff_chunks,
                                          final_norm=nn.LayerNorm, rev_thres=rev_thres)
         self.proj = nn.Linear(d_model, vocab_sz)
         if tie_weights: self.proj.weight = self.emb.emb.weight
@@ -376,6 +377,7 @@ class ReversibleTransformer(Module):
         * n_dec_layers: int (default: 6)
         * n_heads: int (default: 8)
         * d_ff: int - inner dimension of the pointwise FeedForward net, if None defaults to 4*d_model
+        * ff_chunkes: int - number of chunks for FeedForward layer computation
         * attn_dropout: float - attention dropout
         * ff_dropout: float - feed-forward dropout
         * emb_dropout: float - embedding dropout
@@ -407,6 +409,7 @@ class ReversibleTransformer(Module):
                  n_dec_layers=None,
                  n_heads=8,
                  d_ff=None,
+                 ff_chunks:int=1,
                  pad_idx=None,
                  tie_weights=True,
                  shared_emb = False,
@@ -432,10 +435,12 @@ class ReversibleTransformer(Module):
             self.dec_emb = TransformerEmbedding(dec_vocab_sz, d_model, max_seq_len, dropout=emb_dropout, pos_enc=pos_enc,
                                                 axial_shape=axial_shape, axial_emb_dims=axial_emb_dims)
 
-        self.encoder = ReversibleEncoder(d_model, n_enc_layers, n_heads, d_ff=d_ff, attn_dropout=attn_dropout, ff_dropout=ff_dropout,
-                                          prenorm=prenorm, attn_bias=attn_bias, final_norm=nn.LayerNorm, causal=False)
-        self.decoder = ReversibleDecoder(d_model, n_dec_layers, n_heads, d_ff=d_ff, attn_dropout=attn_dropout, ff_dropout=ff_dropout,
-                                          prenorm=prenorm, attn_bias=attn_bias, final_norm=nn.LayerNorm)
+        self.encoder = ReversibleEncoder(d_model, n_enc_layers, n_heads, d_ff=d_ff, attn_dropout=attn_dropout,
+                                         ff_dropout=ff_dropout, prenorm=prenorm, attn_bias=attn_bias,
+                                         final_norm=nn.LayerNorm, causal=False, ff_chunks=ff_chunks)
+        self.decoder = ReversibleDecoder(d_model, n_dec_layers, n_heads, d_ff=d_ff, attn_dropout=attn_dropout,
+                                         ff_dropout=ff_dropout, prenorm=prenorm, attn_bias=attn_bias,
+                                         final_norm=nn.LayerNorm, ff_chunks=ff_chunks)
         self.proj = nn.Linear(d_model, dec_vocab_sz)
         if tie_weights: self.proj.weight = self.dec_emb.emb.weight
 
@@ -644,7 +649,7 @@ class ReformerEncoder(Module):
             attn = ReformerAttentionV2(d_model, n_heads=n_heads, causal=causal, dropout=attn_dropout,
                                        bias=attn_bias, use_lsh=use_lsh, n_hashes=n_hashes, bucket_size=bucket_size,
                                        seed=seed)
-            ff = ChunkedFeedForward(d_model, d_ff, chunks=ff_chunks, dropout=ff_dropout, dim=1)
+            ff = ChunkedFeedForward(d_model, d_ff, n_chunks=ff_chunks, dropout=ff_dropout, dim=1)
 
             f = norm_wrapper(d_model, attn)
             g = norm_wrapper(d_model, ff)
@@ -672,6 +677,7 @@ class ReformerLM(Module, LMMixin):
         * n_layers: int (default: 6)
         * n_heads: int (default: 8)
         * d_ff: int - inner dimension of the pointwise FeedForward net, if None defaults to 4*d_model
+        * ff_chunkes: int - number of chunks for FeedForward layer computation
         * attn_dropout: float - attention dropout
         * ff_dropout: float - feed-forward dropout
         * emb_dropout: float - embedding dropout
@@ -710,7 +716,7 @@ class ReformerLM(Module, LMMixin):
                  emb_dropout:float=0.1,
                  tie_weights:bool=True,
                  causal:bool=True,
-                 pos_enc:str='absolute',
+                 pos_enc:str='axial',
                  max_seq_len:int=512,
                  axial_shape:tuple=None,
                  axial_emb_dims:tuple=None,
