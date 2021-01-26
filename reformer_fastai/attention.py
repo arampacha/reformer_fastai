@@ -24,6 +24,8 @@ from einops import rearrange, repeat
 from .core import *
 from .layers import *
 
+from torch.utils.checkpoint import checkpoint
+
 # Cell
 MASK_VAL = -5e4
 SELF_ATTN_MASK_VAL = -1e4
@@ -237,6 +239,7 @@ class ChunkedDotProdAttention(Module):
         out = rearrange(out, 'b h n d -> b n (h d)')
         return out
 
+
 # Cell
 class ChunkedAttention(Module):
     """
@@ -270,7 +273,7 @@ class ChunkedAttention(Module):
         if self.shared_qk: k = F.normalize(k, 2, dim=-1).type_as(k)
 
         attn_mask = None#self._make_attn_mask(mask, context_mask, x, context)
-        out = self.attn(q, k, v, attn_mask)
+        out = checkpoint(self.attn, q, k, v, attn_mask)
 
         out = self.out_proj(out)
         return self.dropout(out)
