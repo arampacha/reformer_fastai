@@ -147,3 +147,4 @@ checklink/cookies.txt
 
 # wandb local logging
 **/wandb
+/experiment_results
