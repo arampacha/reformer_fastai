@@ -301,7 +301,7 @@ class TransformerLM(Module, LMMixin):
         * vocab_sz: int
         * d_model: int - inner dimension of the model
         * n_layers: int (default: 6)
-        * heads: int (default: 8)
+        * n_heads: int (default: 8)
         * d_ff: int - inner dimension of the pointwise FeedForward net, if None defaults to 4*d_model
         * attn_dropout: float - attention dropout
         * ff_dropout: float - feed-forward dropout
@@ -407,7 +407,7 @@ class Transformer(Module, EncDecMixin):
                  d_model,
                  n_enc_layers=6,
                  n_dec_layers=6,
-                 heads=8,
+                 n_heads=8,
                  d_ff=None,
                  pad_idx=None,
                  tie_weights=True,
@@ -432,9 +432,9 @@ class Transformer(Module, EncDecMixin):
             self.dec_emb = TransformerEmbedding(dec_vocab_sz, d_model, max_seq_len, dropout=emb_dropout, pos_enc=pos_enc,
                                                 axial_shape=axial_shape, axial_emb_dims=axial_emb_dims)
         final_norm = nn.LayerNorm if prenorm else None
-        self.encoder = TransformerEncoder(d_model, n_enc_layers, heads, d_ff=d_ff, attn_dropout=attn_dropout, ff_dropout=ff_dropout,
+        self.encoder = TransformerEncoder(d_model, n_enc_layers, n_heads, d_ff=d_ff, attn_dropout=attn_dropout, ff_dropout=ff_dropout,
                                           prenorm=prenorm, attn_bias=attn_bias, final_norm=final_norm, causal=False)
-        self.decoder = TransformerDecoder(d_model, n_dec_layers, heads, d_ff=d_ff, attn_dropout=attn_dropout, ff_dropout=ff_dropout,
+        self.decoder = TransformerDecoder(d_model, n_dec_layers, n_heads, d_ff=d_ff, attn_dropout=attn_dropout, ff_dropout=ff_dropout,
                                           prenorm=prenorm, comb_attn=comb_attn, attn_bias=attn_bias, final_norm=final_norm)
         self.proj = nn.Linear(d_model, dec_vocab_sz)
         if tie_weights: self.proj.weight = self.dec_emb.emb.weight
