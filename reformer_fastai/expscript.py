@@ -233,7 +233,7 @@ def init_wandb(cbs:list=[], wandb_name:str='', wandb_group:str='', wandb_notes:s
 
 # Cell
 @call_parse
-def run_exp(task:Param(help="Task options: 'synt','lm_base','lm_rev',lm_shared_qk, n_hashes, trans", type=str),
+def run_exp(task:Param(help="Task options: 'synt','lm_base','lm_rev',lm_shared_qk, n_hashes, wmt_rev, wmt_base", type=str),
          data_path:Param(help="Path to data folder", type=str, default='./data'),
          n_epochs:Param(help="Number of epochs", type=int, default=1),
          lr:Param(help="Learning rate", type=float, default=1e-3),
@@ -514,8 +514,8 @@ def run_exp(task:Param(help="Task options: 'synt','lm_base','lm_rev',lm_shared_q
             learn.save(f'{task}_{run_name}_{now}')
 
 
-    elif task == 'wmt_rev':
-        "Model args that can be changed from command line: n_layers, max_seq_len"
+    elif 'wmt' in task:
+        "Model args that can be changed from command line: n_layers, max_seq_len and comb_attn (base only)"
         axial_shape = get_axial_shape(max_seq_len)
         if run_name == '': run_name = f'{task}_sl-{max_seq_len}_bs-{bs}_n_eps-{n_epochs}_seed-{seed}'
 
@@ -529,18 +529,23 @@ def run_exp(task:Param(help="Task options: 'synt','lm_base','lm_rev',lm_shared_q
         print('done')
 
         print('Getting model ...')
-        config = ReversibleTransformerConfigWMT(warn=False, verbose=verbose,
-                                                enc_vocab_sz=tok.vocab_size, dec_vocab_sz=tok.vocab_size, pad_idx=tok.PAD_ID,
-                                                n_enc_layers=n_layers, n_dec_layers=n_layers)
+        if task == 'wmt_rev':
+            config = ReversibleTransformerConfigWMT(warn=False, verbose=verbose,
+                                                    enc_vocab_sz=tok.vocab_size, dec_vocab_sz=tok.vocab_size, pad_idx=tok.PAD_ID,
+                                                    n_enc_layers=n_layers, n_dec_layers=n_layers)
+            model = ReversibleTransformer.from_config(config)
+        elif task == 'wmt_base':
+            config = TransformerConfigWMT(warn=False, verbose=verbose, comb_attn=comb_attn,
+                                            enc_vocab_sz=tok.vocab_size, dec_vocab_sz=tok.vocab_size, pad_idx=tok.PAD_ID,
+                                            n_enc_layers=n_layers, n_dec_layers=n_layers)
 
-        model = ReversibleTransformer.from_config(config)
+            model = Transformer.from_config(config)
         print('done!')
 
         if verbose: print(config)
         config.save(run_name, add_tstmp=True)
 
         print('Getting learner ...')
-        # Use AdaFactor?
         learn = get_seq2seq_learner(dls, model, tok, precision)
         print('done!')
 
@@ -557,7 +562,7 @@ def run_exp(task:Param(help="Task options: 'synt','lm_base','lm_rev',lm_shared_q
             run_name = run_name + f'_grad-accum-{grad_accum}'
 
         # Set up Weights & Biases logging, if needed
-        if do_wandb_logging and rank_distrib()==0:
+        if do_wandb_logging:
             wandb_run, cbs = init_wandb(cbs, wandb_name=run_name, wandb_group=wandb_group,
                                         wandb_notes=wandb_notes, wandb_tags=wandb_tags)
 
