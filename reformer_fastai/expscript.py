@@ -562,7 +562,7 @@ def run_exp(task:Param(help="Task options: 'synt','lm_base','lm_rev',lm_shared_q
             run_name = run_name + f'_grad-accum-{grad_accum}'
 
         # Set up Weights & Biases logging, if needed
-        if do_wandb_logging and rank_distrib()==0:
+        if do_wandb_logging:
             wandb_run, cbs = init_wandb(cbs, wandb_name=run_name, wandb_group=wandb_group,
                                         wandb_notes=wandb_notes, wandb_tags=wandb_tags)
 
