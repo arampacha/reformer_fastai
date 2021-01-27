@@ -81,7 +81,8 @@ class ScaledDotProdAttention(Module):
     def forward(self, q, k, v, attn_mask=None):
         n, device = q.size(1), q.device
         q, k, v = map(lambda t: rearrange(t, 'b n (h d) -> b h n d', h=self.n_heads), (q, k, v))
-        if not self.shared_qk: q = q*self.scale
+        q = q*self.scale
+        if self.shared_qk: k = F.normalize(q, 2, dim=-1).type_as(k)
         # classic dot-product attention
         dots = torch.einsum('bhid,bhjd->bhij', q, k)
 
@@ -131,7 +132,7 @@ class Attention(Module):
 
     def forward(self, x, context = None, mask = None, context_mask = None):
         q, k, v = self.in_proj(x, context)
-        if self.shared_qk: k = F.normalize(k, 2, dim=-1).type_as(k)
+        # if self.shared_qk: k = F.normalize(k, 2, dim=-1).type_as(k)
 
         attn_mask = self._make_attn_mask(mask, context_mask, x, context)
         out = self.attn(q, k, v, attn_mask)
