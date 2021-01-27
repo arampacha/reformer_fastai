@@ -409,7 +409,7 @@ shared_qk       False</pre>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="ReversibleLMConfigEnwik8" class="doc_header"><code>class</code> <code>ReversibleLMConfigEnwik8</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/configs.py#L160" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ReversibleLMConfigEnwik8</code>(<strong><code>vocab_sz</code></strong>=<em><code>256</code></em>, <strong><code>d_model</code></strong>=<em><code>1024</code></em>, <strong><code>n_layers</code></strong>=<em><code>3</code></em>, <strong><code>n_heads</code></strong>=<em><code>8</code></em>, <strong><code>d_ff</code></strong>=<em><code>4096</code></em>, <strong><code>attn_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>ff_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>emb_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>tie_weights</code></strong>=<em><code>True</code></em>, <strong><code>causal</code></strong>=<em><code>True</code></em>, <strong><code>pos_enc</code></strong>=<em><code>'axial'</code></em>, <strong><code>max_seq_len</code></strong>=<em><code>2048</code></em>, <strong><code>axial_shape</code></strong>=<em><code>(64, 32)</code></em>, <strong><code>axial_emb_dims</code></strong>=<em><code>None</code></em>, <strong><code>pad_idx</code></strong>=<em><code>None</code></em>, <strong><code>prenorm</code></strong>=<em><code>False</code></em>, <strong><code>attn_bias</code></strong>=<em><code>False</code></em>, <strong><code>rev_thres</code></strong>=<em><code>0</code></em>) :: <a href="/reformer_fastai/experiment-configs.html#ConfigBase"><code>ConfigBase</code></a></p>
+<h2 id="ReversibleLMConfigEnwik8" class="doc_header"><code>class</code> <code>ReversibleLMConfigEnwik8</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/configs.py#L160" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ReversibleLMConfigEnwik8</code>(<strong><code>vocab_sz</code></strong>=<em><code>256</code></em>, <strong><code>d_model</code></strong>=<em><code>1024</code></em>, <strong><code>n_layers</code></strong>=<em><code>3</code></em>, <strong><code>n_heads</code></strong>=<em><code>8</code></em>, <strong><code>d_ff</code></strong>=<em><code>4096</code></em>, <strong><code>attn_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>ff_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>emb_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>tie_weights</code></strong>=<em><code>True</code></em>, <strong><code>causal</code></strong>=<em><code>True</code></em>, <strong><code>pos_enc</code></strong>=<em><code>'axial'</code></em>, <strong><code>max_seq_len</code></strong>=<em><code>2048</code></em>, <strong><code>axial_shape</code></strong>=<em><code>(64, 32)</code></em>, <strong><code>axial_emb_dims</code></strong>=<em><code>None</code></em>, <strong><code>pad_idx</code></strong>=<em><code>None</code></em>, <strong><code>prenorm</code></strong>=<em><code>True</code></em>, <strong><code>attn_bias</code></strong>=<em><code>False</code></em>, <strong><code>rev_thres</code></strong>=<em><code>0</code></em>) :: <a href="/reformer_fastai/experiment-configs.html#ConfigBase"><code>ConfigBase</code></a></p>
 </blockquote>
 <p>Config for enwik8 Experiment.
 See <a href="https://arampacha.github.io/reformer_fastai/experiment.enwik8-reversible.html">https://arampacha.github.io/reformer_fastai/experiment.enwik8-reversible.html</a> for details</p>
@@ -470,7 +470,7 @@ max_seq_len     2048
 axial_shape     (64, 32)
 axial_emb_dims  None
 pad_idx         None
-prenorm         False
+prenorm         True
 attn_bias       False
 rev_thres       128</pre>
 </div>
@@ -583,7 +583,7 @@ seed            842</pre>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="NLayersConfig" class="doc_header"><code>class</code> <code>NLayersConfig</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/configs.py#L225" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>NLayersConfig</code>(<strong><code>vocab_sz</code></strong>=<em><code>256</code></em>, <strong><code>d_model</code></strong>=<em><code>1024</code></em>, <strong><code>n_layers</code></strong>=<em><code>3</code></em>, <strong><code>n_heads</code></strong>=<em><code>8</code></em>, <strong><code>d_ff</code></strong>=<em><code>4096</code></em>, <strong><code>ff_chunks</code></strong>=<em><code>64</code></em>, <strong><code>attn_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>ff_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>emb_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>tie_weights</code></strong>=<em><code>True</code></em>, <strong><code>causal</code></strong>=<em><code>True</code></em>, <strong><code>pos_enc</code></strong>=<em><code>'axial'</code></em>, <strong><code>max_seq_len</code></strong>=<em><code>16384</code></em>, <strong><code>axial_shape</code></strong>=<em><code>None</code></em>, <strong><code>axial_emb_dims</code></strong>=<em><code>None</code></em>, <strong><code>pad_idx</code></strong>=<em><code>None</code></em>, <strong><code>prenorm</code></strong>=<em><code>False</code></em>, <strong><code>attn_bias</code></strong>=<em><code>False</code></em>, <strong><code>bucket_size</code></strong>=<em><code>64</code></em>, <strong><code>use_lsh</code></strong>=<em><code>True</code></em>, <strong><code>n_hashes</code></strong>=<em><code>8</code></em>, <strong><code>rev_thres</code></strong>=<em><code>0</code></em>, <strong><code>seed</code></strong>=<em><code>842</code></em>) :: <a href="/reformer_fastai/experiment-configs.html#ConfigBase"><code>ConfigBase</code></a></p>
+<h2 id="NLayersConfig" class="doc_header"><code>class</code> <code>NLayersConfig</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/configs.py#L225" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>NLayersConfig</code>(<strong><code>vocab_sz</code></strong>=<em><code>256</code></em>, <strong><code>d_model</code></strong>=<em><code>1024</code></em>, <strong><code>n_layers</code></strong>=<em><code>3</code></em>, <strong><code>n_heads</code></strong>=<em><code>8</code></em>, <strong><code>d_ff</code></strong>=<em><code>4096</code></em>, <strong><code>ff_chunks</code></strong>=<em><code>64</code></em>, <strong><code>attn_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>ff_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>emb_dropout</code></strong>=<em><code>0.1</code></em>, <strong><code>tie_weights</code></strong>=<em><code>True</code></em>, <strong><code>causal</code></strong>=<em><code>True</code></em>, <strong><code>pos_enc</code></strong>=<em><code>'axial'</code></em>, <strong><code>max_seq_len</code></strong>=<em><code>16384</code></em>, <strong><code>axial_shape</code></strong>=<em><code>None</code></em>, <strong><code>axial_emb_dims</code></strong>=<em><code>None</code></em>, <strong><code>pad_idx</code></strong>=<em><code>None</code></em>, <strong><code>prenorm</code></strong>=<em><code>True</code></em>, <strong><code>attn_bias</code></strong>=<em><code>False</code></em>, <strong><code>bucket_size</code></strong>=<em><code>64</code></em>, <strong><code>use_lsh</code></strong>=<em><code>True</code></em>, <strong><code>n_hashes</code></strong>=<em><code>8</code></em>, <strong><code>rev_thres</code></strong>=<em><code>0</code></em>, <strong><code>seed</code></strong>=<em><code>842</code></em>) :: <a href="/reformer_fastai/experiment-configs.html#ConfigBase"><code>ConfigBase</code></a></p>
 </blockquote>
 <p>Config for evaluating performance as function of <code>n_layers</code>.
 See <a href="https://arampacha.github.io/reformer_fastai/experiment.enwik8-n_layers.html">https://arampacha.github.io/reformer_fastai/experiment.enwik8-n_layers.html</a> for details</p>
@@ -646,7 +646,7 @@ max_seq_len     16384
 axial_shape     None
 axial_emb_dims  None
 pad_idx         None
-prenorm         False
+prenorm         True
 attn_bias       False
 bucket_size     64
 use_lsh         True
@@ -826,7 +826,7 @@ axial_emb_dims  None
 pad_idx         None
 prenorm         False
 attn_bias       False
-comb_attn       False</pre>
+comb_attn       True</pre>
 </div>
 
 </div>
