@@ -285,7 +285,7 @@ def run_exp(task:Param(help="Task options: 'synt','lm_base','lm_rev',lm_shared_q
             else: run_name = f'{task}_full-attn_bs-{bs}_n_eps-{n_epochs}'
 
         print('Getting model ...')
-        config = SyntheticConfig(warn=False, verbose=verbose, n_hashes=n_hashes, use_lsh=use_lsh)
+        config = SyntheticConfig(warn=False, verbose=verbose, n_hashes=n_hashes, use_lsh=use_lsh, seed=seed)
         if verbose: print(config)
         config.save(run_name, add_tstmp=True)
         model = LSHLM.from_config(config)
@@ -311,7 +311,7 @@ def run_exp(task:Param(help="Task options: 'synt','lm_base','lm_rev',lm_shared_q
 
         # Start training
         print('Starting training...')
-        with learn.distrib_ctx(cuda_id=cuda_id): learn.fit_one_cycle(n_epochs, lr, cbs=cbs)
+        learn.fit_one_cycle(n_epochs, lr, cbs=cbs)
         print('done!')
 
         # Close wandb logging for this run
