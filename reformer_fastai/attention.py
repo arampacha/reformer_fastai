@@ -81,9 +81,9 @@ class ScaledDotProdAttention(Module):
     def forward(self, q, k, v, attn_mask=None):
         n, device = q.size(1), q.device
         q, k, v = map(lambda t: rearrange(t, 'b n (h d) -> b h n d', h=self.n_heads), (q, k, v))
-
+        if not self.shared_qk: q = q*self.scale
         # classic dot-product attention
-        dots = torch.einsum('bhid,bhjd->bhij', q*self.scale, k)
+        dots = torch.einsum('bhid,bhjd->bhij', q, k)
 
         if exists(attn_mask):
             dots.masked_fill_(~attn_mask, MASK_VAL)
