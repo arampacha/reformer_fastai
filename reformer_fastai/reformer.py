@@ -109,7 +109,6 @@ class ReversibleBlock(Module):
     def backward_pass(self, y, dy, f_args = {}, g_args = {}):
         y1, y2 = torch.chunk(y, 2, dim=2)
         del y
-
         dy1, dy2 = torch.chunk(dy, 2, dim=2)
         del dy
 

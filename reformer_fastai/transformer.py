@@ -2,7 +2,7 @@
 
 __all__ = ['LMMixin', 'EncDecMixin', 'TransformerEncoderBlock', 'TransformerEncoder', 'TransformerDecoderBlock',
            'TransformerDecoderBlockV2', 'TransformerDecoder', 'TransformerLM', 'transformer_lm_splits', 'Transformer',
-           'transformer_splits', 'from_config', 'MODELS']
+           'transformer_splits', 'LowMemEncoderBlock', 'LowMemEncoder', 'ChunkedTransformerLM', 'from_config', 'MODELS']
 
 # Cell
 from fastai.basics import *
@@ -457,6 +457,137 @@ def transformer_splits(model):
     "[v0] Splits Transformer `model` into groups for differential learning rates."
     groups = L([nn.ModuleList([model.enc_emb, model.dec_emb])] + [l for l in model.encoder.layers] + [l for l in model.decoder.layers] + [model.proj])
     return groups.map(params)
+
+# Cell
+class LowMemEncoderBlock(Module):
+    """
+    Low memory transformer encoder block. Consists of chunked multi-head attention and
+    positional feedforward layers
+    """
+    def __init__(self,
+                 d_model:int,
+                 n_heads:int = 8,
+                 d_ff:int = None,
+                 attn_dropout:float = 0.1,
+                 ff_dropout:float = 0.1,
+                 causal:bool = False,
+                 attn_bias:bool = False,
+                 prenorm:bool=False,
+                 shared_qk:bool=False,
+                 attn_chunks:int=1):
+        store_attr('attn_dropout') # mb separate argument attn_post_dropout
+        if prenorm:
+            self.attn = Residual(PreNorm(d_model, ChunkedAttention(d_model, n_heads=n_heads, causal=causal,
+                                                    dropout=attn_dropout, bias=attn_bias, shared_qk=shared_qk,
+                                                    n_chunks=attn_chunks)))
+            self.ff = Residual(PreNorm(d_model, FeedForward(d_model, d_ff=d_ff, dropout=ff_dropout)))
+        else:
+            self.attn = PostNorm(d_model, Residual(ChunkedAttention(d_model, n_heads=n_heads, causal=causal,
+                                                    dropout=attn_dropout, bias=attn_bias, shared_qk=shared_qk,
+                                                                    n_chunks=attn_chunks)))
+            self.ff = PostNorm(d_model, Residual(FeedForward(d_model, d_ff=d_ff, dropout=ff_dropout)))
+
+    def forward(self, x, mask=None): #? more args
+        out = self.attn(x, mask=mask)
+        return self.ff(out)
+
+# Cell
+class LowMemEncoder(Module):
+    """Stack of LowMemEncoderBlocks"""
+    def __init__(self,
+                 d_model,
+                 n_layers=6,
+                 n_heads=8,
+                 d_ff=None,
+                 ff_dropout=0.1,
+                 attn_dropout=0.1,
+                 attn_bias=False,
+                 causal=False,
+                 prenorm=False,
+                 shared_qk:bool=False,
+                 final_norm=None,
+                 attn_chunks:int=1):
+        store_attr('d_model')
+        self.layers = nn.ModuleList([])
+        for _ in range(n_layers):
+            self.layers.append(LowMemEncoderBlock(d_model, n_heads, causal=causal,
+                                    d_ff=d_ff, attn_dropout=attn_dropout, ff_dropout=ff_dropout,
+                                    prenorm=prenorm, attn_bias=attn_bias, shared_qk=shared_qk,
+                                    attn_chunks=attn_chunks))
+        self.norm = None if final_norm is None else final_norm(d_model)
+
+    def forward(self, x, mask=None):
+        for layer in self.layers: x = layer(x, mask=mask)
+        if self.norm is not None: x = self.norm(x)
+        return x
+
+# Cell
+class ChunkedTransformerLM(Module, LMMixin):
+    """
+    Basic Transformer for language modelling
+
+    Parameters:
+        * vocab_sz: int
+        * d_model: int - inner dimension of the model
+        * n_layers: int (default: 6)
+        * n_heads: int (default: 8)
+        * d_ff: int - inner dimension of the pointwise FeedForward net, if None defaults to 4*d_model
+        * attn_chunks: int - number of queries chunks for memory-efficient attention
+        * attn_dropout: float - attention dropout
+        * ff_dropout: float - feed-forward dropout
+        * emb_dropout: float - embedding dropout
+        * causal: bool (default: True) - if True does causal masking automatically
+        * max_seq_len: int (default: 512)
+        * tie_weights: bool - if True target embedding weights are used for computation output projection
+        * prenorm: bool - wether to use PreNorm or PostNorm
+        * attn_bias: bool - wether to allow biases in attention projection layers
+        * pad_idx: int - padding token id, required for autogeneration of padding mask
+        * pos_enc: str from {'absolute', 'fixed', 'axial'} - type of positional encoding to use
+        * axial_shape: tuple - [optional] should be factors of max_seq_len
+        * axial_emb_dims: tuple - [optional] axial embedding components, should sum to d_model
+    Inputs:
+        * x - input ids, shape [bs, sl]
+        * mask - optional boolean mask, shape [bs, sl]
+    Returns:
+        * logits - target token logits, shape [bs, sl, vocab_sz]
+    """
+    def __init__(self,
+                 vocab_sz:int,
+                 d_model:int,
+                 n_layers:int=6,
+                 n_heads:int=8,
+                 d_ff:int=None,
+                 attn_chunks:int=1,
+                 attn_dropout:float=0.1,
+                 ff_dropout:float=0.1,
+                 emb_dropout:float=0.1,
+                 tie_weights:bool=True,
+                 causal:bool=True,
+                 pos_enc:str='absolute',
+                 max_seq_len:int=512,
+                 axial_shape:tuple=None,
+                 axial_emb_dims:tuple=None,
+                 pad_idx:int=None,
+                 prenorm:bool=False,
+                 attn_bias:bool=False,
+                 shared_qk:bool=False):
+        store_attr()
+        self.emb = TransformerEmbedding(vocab_sz, d_model, max_seq_len, dropout=emb_dropout,
+                                        pos_enc=pos_enc, axial_shape=axial_shape,
+                                        axial_emb_dims=axial_emb_dims)
+        final_norm = nn.LayerNorm if prenorm else None
+        self.encoder = LowMemEncoder(d_model, n_layers, n_heads, causal=causal, d_ff=d_ff,
+                                    attn_dropout=attn_dropout, ff_dropout=ff_dropout,
+                                    prenorm=prenorm, attn_bias=attn_bias, attn_chunks=attn_chunks,
+                                    shared_qk=shared_qk, final_norm=final_norm)
+        self.proj = nn.Linear(d_model, vocab_sz)
+        if tie_weights: self.proj.weight = self.emb.emb.weight
+
+    def forward(self, x, mask=None):
+        x = self.emb(x)
+        x = self.encoder(x, mask=mask)
+        return self.proj(x)
+
 
 # Cell
 MODELS = (TransformerLM, Transformer)
