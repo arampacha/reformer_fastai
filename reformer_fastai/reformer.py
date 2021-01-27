@@ -233,7 +233,6 @@ class ReversibleEncoder(Module):
 
             blocks.append(nn.ModuleList([f, g]))
         self.norm = final_norm(d_model) if exists(final_norm) else None
-        # send_signal is not implemented for now
         self.layers = ReversibleSequence(nn.ModuleList(blocks), rev_thres=rev_thres, send_signal=False)
 
     def forward(self, x, **kwargs):
@@ -340,7 +339,7 @@ class ReversibleLM(Module, LMMixin):
                  axial_shape=None,
                  axial_emb_dims=None,
                  pad_idx:int=None,
-                 prenorm:bool=False,
+                 prenorm:bool=True,
                  attn_bias:bool=False,
                  rev_thres:int=0):
         store_attr()
@@ -415,7 +414,7 @@ class ReversibleTransformer(Module):
                  attn_dropout=0.1,
                  ff_dropout=0.1,
                  emb_dropout=0.1,
-                 prenorm=False,
+                 prenorm=True,
                  attn_bias=False,
                  comb_attn=False,
                  pos_enc='absolute',
@@ -720,7 +719,7 @@ class ReformerLM(Module, LMMixin):
                  axial_shape:tuple=None,
                  axial_emb_dims:tuple=None,
                  pad_idx:int=None,
-                 prenorm:bool=False,
+                 prenorm:bool=True,
                  attn_bias:bool=False,
                  use_lsh:bool=True,
                  n_hashes:int=8,

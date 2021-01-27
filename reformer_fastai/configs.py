@@ -179,7 +179,7 @@ class ReversibleLMConfigEnwik8(ConfigBase):
         'axial_shape':(64,32),
         'axial_emb_dims':None,
         'pad_idx':None,
-        'prenorm':False,
+        'prenorm':True,
         'attn_bias':False,
         'rev_thres':0,
     }
@@ -245,7 +245,7 @@ class NLayersConfig(ConfigBase):
         'axial_shape':None,
         'axial_emb_dims':None,
         'pad_idx':None,
-        'prenorm':False,
+        'prenorm':True,
         'attn_bias':False,
         'bucket_size':64,
         'use_lsh':True,
