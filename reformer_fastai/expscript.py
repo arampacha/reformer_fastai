@@ -311,7 +311,7 @@ def run_exp(task:Param(help="Task options: 'synt','lm_base','lm_rev',lm_shared_q
 
         # Start training
         print('Starting training...')
-        with learn.distrib_ctx(cuda_id=cuda_id): learn.fit_one_cycle(n_epochs, lr, cbs=cbs)
+        learn.fit_one_cycle(n_epochs, lr, cbs=cbs)
         print('done!')
 
         # Close wandb logging for this run
