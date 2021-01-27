@@ -268,7 +268,7 @@ def run_exp(task:Param(help="Task options: 'synt','lm_base','lm_rev',lm_shared_q
 
     # Callbacks used for training
     cbs = []
-    if save_model: cbs.append(SaveModelCallback(every_epoch=True))
+    if save_model: cbs.append(SaveModelCallback(every_epoch=True, with_opt=True))
 
     #random seeds
     if seed!=0:
