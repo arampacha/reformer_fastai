@@ -117,7 +117,6 @@ class Attention(Module):
                  out_dropout:float=None,
                  bias:bool=False,
                  shared_qk:bool=False,
-                 low_mem:bool=False,
                  store_attention:bool=False):
         store_attr('causal, mask, n_heads, bias, shared_qk')
         out_dropout = ifnone(out_dropout, dropout)
@@ -162,7 +161,7 @@ class _ChunkedAttnCptFunction(torch.autograd.Function):
 
     @staticmethod
     def forward(ctx, run_function, preserve_rng_state, qc, k, v, i, csz, self, l, attn_mask):
-        check_backward_validity((qc,k,v))
+        # check_backward_validity((qc,k,v))
         ctx.run_function = run_function
         ctx.preserve_rng_state = preserve_rng_state
         ctx.extra = (i, csz, self, l, attn_mask)
@@ -216,7 +215,7 @@ def _checkpoint(function, *args, **kwargs):
     return _ChunkedAttnCptFunction.apply(function, preserve, *args)
 
 # Cell
-#TODO make sure store_attention works
+#Not working, use ChunkedDotProdAttention
 class MemEfficientAttention(Module):
     """
     Memory efficient and very time inefficient attention for long seqences
@@ -272,7 +271,7 @@ def _chunked_attn(qc, k, v, i, csz, self, l, attn_mask):
     return torch.einsum('bhij, bhjd -> bhid', attn, v)
 
 # Cell
-#TODO make sure store_attention works
+#TODO make store_attention work
 class ChunkedDotProdAttention(Module):
     """
     Memory efficient and time inefficient attention for long seqences
