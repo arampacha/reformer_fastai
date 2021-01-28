@@ -14,18 +14,22 @@ python3 -m venv my_env
 source ./my_env/bin/activate
 ```
 
-### Run Install
-Then you can install the package by running:
+### Install
+Then you can install the package via pip:
+
+`pip install reformer-fastai`
+
+Or (even better) install latest version from github:
 
 `pip install git+git://github.com/arampacha/reformer_fastai.git`
 
 ## Project Links
 
+- [Reformer Reproducibility Report on WandB](https://wandb.ai/fastai_community/reformer-fastai/reports/Reformer-Reproducibility-Final-Edits---Vmlldzo0MzQ1OTg)
 - [Older repo](https://github.com/morganmcg1/reformer-fastai-old)
 - [Repo docs](https://arampacha.github.io/reformer_fastai/)
 - [Fastai forums thread](https://forums.fast.ai/t/reproducibility-challenge-2020-fastai-folks-interested/80336/39)
 - [Google doc](https://docs.google.com/document/d/1wF83E3B3yXIGZixEgOUJI2T2XXhT1DVCrPXS5Dbsyh8/edit)
-- [RC2020 Report Style Template](https://paperswithcode.com/static/rc2020/ML-Reproducibility-Challenge-2020-Template.zip)
 
 ## Resources
 
