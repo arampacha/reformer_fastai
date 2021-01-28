@@ -14,7 +14,7 @@ def _masked_accuracy(inp, targ, ignore=-100, dim=-1):
     return (pred[mask] == targ[mask]).float().mean()
 
 class MaskedAccuracy(AvgMetric):
-    "Computes accuracy skipping values where targ=='ignore'"
+    "Computes accuracy skipping values where `targ == ignore`"
     def __init__(self, ignore:int=-100, dim:int=-1):
         self.func = partial(_masked_accuracy, ignore=ignore, dim=dim)
     @property

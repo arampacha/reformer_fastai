@@ -13,6 +13,7 @@ from .attention import *
 
 # Cell
 class LMMixin:
+    "Mixin for language models"
     #TODO maybe refactor
     @torch.no_grad()
     def generate(self, inp,
@@ -72,6 +73,7 @@ class LMMixin:
 
 # Cell
 class EncDecMixin:
+    "Mixin for encoder-decoder models"
     #TODO add beam search and refactor
     @torch.no_grad()
     def generate(self, src,

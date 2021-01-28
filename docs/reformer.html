@@ -6,8 +6,8 @@ title: Reformer
 keywords: fastai
 sidebar: home_sidebar
 
-
-
+summary: "Memory efficient transformer"
+description: "Memory efficient transformer"
 nb_path: "nbs/04_reformer.ipynb"
 ---
 <!--
@@ -36,14 +36,6 @@ nb_path: "nbs/04_reformer.ipynb"
 </div>
     {% endraw %}
 
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Credits to @lucidrains <a href="https://github.com/lucidrains/reformer-pytorch">https://github.com/lucidrains/reformer-pytorch</a></p>
-<p>raw version to be added LSH attention and more...</p>
-
-</div>
-</div>
-</div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Helper-classes">Helper classes<a class="anchor-link" href="#Helper-classes"> </a></h2>
@@ -1396,24 +1388,6 @@ torch.Size([4, 1024])
 </div>
     {% endraw %}
 
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">loss</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
-<span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><a href="/reformer_fastai/attention.html#LSHAttention"><code>LSHAttention</code></a> execution time depends on number of hashing rounds</p>
@@ -1516,23 +1490,6 @@ torch.Size([4, 1024])
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">reformer_lm_splits</span><span class="p">(</span><span class="n">model</span><span class="p">))</span> <span class="o">==</span> <span class="mi">2</span><span class="o">+</span><span class="mi">2</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
 
 </div>
     {% endraw %}
