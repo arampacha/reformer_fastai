@@ -6,8 +6,8 @@ title: Experiment Script
 keywords: fastai
 sidebar: home_sidebar
 
-
-
+summary: "The experiment script plus all functions used for the entire datapipline, all model loading and model training are found here"
+description: "The experiment script plus all functions used for the entire datapipline, all model loading and model training are found here"
 nb_path: "nbs/20_experiment-script.ipynb"
 ---
 <!--
@@ -73,7 +73,23 @@ nb_path: "nbs/20_experiment-script.ipynb"
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Experiment-Configs">Experiment Configs<a class="anchor-link" href="#Experiment-Configs"> </a></h2><p>Model Configs can be found the <code>21_experiment-config.ipynb</code> notebook</p>
+<h2 id="Overview">Overview<a class="anchor-link" href="#Overview"> </a></h2><p>The functions used for the entire datapipline, all model loading and model training can be found here. Click on the "[source]" links to see the full code. Full source code for the experiment script itself can be seen below.</p>
+<h2 id="Running-the-script">Running the script<a class="anchor-link" href="#Running-the-script"> </a></h2><p>Experiments are run with this script by specifying:</p>
+<p>1) The task to run, i.e. synthetic task, language modelling or translation
+2) (Optionally) override default parameters for the dataloaders, models, training loop and logging</p>
+<p>To run the training script run <a href="/reformer_fastai/experiment-script.html#run_exp"><code>run_exp</code></a> from within the <code>reformer_fastai</code> repo. For example:</p>
+
+<pre><code>run_exp 'synth' lr=1e-4 bs=32</code></pre>
+<p>To run experiment script on multiple GPUs use <code>fastai.launch</code>:</p>
+
+<pre><code>python -m fastai.launch [--gpus 1,2] expscript.py [args]</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Experiment-Configs">Experiment Configs<a class="anchor-link" href="#Experiment-Configs"> </a></h2><p>All model and training hypermaramters used in training can be found in <a href="https://arampacha.github.io/reformer_fastai/experiment-configs.html">Experiments/Configs</a></p>
 
 </div>
 </div>
@@ -485,7 +501,7 @@ nb_path: "nbs/20_experiment-script.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="run_exp" class="doc_header"><code>run_exp</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/expscript.py#L235" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>run_exp</code>(<strong><code>task</code></strong>:"Task options: 'synt','lm_base','lm_rev',lm_shared_qk, n_hashes, wmt_rev, wmt_base", <strong><code>data_path</code></strong>:"Path to data folder", <strong><code>n_epochs</code></strong>:"Number of epochs", <strong><code>lr</code></strong>:"Learning rate", <strong><code>bs</code></strong>:"Batch size", <strong><code>train_sz</code></strong>:"TwinSequence train size", <strong><code>valid_sz</code></strong>:"TwinSequence valid size", <strong><code>n_layers</code></strong>:"Number of layers", <strong><code>n_hashes</code></strong>:"Number of LSH Attention hashes", <strong><code>use_lsh</code></strong>:"Use LSH Attention", <strong><code>max_seq_len</code></strong>:"Max sequence length for model embedding and dataloader", <strong><code>do_wandb_logging</code></strong>:"Use weights and biases logging", <strong><code>run_name</code></strong>:"Run name for wandb tracking and model filename", <strong><code>wandb_group</code></strong>:"wandb group", <strong><code>wandb_notes</code></strong>:"wandb notes", <strong><code>wandb_tags</code></strong>:"wandb tags, add tags in a single string, space separated", <strong><code>save_model</code></strong>:"Save model locally in /models", <strong><code>grad_accum</code></strong>:"Gradient Accumulation, set greater than 1 to implement", <strong><code>clip</code></strong>:"Gradient Clipping, will be set if &gt; 0.0", <strong><code>cuda_id</code></strong>:"Which cuda device to use", <strong><code>seed</code></strong>:"Set seed for reproducibiltiy, passing anything except 0 will use fastai's set_seed", <strong><code>distrib</code></strong>:"Set to True if using distributed training", <strong><code>verbose</code></strong>:"Print script logs", <strong><code>tiny</code></strong>:"Use 5% of data, for quick iteration and testings", <strong><code>precision</code></strong>:"0:fp16, 1:non native fp16, 2:fp32")</p>
+<h4 id="run_exp" class="doc_header"><code>run_exp</code><a href="https://github.com/arampacha/reformer_fastai/tree/master/reformer_fastai/expscript.py#L235" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>run_exp</code>(<strong><code>task</code></strong>:"Task options: 'synt','lm_base','lm_rev',lm_shared_qk, n_hashes, n_layers, wmt_rev, wmt_base", <strong><code>data_path</code></strong>:"Path to data folder", <strong><code>n_epochs</code></strong>:"Number of epochs", <strong><code>lr</code></strong>:"Learning rate", <strong><code>bs</code></strong>:"Batch size", <strong><code>train_sz</code></strong>:"TwinSequence train size", <strong><code>valid_sz</code></strong>:"TwinSequence valid size", <strong><code>n_layers</code></strong>:"Number of layers", <strong><code>n_hashes</code></strong>:"Number of LSH Attention hashes", <strong><code>use_lsh</code></strong>:"Use LSH Attention", <strong><code>max_seq_len</code></strong>:"Max sequence length for model embedding and dataloader", <strong><code>do_wandb_logging</code></strong>:"Use weights and biases logging", <strong><code>run_name</code></strong>:"Run name for wandb tracking and model filename", <strong><code>wandb_group</code></strong>:"wandb group", <strong><code>wandb_notes</code></strong>:"wandb notes", <strong><code>wandb_tags</code></strong>:"wandb tags, add tags in a single string, space separated", <strong><code>save_model</code></strong>:"Save model locally in /models", <strong><code>grad_accum</code></strong>:"Gradient Accumulation, set greater than 1 to implement", <strong><code>clip</code></strong>:"Gradient Clipping, will be set if &gt; 0.0", <strong><code>cuda_id</code></strong>:"Which cuda device to use", <strong><code>seed</code></strong>:"Set seed for reproducibiltiy, passing anything except 0 will use fastai's set_seed", <strong><code>distrib</code></strong>:"Set to True if using distributed training", <strong><code>verbose</code></strong>:"Print script logs", <strong><code>tiny</code></strong>:"Use 5% of data, for quick iteration and testings", <strong><code>precision</code></strong>:"0:fp16, 1:non native fp16, 2:fp32")</p>
 </blockquote>
 <p>Task options: 'synt','lm_base','lm_rev',lm_shared_qk, trans</p>
 
@@ -502,6 +518,378 @@ nb_path: "nbs/20_experiment-script.ipynb"
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nd">@call_parse</span>
+<span class="k">def</span> <span class="nf">run_exp</span><span class="p">(</span><span class="n">task</span><span class="p">:</span><span class="n">Param</span><span class="p">(</span><span class="n">help</span><span class="o">=</span><span class="s2">&quot;Task options: &#39;synt&#39;,&#39;lm_base&#39;,&#39;lm_rev&#39;,lm_shared_qk, n_hashes, n_layers, wmt_rev, wmt_base&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">),</span>
+         <span class="n">data_path</span><span class="p">:</span><span class="n">Param</span><span class="p">(</span><span class="n">help</span><span class="o">=</span><span class="s2">&quot;Path to data folder&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;./data&#39;</span><span class="p">),</span>
+         <span class="n">n_epochs</span><span class="p">:</span><span class="n">Param</span><span class="p">(</span><span class="n">help</span><span class="o">=</span><span class="s2">&quot;Number of epochs&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+         <span class="n">lr</span><span class="p">:</span><span class="n">Param</span><span class="p">(</span><span class="n">help</span><span class="o">=</span><span class="s2">&quot;Learning rate&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">),</span>               
+         <span class="n">bs</span><span class="p">:</span><span class="n">Param</span><span class="p">(</span><span class="n">help</span><span class="o">=</span><span class="s2">&quot;Batch size&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">64</span><span class="p">),</span>
+         <span class="n">train_sz</span><span class="p">:</span><span class="n">Param</span><span class="p">(</span><span class="n">help</span><span class="o">=</span><span class="s2">&quot;TwinSequence train size&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">12800</span><span class="p">),</span>
+         <span class="n">valid_sz</span><span class="p">:</span><span class="n">Param</span><span class="p">(</span><span class="n">help</span><span class="o">=</span><span class="s2">&quot;TwinSequence valid size&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">1280</span><span class="p">),</span>
+         <span class="n">n_layers</span><span class="p">:</span><span class="n">Param</span><span class="p">(</span><span class="n">help</span><span class="o">=</span><span class="s2">&quot;Number of layers&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">3</span><span class="p">),</span>
+         <span class="n">n_hashes</span><span class="p">:</span><span class="n">Param</span><span class="p">(</span><span class="n">help</span><span class="o">=</span><span class="s2">&quot;Number of LSH Attention hashes&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+         <span class="n">use_lsh</span><span class="p">:</span><span class="n">Param</span><span class="p">(</span><span class="n">help</span><span class="o">=</span><span class="s2">&quot;Use LSH Attention&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">bool_arg</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+         <span class="n">max_seq_len</span><span class="p">:</span><span class="n">Param</span><span class="p">(</span><span class="n">help</span><span class="o">=</span><span class="s2">&quot;Max sequence length for model embedding and dataloader&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">2048</span><span class="p">),</span>
+         <span class="n">do_wandb_logging</span><span class="p">:</span><span class="n">Param</span><span class="p">(</span><span class="n">help</span><span class="o">=</span><span class="s2">&quot;Use weights and biases logging&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">bool_arg</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+         <span class="n">run_name</span><span class="p">:</span><span class="n">Param</span><span class="p">(</span><span class="n">help</span><span class="o">=</span><span class="s2">&quot;Run name for wandb tracking and model filename&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">),</span>
+         <span class="n">wandb_group</span><span class="p">:</span><span class="n">Param</span><span class="p">(</span><span class="n">help</span><span class="o">=</span><span class="s2">&quot;wandb group&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;TEST&#39;</span><span class="p">),</span>
+         <span class="n">wandb_notes</span><span class="p">:</span><span class="n">Param</span><span class="p">(</span><span class="n">help</span><span class="o">=</span><span class="s2">&quot;wandb notes&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;My experiment notes&#39;</span><span class="p">),</span>
+         <span class="n">wandb_tags</span><span class="p">:</span><span class="n">Param</span><span class="p">(</span><span class="n">help</span><span class="o">=</span><span class="s2">&quot;wandb tags, add tags in a single string, space separated&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;test&#39;</span><span class="p">),</span>
+         <span class="n">save_model</span><span class="p">:</span><span class="n">Param</span><span class="p">(</span><span class="n">help</span><span class="o">=</span><span class="s2">&quot;Save model locally in /models&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">bool_arg</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+         <span class="n">grad_accum</span><span class="p">:</span><span class="n">Param</span><span class="p">(</span><span class="n">help</span><span class="o">=</span><span class="s2">&quot;Gradient Accumulation, set greater than 1 to implement&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+         <span class="n">clip</span><span class="p">:</span><span class="n">Param</span><span class="p">(</span><span class="n">help</span><span class="o">=</span><span class="s2">&quot;Gradient Clipping, will be set if &gt; 0.0&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">0.0</span><span class="p">),</span>
+         <span class="n">cuda_id</span><span class="p">:</span><span class="n">Param</span><span class="p">(</span><span class="n">help</span><span class="o">=</span><span class="s2">&quot;Which cuda device to use&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
+         <span class="n">seed</span><span class="p">:</span><span class="n">Param</span><span class="p">(</span><span class="n">help</span><span class="o">=</span><span class="s2">&quot;Set seed for reproducibiltiy, passing anything except 0 will use fastai&#39;s set_seed&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
+         <span class="n">distrib</span><span class="p">:</span><span class="n">Param</span><span class="p">(</span><span class="n">help</span><span class="o">=</span><span class="s2">&quot;Set to True if using distributed training&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">bool_arg</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+         <span class="n">verbose</span><span class="p">:</span><span class="n">Param</span><span class="p">(</span><span class="n">help</span><span class="o">=</span><span class="s2">&quot;Print script logs&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">bool_arg</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+         <span class="n">tiny</span><span class="p">:</span><span class="n">Param</span><span class="p">(</span><span class="n">help</span><span class="o">=</span><span class="s2">&quot;Use 5</span><span class="si">% o</span><span class="s2">f data, for quick iteration and testings&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">bool_arg</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+         <span class="n">precision</span><span class="p">:</span><span class="n">Param</span><span class="p">(</span><span class="n">help</span><span class="o">=</span><span class="s2">&quot;0:fp16, 1:non native fp16, 2:fp32&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;Task options: &#39;synt&#39;,&#39;lm_base&#39;,&#39;lm_rev&#39;,lm_shared_qk, trans&quot;&quot;&quot;</span>
+    <span class="c1">#Set up distributed training</span>
+<span class="c1">#     _wrapper = rank0_first if distrib else partial</span>
+<span class="c1">#     if distrib: cuda_id = None </span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">set_device</span><span class="p">(</span><span class="n">cuda_id</span><span class="p">)</span>
+    
+    <span class="c1"># Callbacks used for training</span>
+    <span class="n">cbs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="n">save_model</span><span class="p">:</span> <span class="n">cbs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">SaveModelCallback</span><span class="p">(</span><span class="n">every_epoch</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">with_opt</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+    
+    <span class="c1">#random seeds</span>
+    <span class="k">if</span> <span class="n">seed</span><span class="o">!=</span><span class="mi">0</span><span class="p">:</span>
+        <span class="n">set_seed</span><span class="p">(</span><span class="n">seed</span><span class="p">,</span> <span class="n">reproducible</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># this  sets `torch.cudnn.backends ++`</span>
+    <span class="k">else</span><span class="p">:</span> 
+        <span class="n">seed</span> <span class="o">=</span> <span class="kc">None</span>   <span class="c1"># this is passed to LSH and data generator. They expect None or int</span>
+    
+    <span class="k">if</span> <span class="n">task</span> <span class="o">==</span> <span class="s1">&#39;synt&#39;</span><span class="p">:</span>
+        <span class="s2">&quot;Model + Data Args than can be changed from command line: train_sz, valid_sz, n_hashes, use_lsh, seed&quot;</span>
+        
+        
+        <span class="k">if</span> <span class="n">run_name</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span> 
+            <span class="k">if</span> <span class="n">use_lsh</span><span class="p">:</span> <span class="n">run_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">task</span><span class="si">}</span><span class="s1">_lsh-</span><span class="si">{</span><span class="n">n_hashes</span><span class="si">}</span><span class="s1">_bs-</span><span class="si">{</span><span class="n">bs</span><span class="si">}</span><span class="s1">_n_eps-</span><span class="si">{</span><span class="n">n_epochs</span><span class="si">}</span><span class="s1">_seed-</span><span class="si">{</span><span class="n">seed</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="k">else</span><span class="p">:</span> <span class="n">run_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">task</span><span class="si">}</span><span class="s1">_full-attn_bs-</span><span class="si">{</span><span class="n">bs</span><span class="si">}</span><span class="s1">_n_eps-</span><span class="si">{</span><span class="n">n_epochs</span><span class="si">}</span><span class="s1">&#39;</span>
+        
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Getting model ...&#39;</span><span class="p">)</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="n">SyntheticConfig</span><span class="p">(</span><span class="n">warn</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span> <span class="n">n_hashes</span><span class="o">=</span><span class="n">n_hashes</span><span class="p">,</span> <span class="n">use_lsh</span><span class="o">=</span><span class="n">use_lsh</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">run_name</span><span class="p">,</span> <span class="n">add_tstmp</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">LSHLM</span><span class="o">.</span><span class="n">from_config</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;done!&#39;</span><span class="p">)</span>
+        
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Getting dataloaders ...&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">train_sz</span> <span class="o">!=</span> <span class="mi">12800</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Note, &quot;train_sz&quot; changed from recommended 12800 to </span><span class="si">{</span><span class="n">train_sz</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">dls</span> <span class="o">=</span> <span class="n">get_twin_sequence_dataloaders</span><span class="p">(</span><span class="n">bs</span><span class="o">=</span><span class="n">bs</span><span class="p">,</span> <span class="n">sl</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;max_seq_len&#39;</span><span class="p">],</span> <span class="n">train_sz</span><span class="o">=</span><span class="n">train_sz</span><span class="p">,</span> 
+                                            <span class="n">valid_sz</span><span class="o">=</span><span class="n">valid_sz</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;done!&#39;</span><span class="p">)</span>
+        
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Getting learner ...&#39;</span><span class="p">)</span>
+        <span class="n">learn</span> <span class="o">=</span> <span class="n">get_synthetic_learner</span><span class="p">(</span><span class="n">dls</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">precision</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;done!&#39;</span><span class="p">)</span>
+        
+        <span class="c1"># Set up Weights &amp; Biases logging, if needed</span>
+        <span class="k">if</span> <span class="n">do_wandb_logging</span> <span class="ow">and</span> <span class="n">rank_distrib</span><span class="p">()</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+            <span class="n">wandb_run</span><span class="p">,</span> <span class="n">cbs</span> <span class="o">=</span> <span class="n">init_wandb</span><span class="p">(</span><span class="n">cbs</span><span class="p">,</span> <span class="n">wandb_name</span><span class="o">=</span><span class="n">run_name</span><span class="p">,</span> <span class="n">wandb_group</span><span class="o">=</span><span class="n">wandb_group</span><span class="p">,</span>
+                                        <span class="n">wandb_notes</span><span class="o">=</span><span class="n">wandb_notes</span><span class="p">,</span> <span class="n">wandb_tags</span><span class="o">=</span><span class="n">wandb_tags</span><span class="p">,</span> <span class="n">save_model</span><span class="o">=</span><span class="n">save_model</span><span class="p">)</span>
+        
+        <span class="c1"># Append training callbacks needed</span>
+        <span class="n">cbs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">MaskTargCallback</span><span class="p">())</span>
+        
+        <span class="c1"># Start training</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Starting training...&#39;</span><span class="p">)</span>
+        <span class="n">learn</span><span class="o">.</span><span class="n">fit_one_cycle</span><span class="p">(</span><span class="n">n_epochs</span><span class="p">,</span> <span class="n">lr</span><span class="p">,</span> <span class="n">cbs</span><span class="o">=</span><span class="n">cbs</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;done!&#39;</span><span class="p">)</span>
+        
+        <span class="c1"># Close wandb logging for this run</span>
+        <span class="k">if</span> <span class="n">do_wandb_logging</span><span class="p">:</span> <span class="n">wandb_run</span><span class="o">.</span><span class="n">finish</span><span class="p">()</span>
+        
+        <span class="c1"># Save model weights if needed, saved in /models relative to where script is run</span>
+        <span class="k">if</span> <span class="n">save_model</span><span class="p">:</span>
+            <span class="n">now</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;_</span><span class="si">%d</span><span class="s2">_%m_%Y_%H:%M&quot;</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">gmtime</span><span class="p">())</span>
+            <span class="n">learn</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">task</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">run_name</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">now</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    
+    <span class="k">elif</span> <span class="s1">&#39;lm&#39;</span> <span class="ow">in</span> <span class="n">task</span><span class="p">:</span>
+        <span class="s2">&quot;Model args that can be changed from command line: axial_shape, max_seq_len&quot;</span>
+        <span class="n">axial_shape</span> <span class="o">=</span> <span class="n">get_axial_shape</span><span class="p">(</span><span class="n">max_seq_len</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">task</span> <span class="o">==</span> <span class="s1">&#39;lm_base&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">run_name</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span> <span class="n">run_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">task</span><span class="si">}</span><span class="s1">_enwik8_sl-</span><span class="si">{</span><span class="n">max_seq_len</span><span class="si">}</span><span class="s1">_bs-</span><span class="si">{</span><span class="n">bs</span><span class="si">}</span><span class="s1">_n_eps-</span><span class="si">{</span><span class="n">n_epochs</span><span class="si">}</span><span class="s1">_seed-</span><span class="si">{</span><span class="n">seed</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="n">config</span> <span class="o">=</span> <span class="n">TransformerLMConfigEnwik8</span><span class="p">(</span><span class="n">warn</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span> 
+                                               <span class="n">axial_shape</span><span class="o">=</span><span class="n">axial_shape</span><span class="p">,</span> <span class="n">max_seq_len</span><span class="o">=</span><span class="n">max_seq_len</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Getting model ...&#39;</span><span class="p">)</span>
+            <span class="n">model</span> <span class="o">=</span> <span class="n">TransformerLM</span><span class="o">.</span><span class="n">from_config</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;done!&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">task</span> <span class="o">==</span> <span class="s1">&#39;lm_rev&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">run_name</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span> <span class="n">run_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">task</span><span class="si">}</span><span class="s1">_enwik8_sl-</span><span class="si">{</span><span class="n">max_seq_len</span><span class="si">}</span><span class="s1">_bs-</span><span class="si">{</span><span class="n">bs</span><span class="si">}</span><span class="s1">_n_eps-</span><span class="si">{</span><span class="n">n_epochs</span><span class="si">}</span><span class="s1">_seed-</span><span class="si">{</span><span class="n">seed</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="n">config</span> <span class="o">=</span> <span class="n">ReversibleLMConfigEnwik8</span><span class="p">(</span><span class="n">warn</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span> 
+                                              <span class="n">axial_shape</span><span class="o">=</span><span class="n">axial_shape</span><span class="p">,</span> <span class="n">max_seq_len</span><span class="o">=</span><span class="n">max_seq_len</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Getting model ...&#39;</span><span class="p">)</span>
+            <span class="n">model</span> <span class="o">=</span> <span class="n">ReversibleLM</span><span class="o">.</span><span class="n">from_config</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;done!&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">task</span> <span class="o">==</span> <span class="s1">&#39;lm_shared_qk&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">run_name</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span> <span class="n">run_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">task</span><span class="si">}</span><span class="s1">_enwik8_sl-</span><span class="si">{</span><span class="n">max_seq_len</span><span class="si">}</span><span class="s1">_bs-</span><span class="si">{</span><span class="n">bs</span><span class="si">}</span><span class="s1">_n_eps-</span><span class="si">{</span><span class="n">n_epochs</span><span class="si">}</span><span class="s1">_seed-</span><span class="si">{</span><span class="n">seed</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="n">config</span> <span class="o">=</span> <span class="n">TransformerLMConfigEnwik8</span><span class="p">(</span><span class="n">warn</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span> <span class="n">shared_qk</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> 
+                                               <span class="n">axial_shape</span><span class="o">=</span><span class="n">axial_shape</span><span class="p">,</span> <span class="n">max_seq_len</span><span class="o">=</span><span class="n">max_seq_len</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Getting model ...&#39;</span><span class="p">)</span>
+            <span class="n">model</span> <span class="o">=</span> <span class="n">TransformerLM</span><span class="o">.</span><span class="n">from_config</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;done!&#39;</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">run_name</span><span class="p">,</span> <span class="n">add_tstmp</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Checking data&#39;</span><span class="p">)</span>
+<span class="c1">#         _wrapper(download_enwik8_data, data_path=data_path)</span>
+<span class="c1">#         if distrib: rank0_first(download_enwik8_data, data_path=data_path)</span>
+        <span class="n">download_enwik8_data</span><span class="p">(</span><span class="n">data_path</span><span class="o">=</span><span class="n">data_path</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;done&#39;</span><span class="p">)</span>
+        
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Getting dataloaders ...&#39;</span><span class="p">)</span>
+        <span class="n">dls</span> <span class="o">=</span> <span class="n">get_enwik8_dataloader</span><span class="p">(</span><span class="n">data_path</span><span class="o">=</span><span class="n">data_path</span><span class="p">,</span> <span class="n">bs</span><span class="o">=</span><span class="n">bs</span><span class="p">,</span> <span class="n">val_bs</span><span class="o">=</span><span class="n">bs</span><span class="p">,</span> <span class="n">sl</span><span class="o">=</span><span class="n">max_seq_len</span><span class="p">,</span> 
+                                    <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span> <span class="n">tiny</span><span class="o">=</span><span class="n">tiny</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;done&#39;</span><span class="p">)</span>
+        
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Getting learner ...&#39;</span><span class="p">)</span>
+        <span class="n">learn</span> <span class="o">=</span> <span class="n">get_lm_learner</span><span class="p">(</span><span class="n">dls</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">opt_func</span><span class="o">=</span><span class="n">adafactor</span><span class="p">,</span> <span class="n">precision</span><span class="o">=</span><span class="n">precision</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;done!&#39;</span><span class="p">)</span>
+        
+        <span class="c1"># CALLBACKS</span>
+        <span class="c1">## Gradient Clipping</span>
+        <span class="k">if</span> <span class="n">clip</span> <span class="o">!=</span> <span class="mf">0.0</span><span class="p">:</span> <span class="n">cbs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">GradientClip</span><span class="p">(</span><span class="n">max_norm</span><span class="o">=</span><span class="n">clip</span><span class="p">))</span>
+        
+        <span class="c1">## Gradient Accumulation</span>
+        <span class="k">if</span> <span class="n">grad_accum</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Gradient accumulation on, virtual batch size == </span><span class="si">{</span><span class="n">grad_accum</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">cbs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">GradientAccumulation</span><span class="p">(</span><span class="n">n_acc</span><span class="o">=</span><span class="n">grad_accum</span><span class="p">))</span>
+            <span class="n">run_name</span> <span class="o">=</span> <span class="n">run_name</span> <span class="o">+</span> <span class="sa">f</span><span class="s1">&#39;_grad-accum-</span><span class="si">{</span><span class="n">grad_accum</span><span class="si">}</span><span class="s1">&#39;</span>
+        
+        <span class="c1"># Set up Weights &amp; Biases logging, if needed</span>
+        <span class="k">if</span> <span class="n">do_wandb_logging</span> <span class="ow">and</span> <span class="n">rank_distrib</span><span class="p">()</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+            <span class="n">wandb_run</span><span class="p">,</span> <span class="n">cbs</span> <span class="o">=</span> <span class="n">init_wandb</span><span class="p">(</span><span class="n">cbs</span><span class="p">,</span> <span class="n">wandb_name</span><span class="o">=</span><span class="n">run_name</span><span class="p">,</span> <span class="n">wandb_group</span><span class="o">=</span><span class="n">wandb_group</span><span class="p">,</span>
+                                        <span class="n">wandb_notes</span><span class="o">=</span><span class="n">wandb_notes</span><span class="p">,</span> <span class="n">wandb_tags</span><span class="o">=</span><span class="n">wandb_tags</span><span class="p">,</span> <span class="n">save_model</span><span class="o">=</span><span class="n">save_model</span><span class="p">)</span>
+        
+        <span class="c1"># Start training</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Starting training...&#39;</span><span class="p">)</span>
+        <span class="n">learn</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">n_epochs</span><span class="p">,</span> <span class="n">cbs</span><span class="o">=</span><span class="n">cbs</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;done!&#39;</span><span class="p">)</span>
+        
+        <span class="c1"># Close wandb logging for this run</span>
+        <span class="k">if</span> <span class="n">do_wandb_logging</span><span class="p">:</span> <span class="n">wandb_run</span><span class="o">.</span><span class="n">finish</span><span class="p">()</span>
+        
+        <span class="c1"># Save model weights if needed, saved in /models relative to where script is run</span>
+        <span class="k">if</span> <span class="n">save_model</span><span class="p">:</span>
+            <span class="n">now</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;_</span><span class="si">%d</span><span class="s2">_%m_%Y_%H:%M&quot;</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">gmtime</span><span class="p">())</span>
+            <span class="n">learn</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">task</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">run_name</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">now</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    
+    <span class="k">elif</span> <span class="n">task</span> <span class="o">==</span> <span class="s1">&#39;n_hashes&#39;</span><span class="p">:</span>
+        <span class="s2">&quot;Model args that can be changed from command line: n_hashes, seed&quot;</span>
+        
+        <span class="k">if</span> <span class="n">run_name</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span> <span class="n">run_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">task</span><span class="si">}</span><span class="s1">-</span><span class="si">{</span><span class="n">n_hashes</span><span class="si">}</span><span class="s1">_enwik8_sl-</span><span class="si">{</span><span class="n">max_seq_len</span><span class="si">}</span><span class="s1">_bs-</span><span class="si">{</span><span class="n">bs</span><span class="si">}</span><span class="s1">_n_eps-</span><span class="si">{</span><span class="n">n_epochs</span><span class="si">}</span><span class="s1">_seed-</span><span class="si">{</span><span class="n">seed</span><span class="si">}</span><span class="s1">&#39;</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Checking data&#39;</span><span class="p">)</span>
+<span class="c1">#         _wrapper(download_enwik8_data, data_path=data_path)</span>
+<span class="c1">#         if distrib: rank0_first(download_enwik8_data, data_path=data_path)</span>
+        <span class="n">download_enwik8_data</span><span class="p">(</span><span class="n">data_path</span><span class="o">=</span><span class="n">data_path</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;done&#39;</span><span class="p">)</span>
+        
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Getting dataloaders ...&#39;</span><span class="p">)</span>
+        <span class="n">dls</span> <span class="o">=</span> <span class="n">get_enwik8_dataloader</span><span class="p">(</span><span class="n">data_path</span><span class="o">=</span><span class="n">data_path</span><span class="p">,</span> <span class="n">bs</span><span class="o">=</span><span class="n">bs</span><span class="p">,</span> <span class="n">val_bs</span><span class="o">=</span><span class="n">bs</span><span class="p">,</span> <span class="n">sl</span><span class="o">=</span><span class="n">max_seq_len</span><span class="p">,</span> 
+                                    <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span> <span class="n">tiny</span><span class="o">=</span><span class="n">tiny</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;done&#39;</span><span class="p">)</span>
+        <span class="n">pad_id</span> <span class="o">=</span> <span class="n">dls</span><span class="o">.</span><span class="n">byte_text_tokenizer</span><span class="o">.</span><span class="n">pad_token_id</span>
+        
+        <span class="n">config</span> <span class="o">=</span> <span class="n">NHashesConfig</span><span class="p">(</span><span class="n">warn</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span> <span class="n">n_hashes</span><span class="o">=</span><span class="n">n_hashes</span><span class="p">,</span>
+                               <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span> <span class="n">pad_idx</span><span class="o">=</span><span class="n">pad_id</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Getting model ...&#39;</span><span class="p">)</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">LSHLM</span><span class="o">.</span><span class="n">from_config</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;done!&#39;</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">run_name</span><span class="p">,</span> <span class="n">add_tstmp</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Getting learner ...&#39;</span><span class="p">)</span>
+        <span class="n">learn</span> <span class="o">=</span> <span class="n">get_lm_learner</span><span class="p">(</span><span class="n">dls</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">opt_func</span><span class="o">=</span><span class="n">adafactor</span><span class="p">,</span> <span class="n">precision</span><span class="o">=</span><span class="n">precision</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;done!&#39;</span><span class="p">)</span>
+        
+        <span class="c1"># CALLBACKS</span>
+        <span class="c1">## Gradient Clipping</span>
+        <span class="k">if</span> <span class="n">clip</span> <span class="o">!=</span> <span class="mf">0.0</span><span class="p">:</span> <span class="n">cbs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">GradientClip</span><span class="p">(</span><span class="n">max_norm</span><span class="o">=</span><span class="n">clip</span><span class="p">))</span>
+        
+        <span class="c1">## Gradient Accumulation</span>
+        <span class="k">if</span> <span class="n">grad_accum</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span> 
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Gradient accumulation on, virtual batch size == </span><span class="si">{</span><span class="n">grad_accum</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">cbs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">GradientAccumulation</span><span class="p">(</span><span class="n">n_acc</span><span class="o">=</span><span class="n">grad_accum</span><span class="p">))</span>
+            <span class="n">run_name</span> <span class="o">=</span> <span class="n">run_name</span> <span class="o">+</span> <span class="sa">f</span><span class="s1">&#39;_grad-accum-</span><span class="si">{</span><span class="n">grad_accum</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="c1">#LSH-specific callback</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">use_lsh</span><span class="p">:</span> <span class="n">cbs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">PadBatchCallback</span><span class="p">(</span><span class="n">bucket_size</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">bucket_size</span><span class="p">,</span>
+                                                       <span class="n">val</span><span class="o">=</span><span class="n">pad_id</span><span class="p">,</span> <span class="n">y_val</span><span class="o">=</span><span class="n">pad_id</span><span class="p">))</span>
+        <span class="c1"># Set up Weights &amp; Biases logging, if needed</span>
+        <span class="k">if</span> <span class="n">do_wandb_logging</span> <span class="ow">and</span> <span class="n">rank_distrib</span><span class="p">()</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+            <span class="n">wandb_run</span><span class="p">,</span> <span class="n">cbs</span> <span class="o">=</span> <span class="n">init_wandb</span><span class="p">(</span><span class="n">cbs</span><span class="p">,</span> <span class="n">wandb_name</span><span class="o">=</span><span class="n">run_name</span><span class="p">,</span> <span class="n">wandb_group</span><span class="o">=</span><span class="n">wandb_group</span><span class="p">,</span>
+                                        <span class="n">wandb_notes</span><span class="o">=</span><span class="n">wandb_notes</span><span class="p">,</span> <span class="n">wandb_tags</span><span class="o">=</span><span class="n">wandb_tags</span><span class="p">,</span> <span class="n">save_model</span><span class="o">=</span><span class="n">save_model</span><span class="p">)</span>
+        
+        <span class="c1"># Start training</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Starting training...&#39;</span><span class="p">)</span>
+        <span class="n">learn</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">n_epochs</span><span class="p">,</span> <span class="n">cbs</span><span class="o">=</span><span class="n">cbs</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;done!&#39;</span><span class="p">)</span>
+        
+        <span class="c1"># Close wandb logging for this run</span>
+        <span class="k">if</span> <span class="n">do_wandb_logging</span><span class="p">:</span> <span class="n">wandb_run</span><span class="o">.</span><span class="n">finish</span><span class="p">()</span>
+        
+        <span class="c1"># Save model weights if needed, saved in /models relative to where script is run</span>
+        <span class="k">if</span> <span class="n">save_model</span><span class="p">:</span>
+            <span class="n">now</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;_</span><span class="si">%d</span><span class="s2">_%m_%Y_%H:%M&quot;</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">gmtime</span><span class="p">())</span>
+            <span class="n">learn</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">task</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">run_name</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">now</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    
+    <span class="k">elif</span> <span class="n">task</span> <span class="o">==</span> <span class="s1">&#39;n_layers&#39;</span><span class="p">:</span>
+        <span class="s2">&quot;Model args that can be changed from command line: n_hashes, seed&quot;</span>
+        
+        <span class="k">if</span> <span class="n">run_name</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span> <span class="n">run_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">task</span><span class="si">}</span><span class="s1">-</span><span class="si">{</span><span class="n">n_layers</span><span class="si">}</span><span class="s1">_enwik8_sl-</span><span class="si">{</span><span class="n">max_seq_len</span><span class="si">}</span><span class="s1">_bs-</span><span class="si">{</span><span class="n">bs</span><span class="si">}</span><span class="s1">_n_eps-</span><span class="si">{</span><span class="n">n_epochs</span><span class="si">}</span><span class="s1">_seed-</span><span class="si">{</span><span class="n">seed</span><span class="si">}</span><span class="s1">&#39;</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Checking data&#39;</span><span class="p">)</span>
+<span class="c1">#         _wrapper(download_enwik8_data, data_path=data_path)</span>
+<span class="c1">#         if distrib: rank0_first(download_enwik8_data, data_path=data_path)</span>
+        <span class="n">download_enwik8_data</span><span class="p">(</span><span class="n">data_path</span><span class="o">=</span><span class="n">data_path</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;done&#39;</span><span class="p">)</span>
+        
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Getting dataloaders ...&#39;</span><span class="p">)</span>
+        <span class="n">dls</span> <span class="o">=</span> <span class="n">get_enwik8_dataloader</span><span class="p">(</span><span class="n">data_path</span><span class="o">=</span><span class="n">data_path</span><span class="p">,</span> <span class="n">bs</span><span class="o">=</span><span class="n">bs</span><span class="p">,</span> <span class="n">val_bs</span><span class="o">=</span><span class="n">bs</span><span class="p">,</span> <span class="n">sl</span><span class="o">=</span><span class="n">max_seq_len</span><span class="p">,</span> 
+                                    <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span> <span class="n">tiny</span><span class="o">=</span><span class="n">tiny</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;done&#39;</span><span class="p">)</span>
+        <span class="n">pad_id</span> <span class="o">=</span> <span class="n">dls</span><span class="o">.</span><span class="n">byte_text_tokenizer</span><span class="o">.</span><span class="n">pad_token_id</span>
+        
+        <span class="n">config</span> <span class="o">=</span> <span class="n">NLayersConfig</span><span class="p">(</span><span class="n">warn</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span> <span class="n">n_layers</span><span class="o">=</span><span class="n">n_layers</span><span class="p">,</span>
+                               <span class="n">max_seq_len</span><span class="o">=</span><span class="n">max_seq_len</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span> <span class="n">pad_idx</span><span class="o">=</span><span class="n">pad_id</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Getting model ...&#39;</span><span class="p">)</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">ReformerLM</span><span class="o">.</span><span class="n">from_config</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;done!&#39;</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">run_name</span><span class="p">,</span> <span class="n">add_tstmp</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Getting learner ...&#39;</span><span class="p">)</span>
+        <span class="n">learn</span> <span class="o">=</span> <span class="n">get_reformerlm_learner</span><span class="p">(</span><span class="n">dls</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">opt_func</span><span class="o">=</span><span class="n">adafactor</span><span class="p">,</span> <span class="n">precision</span><span class="o">=</span><span class="n">precision</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;done!&#39;</span><span class="p">)</span>
+        
+        <span class="c1"># CALLBACKS</span>
+        <span class="c1">## Gradient Clipping</span>
+        <span class="k">if</span> <span class="n">clip</span> <span class="o">!=</span> <span class="mf">0.0</span><span class="p">:</span> <span class="n">cbs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">GradientClip</span><span class="p">(</span><span class="n">max_norm</span><span class="o">=</span><span class="n">clip</span><span class="p">))</span>
+        
+        <span class="c1">## Gradient Accumulation</span>
+        <span class="k">if</span> <span class="n">grad_accum</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span> 
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Gradient accumulation on, virtual batch size == </span><span class="si">{</span><span class="n">grad_accum</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">cbs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">GradientAccumulation</span><span class="p">(</span><span class="n">n_acc</span><span class="o">=</span><span class="n">grad_accum</span><span class="p">))</span>
+            <span class="n">run_name</span> <span class="o">=</span> <span class="n">run_name</span> <span class="o">+</span> <span class="sa">f</span><span class="s1">&#39;_grad-accum-</span><span class="si">{</span><span class="n">grad_accum</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="c1">#LSH-specific callback</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">use_lsh</span><span class="p">:</span> <span class="n">cbs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">PadBatchCallback</span><span class="p">(</span><span class="n">bucket_size</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">bucket_size</span><span class="p">,</span>
+                                                       <span class="n">val</span><span class="o">=</span><span class="n">pad_id</span><span class="p">,</span> <span class="n">y_val</span><span class="o">=</span><span class="n">pad_id</span><span class="p">))</span>
+        <span class="c1"># Set up Weights &amp; Biases logging, if needed</span>
+        <span class="k">if</span> <span class="n">do_wandb_logging</span> <span class="ow">and</span> <span class="n">rank_distrib</span><span class="p">()</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+            <span class="n">wandb_run</span><span class="p">,</span> <span class="n">cbs</span> <span class="o">=</span> <span class="n">init_wandb</span><span class="p">(</span><span class="n">cbs</span><span class="p">,</span> <span class="n">wandb_name</span><span class="o">=</span><span class="n">run_name</span><span class="p">,</span> <span class="n">wandb_group</span><span class="o">=</span><span class="n">wandb_group</span><span class="p">,</span>
+                                        <span class="n">wandb_notes</span><span class="o">=</span><span class="n">wandb_notes</span><span class="p">,</span> <span class="n">wandb_tags</span><span class="o">=</span><span class="n">wandb_tags</span><span class="p">,</span> <span class="n">save_model</span><span class="o">=</span><span class="n">save_model</span><span class="p">)</span>
+        
+        <span class="c1"># Start training</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Starting training...&#39;</span><span class="p">)</span>
+        <span class="n">learn</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">n_epochs</span><span class="p">,</span> <span class="n">cbs</span><span class="o">=</span><span class="n">cbs</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;done!&#39;</span><span class="p">)</span>
+        
+        <span class="c1"># Close wandb logging for this run</span>
+        <span class="k">if</span> <span class="n">do_wandb_logging</span><span class="p">:</span> <span class="n">wandb_run</span><span class="o">.</span><span class="n">finish</span><span class="p">()</span>
+        
+        <span class="c1"># Save model weights if needed, saved in /models relative to where script is run</span>
+        <span class="k">if</span> <span class="n">save_model</span><span class="p">:</span>
+            <span class="n">now</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;_</span><span class="si">%d</span><span class="s2">_%m_%Y_%H:%M&quot;</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">gmtime</span><span class="p">())</span>
+            <span class="n">learn</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">task</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">run_name</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">now</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    
+    
+    <span class="k">elif</span> <span class="s1">&#39;wmt&#39;</span> <span class="ow">in</span> <span class="n">task</span><span class="p">:</span>
+        <span class="s2">&quot;Model args that can be changed from command line: n_layers, max_seq_len&quot;</span>
+        <span class="n">axial_shape</span> <span class="o">=</span> <span class="n">get_axial_shape</span><span class="p">(</span><span class="n">max_seq_len</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">run_name</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span> <span class="n">run_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">task</span><span class="si">}</span><span class="s1">_sl-</span><span class="si">{</span><span class="n">max_seq_len</span><span class="si">}</span><span class="s1">_bs-</span><span class="si">{</span><span class="n">bs</span><span class="si">}</span><span class="s1">_n_eps-</span><span class="si">{</span><span class="n">n_epochs</span><span class="si">}</span><span class="s1">_seed-</span><span class="si">{</span><span class="n">seed</span><span class="si">}</span><span class="s1">&#39;</span>
+            
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Checking data&#39;</span><span class="p">)</span>
+        <span class="n">download_wmt14_data</span><span class="p">(</span><span class="n">data_path</span><span class="o">=</span><span class="n">data_path</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;done&#39;</span><span class="p">)</span>
+        
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Getting dataloaders and tokenizer ...&#39;</span><span class="p">)</span>
+        <span class="n">dls</span><span class="p">,</span> <span class="n">tok</span> <span class="o">=</span> <span class="n">get_wmt14_dataloader</span><span class="p">(</span><span class="n">data_path</span><span class="o">=</span><span class="n">data_path</span><span class="p">,</span> <span class="n">bs</span><span class="o">=</span><span class="n">bs</span><span class="p">,</span> <span class="n">val_bs</span><span class="o">=</span><span class="n">bs</span><span class="p">,</span> <span class="n">sl</span><span class="o">=</span><span class="n">max_seq_len</span><span class="p">,</span> 
+                                           <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span> <span class="n">tiny</span><span class="o">=</span><span class="n">tiny</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;done&#39;</span><span class="p">)</span>
+        
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Getting model ...&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">task</span> <span class="o">==</span> <span class="s1">&#39;wmt_rev&#39;</span><span class="p">:</span>
+            <span class="n">config</span> <span class="o">=</span> <span class="n">ReversibleTransformerConfigWMT</span><span class="p">(</span><span class="n">warn</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span> 
+                                                    <span class="n">enc_vocab_sz</span><span class="o">=</span><span class="n">tok</span><span class="o">.</span><span class="n">vocab_size</span><span class="p">,</span> <span class="n">dec_vocab_sz</span><span class="o">=</span><span class="n">tok</span><span class="o">.</span><span class="n">vocab_size</span><span class="p">,</span> <span class="n">pad_idx</span><span class="o">=</span><span class="n">tok</span><span class="o">.</span><span class="n">PAD_ID</span><span class="p">,</span>
+                                                    <span class="n">n_enc_layers</span><span class="o">=</span><span class="n">n_layers</span><span class="p">,</span> <span class="n">n_dec_layers</span><span class="o">=</span><span class="n">n_layers</span><span class="p">)</span>
+            <span class="n">model</span> <span class="o">=</span> <span class="n">ReversibleTransformer</span><span class="o">.</span><span class="n">from_config</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">task</span> <span class="o">==</span> <span class="s1">&#39;wmt_base&#39;</span><span class="p">:</span>
+            <span class="n">config</span> <span class="o">=</span> <span class="n">TransformerConfigWMT</span><span class="p">(</span><span class="n">warn</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span> 
+                                            <span class="n">enc_vocab_sz</span><span class="o">=</span><span class="n">tok</span><span class="o">.</span><span class="n">vocab_size</span><span class="p">,</span> <span class="n">dec_vocab_sz</span><span class="o">=</span><span class="n">tok</span><span class="o">.</span><span class="n">vocab_size</span><span class="p">,</span> <span class="n">pad_idx</span><span class="o">=</span><span class="n">tok</span><span class="o">.</span><span class="n">PAD_ID</span><span class="p">,</span>
+                                            <span class="n">n_enc_layers</span><span class="o">=</span><span class="n">n_layers</span><span class="p">,</span> <span class="n">n_dec_layers</span><span class="o">=</span><span class="n">n_layers</span><span class="p">)</span>
+
+            <span class="n">model</span> <span class="o">=</span> <span class="n">Transformer</span><span class="o">.</span><span class="n">from_config</span><span class="p">(</span><span class="n">config</span><span class="p">)</span> 
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;done!&#39;</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">run_name</span><span class="p">,</span> <span class="n">add_tstmp</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Getting learner ...&#39;</span><span class="p">)</span>    
+        <span class="n">learn</span> <span class="o">=</span> <span class="n">get_seq2seq_learner</span><span class="p">(</span><span class="n">dls</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">tok</span><span class="p">,</span> <span class="n">precision</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;done!&#39;</span><span class="p">)</span>
+        
+        <span class="c1"># CALLBACKS</span>
+        <span class="n">cbs</span> <span class="o">+=</span> <span class="p">[</span><span class="n">CombineInputOutputCallback</span><span class="p">(),</span> <span class="n">LossTargetShiftCallback</span><span class="p">(),</span> <span class="n">RemoveEOSCallback</span><span class="p">(</span><span class="n">eos_idx</span><span class="o">=</span><span class="n">tok</span><span class="o">.</span><span class="n">EOS_ID</span><span class="p">)]</span>
+        
+        <span class="c1">## Gradient Clipping Callback</span>
+        <span class="k">if</span> <span class="n">clip</span> <span class="o">!=</span> <span class="mf">0.0</span><span class="p">:</span> <span class="n">cbs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">GradientClip</span><span class="p">(</span><span class="n">max_norm</span><span class="o">=</span><span class="n">clip</span><span class="p">))</span>
+        
+        <span class="c1">## Gradient Accumulation Callback</span>
+        <span class="k">if</span> <span class="n">grad_accum</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Gradient accumulation on, virtual batch size == </span><span class="si">{</span><span class="n">grad_accum</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">cbs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">GradientAccumulation</span><span class="p">(</span><span class="n">n_acc</span><span class="o">=</span><span class="n">grad_accum</span><span class="p">))</span>
+            <span class="n">run_name</span> <span class="o">=</span> <span class="n">run_name</span> <span class="o">+</span> <span class="sa">f</span><span class="s1">&#39;_grad-accum-</span><span class="si">{</span><span class="n">grad_accum</span><span class="si">}</span><span class="s1">&#39;</span>
+        
+        <span class="c1"># Set up Weights &amp; Biases logging, if needed</span>
+        <span class="k">if</span> <span class="n">do_wandb_logging</span><span class="p">:</span>
+            <span class="n">wandb_run</span><span class="p">,</span> <span class="n">cbs</span> <span class="o">=</span> <span class="n">init_wandb</span><span class="p">(</span><span class="n">cbs</span><span class="p">,</span> <span class="n">wandb_name</span><span class="o">=</span><span class="n">run_name</span><span class="p">,</span> <span class="n">wandb_group</span><span class="o">=</span><span class="n">wandb_group</span><span class="p">,</span>
+                                        <span class="n">wandb_notes</span><span class="o">=</span><span class="n">wandb_notes</span><span class="p">,</span> <span class="n">wandb_tags</span><span class="o">=</span><span class="n">wandb_tags</span><span class="p">,</span> <span class="n">save_model</span><span class="o">=</span><span class="n">save_model</span><span class="p">)</span>
+        
+        <span class="c1"># Start training</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Starting training...&#39;</span><span class="p">)</span>
+        <span class="n">learn</span><span class="o">.</span><span class="n">fit_one_cycle</span><span class="p">(</span><span class="n">n_epochs</span><span class="p">,</span> <span class="n">lr</span><span class="p">,</span> <span class="n">cbs</span><span class="o">=</span><span class="n">cbs</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;done!&#39;</span><span class="p">)</span>
+        
+        <span class="c1"># Close wandb logging for this run</span>
+        <span class="k">if</span> <span class="n">do_wandb_logging</span><span class="p">:</span> <span class="n">wandb_run</span><span class="o">.</span><span class="n">finish</span><span class="p">()</span>
+        
+        <span class="c1"># Save model weights if needed, saved in /models relative to where script is run</span>
+        <span class="k">if</span> <span class="n">save_model</span><span class="p">:</span>
+            <span class="n">now</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;_</span><span class="si">%d</span><span class="s2">_%m_%Y_%H:%M&quot;</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">gmtime</span><span class="p">())</span>
+            <span class="n">learn</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">task</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">run_name</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">now</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    
+    
+    <span class="k">elif</span> <span class="n">task</span> <span class="o">==</span> <span class="s1">&#39;test_cfg&#39;</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Locals &#39;</span><span class="p">,</span> <span class="nb">locals</span><span class="p">())</span>
+        <span class="nb">print</span><span class="p">()</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="n">SyntheticConfig</span><span class="p">(</span><span class="n">verbouse</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="nb">locals</span><span class="p">())</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s1">&#39;test&#39;</span><span class="p">)</span>
+        <span class="n">config2</span> <span class="o">=</span> <span class="n">SyntheticConfig</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="s1">&#39;test&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">config2</span><span class="p">)</span>
+        
+    <span class="k">elif</span> <span class="n">task</span> <span class="o">==</span> <span class="s1">&#39;test&#39;</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;testing testing :)&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">verbose</span><span class="p">)</span>
+        
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;No task run&#39;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
 
 </div>
     {% endraw %}

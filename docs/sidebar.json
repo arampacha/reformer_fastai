@@ -13,9 +13,9 @@
     "Metrics":"metrics.html",
     "": {
       "Experiments": {
-        "Experiment Commands": "/experiment.experiment-commands.html"
+        "Experiment Commands": "/experiment.experiment-commands.html",
         "Experiment Script": "/experiment-script.html", 
-        "Experiment Configs": "/experiment-configs.html"
+        "Experiment Configs": "/experiment-configs.html",
         "Synthetic task": "/experiment.synthetic-task.html",
         "Synthetic task: Comparison": "/experiment.synthetic-task-comparison.html",
         "Synthetic task: Analysis": "/experiment.synthetic-task-analysis.html",
@@ -24,7 +24,7 @@
         "enwik8 SharedQK": "/experiment.enwik8_sharedQK.html",
         "enwik8 Reversible": "/experiment.enwik8_reversible.html",
         "Performance: n_hashes": "/experiment.enwik8-n_hashes.html",
-        "Performance: n_layers": "/experiment.enwik8-n_layers.html",
+        "Performance: n_layers": "/experiment.enwik8-n_layers.html"
       }
     },
     "empty1": {
@@ -32,6 +32,6 @@
         "LSH walkthru": "/exploration.LSH.html",
         "Memory usage and timing": "/exploration.memory_and_timing.html"
       }
-    },
+    }
   }
 }

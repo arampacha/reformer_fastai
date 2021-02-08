@@ -43,6 +43,15 @@ entries:
       - output: web
         subfolderitems:
         - output: web,pdf
+          title: Experiment Commands
+          url: /experiment.experiment-commands.html
+        - output: web,pdf
+          title: Experiment Script
+          url: /experiment-script.html
+        - output: web,pdf
+          title: Experiment Configs
+          url: /experiment-configs.html
+        - output: web,pdf
           title: Synthetic task
           url: /experiment.synthetic-task.html
         - output: web,pdf
@@ -69,12 +78,6 @@ entries:
         - output: web,pdf
           title: 'Performance: n_layers'
           url: /experiment.enwik8-n_layers.html
-        - output: web,pdf
-          title: Script
-          url: /experiment-script.html
-        - output: web,pdf
-          title: Configs
-          url: /experiment-configs.html
         title: Experiments
       - output: web
         subfolderitems:
@@ -85,12 +88,6 @@ entries:
           title: Memory usage and timing
           url: /exploration.memory_and_timing.html
         title: Exploration
-      - output: web
-        subfolderitems:
-        - output: web,pdf
-          title: Report Summary
-          url: /reproducibility.report_1_reproducibility_summary.html
-        title: Reformer Reproducibility
     output: web
     title: reformer_fastai
   output: web

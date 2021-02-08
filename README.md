@@ -1,4 +1,3 @@
-
 # Reformer Reproducibility Experiments
 > Fastai community entry to <a href='https://paperswithcode.com/rc2020'>2020 Papers With Code Reproducibility Challenge</a>
 
