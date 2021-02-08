@@ -1,16 +1,6 @@
 {
   "reformer_fastai": {
-    "Overview": "/",  
-    "Core": "core.html",
-    "Layers": "layers.html",
-    "Attention Modules ": "attention.html",
-    "Standard Transformer": "transformer.html",
-    "Reformer": "reformer.html",
-    "Tokenizers": "tokenizers.html",
-    "Data": "data.html",
-    "Logging": "logging.html",  
-    "Optimizers":"optimizers.html",
-    "Metrics":"metrics.html",
+    "Reformer Reproducibility Challenge": "/", 
     "": {
       "Experiments": {
         "Synthetic task": "/experiment.synthetic-task.html",
@@ -26,6 +16,16 @@
         "Configs": "/experiment-configs.html"
       }
     },
+    "Core": "core.html",
+    "Layers": "layers.html",
+    "Attention Modules ": "attention.html",
+    "Standard Transformer": "transformer.html",
+    "Reformer": "reformer.html",
+    "Tokenizers": "tokenizers.html",
+    "Data": "data.html",
+    "Logging": "logging.html",  
+    "Optimizers":"optimizers.html",
+    "Metrics":"metrics.html",
     "empty1": {
       "Exploration": {
         "LSH walkthru": "/exploration.LSH.html",

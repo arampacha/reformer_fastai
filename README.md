@@ -3,7 +3,10 @@
 > Fastai community entry to <a href='https://paperswithcode.com/rc2020'>2020 Papers With Code Reproducibility Challenge</a>
 
 
-**Our OpenReview paper submission to the challenge can be found [here](https://openreview.net/forum?id=3s8Y7dHYkN-) and our Weights & Biases Report (with interactive charts) is available [here](https://wandb.ai/fastai_community/reformer-fastai/reports/Reformer-Reproducibility-Final-Edits---Vmlldzo0MzQ1OTg)** 
+## Our Reproducibility Challenge Submission
+
+- Our OpenReview paper submission to the challenge can be found [here](https://openreview.net/forum?id=3s8Y7dHYkN-) 
+- Our Weights & Biases Report, with interactive charts, is available [here](https://wandb.ai/fastai_community/reformer-fastai/reports/Reformer-Reproducibility-Final-Edits---Vmlldzo0MzQ1OTg) 
 
 ## Installation
 
