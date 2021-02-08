@@ -33,10 +33,5 @@
         "Memory usage and timing": "/exploration.memory_and_timing.html"
       }
     },
-    "empty2": {
-      "Reformer Reproducibility": {
-        "Report Summary": "/reproducibility.report_1_reproducibility_summary.html"
-      }
-    }  
   }
 }
