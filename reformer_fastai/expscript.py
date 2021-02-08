@@ -233,7 +233,7 @@ def init_wandb(cbs:list=[], wandb_name:str='', wandb_group:str='', wandb_notes:s
 
 # Cell
 @call_parse
-def run_exp(task:Param(help="Task options: 'synt','lm_base','lm_rev',lm_shared_qk, n_hashes, wmt_rev, wmt_base", type=str),
+def run_exp(task:Param(help="Task options: 'synt','lm_base','lm_rev',lm_shared_qk, n_hashes, n_layers, wmt_rev, wmt_base", type=str),
          data_path:Param(help="Path to data folder", type=str, default='./data'),
          n_epochs:Param(help="Number of epochs", type=int, default=1),
          lr:Param(help="Learning rate", type=float, default=1e-3),

@@ -9,6 +9,36 @@ entries:
     - output: web,pdf
       title: Reformer Reproducibility Challenge
       url: /
+    - output: web,pdf
+      title: Core
+      url: core.html
+    - output: web,pdf
+      title: Layers
+      url: layers.html
+    - output: web,pdf
+      title: 'Attention Modules '
+      url: attention.html
+    - output: web,pdf
+      title: Standard Transformer
+      url: transformer.html
+    - output: web,pdf
+      title: Reformer
+      url: reformer.html
+    - output: web,pdf
+      title: Tokenizers
+      url: tokenizers.html
+    - output: web,pdf
+      title: Data
+      url: data.html
+    - output: web,pdf
+      title: Logging
+      url: logging.html
+    - output: web,pdf
+      title: Optimizers
+      url: optimizers.html
+    - output: web,pdf
+      title: Metrics
+      url: metrics.html
       subfolders:
       - output: web
         subfolderitems:
@@ -46,36 +76,6 @@ entries:
           title: Configs
           url: /experiment-configs.html
         title: Experiments
-    - output: web,pdf
-      title: Core
-      url: core.html
-    - output: web,pdf
-      title: Layers
-      url: layers.html
-    - output: web,pdf
-      title: 'Attention Modules '
-      url: attention.html
-    - output: web,pdf
-      title: Standard Transformer
-      url: transformer.html
-    - output: web,pdf
-      title: Reformer
-      url: reformer.html
-    - output: web,pdf
-      title: Tokenizers
-      url: tokenizers.html
-    - output: web,pdf
-      title: Data
-      url: data.html
-    - output: web,pdf
-      title: Logging
-      url: logging.html
-    - output: web,pdf
-      title: Optimizers
-      url: optimizers.html
-    - output: web,pdf
-      title: Metrics
-      url: metrics.html
       - output: web
         subfolderitems:
         - output: web,pdf
