@@ -1,16 +1,20 @@
-# Reformer Reproducibility Experiments
-> Fastai community entry to <a href='https://paperswithcode.com/rc2020'>2020 Reproducibility Challenge</a>
 
+# Reformer Reproducibility Experiments
+> Fastai community entry to <a href='https://paperswithcode.com/rc2020'>2020 Papers With Code Reproducibility Challenge</a>
+
+
+## Our Reproducibility Challenge Submission
+
+- Our OpenReview paper submission to the challenge can be found [here](https://openreview.net/forum?id=3s8Y7dHYkN-) 
+- Our Weights & Biases Report, with interactive charts, is available [here](https://wandb.ai/fastai_community/reformer-fastai/reports/Reformer-Reproducibility-Final-Edits---Vmlldzo0MzQ1OTg) 
 
 ## Installation
 
 ### Setup
-
 If you don't already, its a good idea to install the package into a virtual environment
 
 ```
 python3 -m venv my_env
-
 source ./my_env/bin/activate
 ```
 
@@ -23,13 +27,47 @@ Or (even better) install latest version from github:
 
 `pip install git+git://github.com/arampacha/reformer_fastai.git`
 
+### Contributing
+This project used nbdev for all development, see [their docs here](https://nbdev.fast.ai/) to install nbdev and get started. Once you have nbdev installed we suggest you follow the suggested [contributor workflow](https://github.com/arampacha/reformer_fastai/blob/master/CONTRIBUTING.md)
+
+## Running Experiments
+
+A pip installed version of this library is needed to run experiments. All experiments are run using the `run_exp` command, followed by the particular task name and then the parameters related to that task. `run_exp --help` will display a list of all parameters as well as a brief description. For brevity, an example of how to run a Reformer Language Model experiment is show below, **a list of all experiment commands can be found here**
+
+### Example: Reversible Language Model
+Below is an example of the code used that generated the results in Section 4.4 "Effect of reversible layers" of our submission paper.
+
+```
+run_exp "lm_rev" \
+        --n_epochs=10 \
+        --bs=2 \
+        --max_seq_len=4096 \
+        --grad_accum=8 \
+        --save_model=True  \
+        --clip=0.5 \
+        --seed=444 \
+        --precision=2 \
+        --do_wandb_logging=False \
+```
+
+## Results
+All full description of our results, including charts and tables can be found in our paper [here on OpenReview](https://openreview.net/forum?id=3s8Y7dHYkN-). Our results are summarised as follows:
+
+> Claims around speed on longer sequences and reduced memory footprint were validated; as sequence length
+increased, Locality Sensitive Hashing ("LSH") Attention became faster and increasing the number of hashes improved
+performance. We could not achieve the performance of a traditional Transformer with Reformer. Some experiments
+were not run for as long as in the paper due to a lack of computational resources. Potentially the under-performance
+of our Reformer may be due to under-training, implementation differences or nuances in JAX vs Pytorch. Also,
+exploding gradients were encountered with mixed precision training and several model settings were found to be
+unstable depending on the random seed or learning rate.
+
 ## Project Links
 
+- [Our OpenReview paper submission](https://openreview.net/forum?id=3s8Y7dHYkN-)
 - [Reformer Reproducibility Report on WandB](https://wandb.ai/fastai_community/reformer-fastai/reports/Reformer-Reproducibility-Final-Edits---Vmlldzo0MzQ1OTg)
-- [Older repo](https://github.com/morganmcg1/reformer-fastai-old)
-- [Repo docs](https://arampacha.github.io/reformer_fastai/)
+- [Our project documentation](https://arampacha.github.io/reformer_fastai/)
 - [Fastai forums thread](https://forums.fast.ai/t/reproducibility-challenge-2020-fastai-folks-interested/80336/39)
-- [Google doc](https://docs.google.com/document/d/1wF83E3B3yXIGZixEgOUJI2T2XXhT1DVCrPXS5Dbsyh8/edit)
+- [Google doc used for early planning](https://docs.google.com/document/d/1wF83E3B3yXIGZixEgOUJI2T2XXhT1DVCrPXS5Dbsyh8/edit)
 
 ## Resources
 
