@@ -1,21 +1,6 @@
 {
   "reformer_fastai": {
     "Reformer Reproducibility Challenge": "/", 
-    "": {
-      "Experiments": {
-        "Synthetic task": "/experiment.synthetic-task.html",
-        "Synthetic task: Comparison": "/experiment.synthetic-task-comparison.html",
-        "Synthetic task: Analysis": "/experiment.synthetic-task-analysis.html",
-	"Synthetic task: LSH-speed": "/experiment.speed-lsh_synthetic-task.html",
-        "enwik8 baseline": "/experiment.enwik8_baseline.html",
-        "enwik8 SharedQK": "/experiment.enwik8_sharedQK.html",
-        "enwik8 Reversible": "/experiment.enwik8_reversible.html",
-        "Performance: n_hashes": "/experiment.enwik8-n_hashes.html",
-        "Performance: n_layers": "/experiment.enwik8-n_layers.html",
-        "Script": "/experiment-script.html", 
-        "Configs": "/experiment-configs.html"
-      }
-    },
     "Core": "core.html",
     "Layers": "layers.html",
     "Attention Modules ": "attention.html",
@@ -26,6 +11,22 @@
     "Logging": "logging.html",  
     "Optimizers":"optimizers.html",
     "Metrics":"metrics.html",
+    "": {
+      "Experiments": {
+        "Experiment Commands": "/experiment.experiment-commands.html"
+        "Experiment Script": "/experiment-script.html", 
+        "Experiment Configs": "/experiment-configs.html"
+        "Synthetic task": "/experiment.synthetic-task.html",
+        "Synthetic task: Comparison": "/experiment.synthetic-task-comparison.html",
+        "Synthetic task: Analysis": "/experiment.synthetic-task-analysis.html",
+        "Synthetic task: LSH-speed": "/experiment.speed-lsh_synthetic-task.html",
+        "enwik8 baseline": "/experiment.enwik8_baseline.html",
+        "enwik8 SharedQK": "/experiment.enwik8_sharedQK.html",
+        "enwik8 Reversible": "/experiment.enwik8_reversible.html",
+        "Performance: n_hashes": "/experiment.enwik8-n_hashes.html",
+        "Performance: n_layers": "/experiment.enwik8-n_layers.html",
+      }
+    },
     "empty1": {
       "Exploration": {
         "LSH walkthru": "/exploration.LSH.html",
