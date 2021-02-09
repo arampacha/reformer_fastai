@@ -1,3 +1,4 @@
+
 # Reformer Reproducibility Experiments
 > Fastai community entry to <a href='https://paperswithcode.com/rc2020'>2020 Papers With Code Reproducibility Challenge</a>
 
@@ -5,7 +6,7 @@
 ## Our Reproducibility Challenge Submission
 
 - Our OpenReview paper submission to the challenge can be found [here](https://openreview.net/forum?id=3s8Y7dHYkN-) 
-- Our Weights & Biases Report, with interactive charts, is available [here](https://wandb.ai/fastai_community/reformer-fastai/reports/Reformer-Reproducibility-Final-Edits---Vmlldzo0MzQ1OTg) 
+- Our Weights & Biases Report, with interactive charts, is available [here](https://wandb.ai/fastai_community/reformer-fastai/reports/Reformer-Reproducibility-Report---Vmlldzo0MzQ1OTg) 
 
 ## Installation
 
@@ -49,6 +50,10 @@ run_exp "lm_rev" \
         --do_wandb_logging=False \
 ```
 
+## Hyperparameters Used
+
+The main hyperparameters used are documented in the [Experiment Commands](https://arampacha.github.io/reformer_fastai/experiment.experiment-commands.html) page and the [Experiment Configs](https://arampacha.github.io/reformer_fastai/experiment-configs.html) page. In addition, a full list of our hyperparameters can be found in the Run Sets tables of [our Weights & Biases Report](https://wandb.ai/fastai_community/reformer-fastai/reports/Reformer-Reproducibility-Report---Vmlldzo0MzQ1OTg). To see these, navigate to the experiment of interests, click on the "Run Set" button under each chart and scroll across to find all hyperparameters.
+
 ## Results
 All full description of our results, including charts and tables can be found in our paper [here on OpenReview](https://openreview.net/forum?id=3s8Y7dHYkN-). Our results are summarised as follows:
 
@@ -59,6 +64,10 @@ were not run for as long as in the paper due to a lack of computational resource
 of our Reformer may be due to under-training, implementation differences or nuances in JAX vs Pytorch. Also,
 exploding gradients were encountered with mixed precision training and several model settings were found to be
 unstable depending on the random seed or learning rate.
+
+## Trained Models
+
+All trained models from this project can be found in our [Weights & Biases project here](https://wandb.ai/fastai_community/reformer-fastai/artifacts)
 
 ## Project Links
 
@@ -90,20 +99,22 @@ unstable depending on the random seed or learning rate.
 
 ### Data
 
+Tokenizers used with these datasets can be [found here](https://arampacha.github.io/reformer_fastai/tokenizers.html)
+
 **enwik8**
 - [enwik8.zip, raw data, 100mb](http://mattmahoney.net/dc/enwik8.zip)
 - [Tensor2Tensor enwik8 data generator code, with train/dev/test split](https://github.com/tensorflow/tensor2tensor/blob/master/tensor2tensor/data_generators/enwik8.py). File lengths:
     - Train: 89,621,832
     - Eval: 5,000,000
     - Test: 5,000,000
-- [enwik8 notebook Tensor2Tensor](https://github.com/morganmcg1/reformer-fastai/blob/main/enwiki8_Tensor2Tensor_download.ipynb)
+- Tokenier used: ByteTextTokenizer
 
 **WMT14**
 - [WMT on HuggingFace Datasets](https://huggingface.co/datasets/viewer/?dataset=wmt14&config=cs-en)
-- [Reformer WMT14 vocab](https://github.com/google/trax/tree/a0483a12cb7ebece40b5e302e8e81fd9249c6ef6/trax/models/reformer/testdata)
-- Reformer.input_vocab_size = 33300, from [WMT14 model config](https://github.com/google/trax/blob/master/trax/supervised/configs/reformer_wmt_ende.gin)
-- Train Test split: (guess) newstest2013 for validation and newstest2014 for test, in consistence with Vaswani et al. (2017) - from https://arxiv.org/pdf/2009.02070.pdf
-- Tokenizer: [Tensor2Tensor SubWordTextEncoder](https://github.com/tensorflow/tensor2tensor/blob/21dba2c1bdcc7ab582a2bfd8c0885c217963bb4f/tensor2tensor/data_generators/text_encoder.py#L448)
+- [Reformer pre-trained WMT14 vocab](https://github.com/google/trax/tree/a0483a12cb7ebece40b5e302e8e81fd9249c6ef6/trax/models/reformer/testdata)
+    - Vocab size = 33300, from [WMT14 model config](https://github.com/google/trax/blob/master/trax/supervised/configs/reformer_wmt_ende.gin)
+- Train Test split: newstest2013 for validation and newstest2014 for test, in consistence with Vaswani et al. (2017) - from https://arxiv.org/pdf/2009.02070.pdf
+- Tokenizer used: SubWordTextEncoder
 
 ### Explainers
 

@@ -19,8 +19,7 @@ from fastai.text.all import *
 
 class ByteTextTokenizer(Transform):
     """
-        Encodes each byte to an id. For 8-bit strings only.
-        Credit to `tensor2tensor` library: https://github.com/tensorflow/tensor2tensor/blob/5f9dd2db6d7797162e53adf152310ed13e9fc711/tensor2tensor/data_generators/text_encoder.py#L176
+        Encodes each byte to an id. For 8-bit strings only. Credit to the Tensor2Tensor library
     """
     def __init__(self, is_lm=True, add_bos=False, add_eos=False):
         self.ls_lm = is_lm

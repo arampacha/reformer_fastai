@@ -31,13 +31,6 @@ nb_path: "nbs/22_experiment.experiment-commands.ipynb"
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>--do_wandb_logging=False --wandb_group='lm_base_final' --wandb_notes='Final Baseline TransformerLM experiment run' --wandb_tags='lm exp lm_base'</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Running-Experiments">Running Experiments<a class="anchor-link" href="#Running-Experiments"> </a></h2><p>After installing our library, experiments are run by running <code>run_exp TASK_NAME PARAMS</code>. The TASK_NAME sets the data and model to use while PARAMS adjust some model and training settings as well as logging.</p>
 <h2 id="Experiment-Task-Names">Experiment Task Names<a class="anchor-link" href="#Experiment-Task-Names"> </a></h2><p>When running the experiment script, each experiment type has its own "task" which defines the data and model to be used as well as the training schedule. Most model settings are hard-coded in configs to mirror the configurations used in the Reformer paper. All model and training hypermaramters used in training can be found in <a href="https://arampacha.github.io/reformer_fastai/experiment-configs.html">Experiments/Configs</a>. Depending on the task, a limited number of configs can be changed such as <code>seq_len</code> or <code>n_layers</code> for example.</p>
 <ul>
@@ -72,7 +65,7 @@ The language modelling experiments outlined in section 4.3 and 4.4 of the paper 
 The LSH-LM evaluation speed experiment used the same functions as the script but was carried out in the <a href="https://arampacha.github.io/reformer_fastai/experiment.speed-lsh_synthetic-task.html">"LSH evaluation speed" notebook here</a></p>
 <p><strong>Section 4.8 - Deep Reformer models</strong></p>
 
-<pre><code>"n_layers" --n_layers=6 --n_epochs=8 --bs=2 --max_seq_len=16384 --do_wandb_logging=True --wandb_group='n_layers' --wandb_notes='performance as function of n_layers (6)' --wandb_tags='lm exp lsh nlayers' --grad_accum=8 --clip=1.0 --seed=48 --save_model=True</code></pre>
+<pre><code>run_exp "n_layers" --n_layers=6 --n_epochs=8 --bs=2 --max_seq_len=16384 --do_wandb_logging=True --wandb_group='n_layers' --wandb_notes='performance as function of n_layers (6)' --wandb_tags='lm exp lsh nlayers' --grad_accum=8 --clip=1.0 --seed=48 --save_model=True</code></pre>
 
 </div>
 </div>
