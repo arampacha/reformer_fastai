@@ -1,4 +1,3 @@
-
 # Reformer Reproducibility Experiments
 > Fastai community entry to <a href='https://paperswithcode.com/rc2020'>2020 Papers With Code Reproducibility Challenge</a>
 
@@ -68,6 +67,10 @@ unstable depending on the random seed or learning rate.
 ## Trained Models
 
 All trained models from this project can be found in our [Weights & Biases project here](https://wandb.ai/fastai_community/reformer-fastai/artifacts)
+
+## Evaluation
+
+An notebook example of running evaluation on one of our trained models saved on Weights & Biases can be [found here](https://github.com/arampacha/reformer_fastai/blob/master/nbs/61_evaluation.ipynb)
 
 ## Project Links
 
