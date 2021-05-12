@@ -1,10 +1,11 @@
 # Reformer Reproducibility Experiments
-> Entry to <a href='https://paperswithcode.com/rc2020'>2020 Papers With Code Reproducibility Challenge</a>
+> Fastai community entry to <a href='https://paperswithcode.com/rc2020'>2020 Papers With Code Reproducibility Challenge</a>
 
 
 ## Our Reproducibility Challenge Submission
 
 - Our OpenReview paper submission to the challenge can be found [here](https://openreview.net/forum?id=3s8Y7dHYkN-) 
+- Our Weights & Biases Report, with interactive charts, is available [here](https://wandb.ai/fastai_community/reformer-fastai/reports/Reformer-Reproducibility-Report---Vmlldzo0MzQ1OTg) 
 
 ## Installation
 
@@ -21,6 +22,9 @@ Then you can install the package via pip:
 
 `pip install reformer-fastai`
 
+Or (even better) install latest version from github:
+
+`pip install git+git://github.com/arampacha/reformer_fastai.git`
 
 ### Contributing
 This project used nbdev for all development, see [their docs here](https://nbdev.fast.ai/) to install nbdev and get started. Once you have nbdev installed we suggest you follow the suggested [contributor workflow](https://github.com/arampacha/reformer_fastai/blob/master/CONTRIBUTING.md)
@@ -47,7 +51,7 @@ run_exp "lm_rev" \
 
 ## Hyperparameters Used
 
-The main hyperparameters used are documented in the [Experiment Commands](https://arampacha.github.io/reformer_fastai/experiment.experiment-commands.html) page and the [Experiment Configs](https://arampacha.github.io/reformer_fastai/experiment-configs.html) page.
+The main hyperparameters used are documented in the [Experiment Commands](https://arampacha.github.io/reformer_fastai/experiment.experiment-commands.html) page and the [Experiment Configs](https://arampacha.github.io/reformer_fastai/experiment-configs.html) page. In addition, a full list of our hyperparameters can be found in the Run Sets tables of [our Weights & Biases Report](https://wandb.ai/fastai_community/reformer-fastai/reports/Reformer-Reproducibility-Report---Vmlldzo0MzQ1OTg). To see these, navigate to the experiment of interests, click on the "Run Set" button under each chart and scroll across to find all hyperparameters.
 
 ## Results
 All full description of our results, including charts and tables can be found in our paper [here on OpenReview](https://openreview.net/forum?id=3s8Y7dHYkN-). Our results are summarised as follows:
@@ -59,6 +63,18 @@ were not run for as long as in the paper due to a lack of computational resource
 of our Reformer may be due to under-training, implementation differences or nuances in JAX vs Pytorch. Also,
 exploding gradients were encountered with mixed precision training and several model settings were found to be
 unstable depending on the random seed or learning rate.
+
+## Trained Models
+
+All trained models from this project can be found in our [Weights & Biases project here](https://wandb.ai/fastai_community/reformer-fastai/artifacts)
+
+## Project Links
+
+- [Our OpenReview paper submission](https://openreview.net/forum?id=3s8Y7dHYkN-)
+- [Reformer Reproducibility Report on WandB](https://wandb.ai/fastai_community/reformer-fastai/reports/Reformer-Reproducibility-Final-Edits---Vmlldzo0MzQ1OTg)
+- [Our project documentation](https://arampacha.github.io/reformer_fastai/)
+- [Fastai forums thread](https://forums.fast.ai/t/reproducibility-challenge-2020-fastai-folks-interested/80336/39)
+- [Google doc used for early planning](https://docs.google.com/document/d/1wF83E3B3yXIGZixEgOUJI2T2XXhT1DVCrPXS5Dbsyh8/edit)
 
 ## Resources
 
@@ -109,5 +125,6 @@ Tokenizers used with these datasets can be [found here](https://arampacha.github
 ### Related
 
 - [Coursera Attention Models in NLP course, with Reformer co-author](https://www.coursera.org/learn/attention-models-in-nlp)
+- [@hallvagi Attention blogpost](https://hallvagi.github.io/dl-explorer/fastai/attention/lstm/2020/06/29/Attention.html)
 - [The Transformer Family by @lilianweng](https://lilianweng.github.io/lil-log/2020/04/07/the-transformer-family.html)
 - [A Family of Attention Mechanisms bu @lilianweng](https://lilianweng.github.io/lil-log/2018/06/24/attention-attention.html#a-family-of-attention-mechanisms)

@@ -6,8 +6,8 @@ title: Reformer Reproducibility Experiments
 keywords: fastai
 sidebar: home_sidebar
 
-summary: "Entry to <a href='https://paperswithcode.com/rc2020'>2020 Papers With Code Reproducibility Challenge</a>"
-description: "Entry to <a href='https://paperswithcode.com/rc2020'>2020 Papers With Code Reproducibility Challenge</a>"
+summary: "Fastai community entry to <a href='https://paperswithcode.com/rc2020'>2020 Papers With Code Reproducibility Challenge</a>"
+description: "Fastai community entry to <a href='https://paperswithcode.com/rc2020'>2020 Papers With Code Reproducibility Challenge</a>"
 nb_path: "nbs/index.ipynb"
 ---
 <!--
@@ -33,6 +33,7 @@ nb_path: "nbs/index.ipynb"
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Our-Reproducibility-Challenge-Submission">Our Reproducibility Challenge Submission<a class="anchor-link" href="#Our-Reproducibility-Challenge-Submission"> </a></h2><ul>
 <li>Our OpenReview paper submission to the challenge can be found <a href="https://openreview.net/forum?id=3s8Y7dHYkN-">here</a> </li>
+<li>Our Weights &amp; Biases Report, with interactive charts, is available <a href="https://wandb.ai/fastai_community/reformer-fastai/reports/Reformer-Reproducibility-Report---Vmlldzo0MzQ1OTg">here</a> </li>
 </ul>
 <h2 id="Installation">Installation<a class="anchor-link" href="#Installation"> </a></h2>
 </div>
@@ -46,6 +47,8 @@ nb_path: "nbs/index.ipynb"
 source ./my_env/bin/activate</code></pre>
 <h3 id="Install">Install<a class="anchor-link" href="#Install"> </a></h3><p>Then you can install the package via pip:</p>
 <p><code>pip install reformer-fastai</code></p>
+<p>Or (even better) install latest version from github:</p>
+<p><code>pip install git+git://github.com/arampacha/reformer_fastai.git</code></p>
 <h3 id="Contributing">Contributing<a class="anchor-link" href="#Contributing"> </a></h3><p>This project used nbdev for all development, see <a href="https://nbdev.fast.ai/">their docs here</a> to install nbdev and get started. Once you have nbdev installed we suggest you follow the suggested <a href="https://github.com/arampacha/reformer_fastai/blob/master/CONTRIBUTING.md">contributor workflow</a></p>
 
 </div>
@@ -78,7 +81,7 @@ source ./my_env/bin/activate</code></pre>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Hyperparameters-Used">Hyperparameters Used<a class="anchor-link" href="#Hyperparameters-Used"> </a></h2><p>The main hyperparameters used are documented in the <a href="https://arampacha.github.io/reformer_fastai/experiment.experiment-commands.html">Experiment Commands</a> page and the <a href="https://arampacha.github.io/reformer_fastai/experiment-configs.html">Experiment Configs</a> page.</p>
+<h2 id="Hyperparameters-Used">Hyperparameters Used<a class="anchor-link" href="#Hyperparameters-Used"> </a></h2><p>The main hyperparameters used are documented in the <a href="https://arampacha.github.io/reformer_fastai/experiment.experiment-commands.html">Experiment Commands</a> page and the <a href="https://arampacha.github.io/reformer_fastai/experiment-configs.html">Experiment Configs</a> page. In addition, a full list of our hyperparameters can be found in the Run Sets tables of <a href="https://wandb.ai/fastai_community/reformer-fastai/reports/Reformer-Reproducibility-Report---Vmlldzo0MzQ1OTg">our Weights &amp; Biases Report</a>. To see these, navigate to the experiment of interests, click on the "Run Set" button under each chart and scroll across to find all hyperparameters.</p>
 
 </div>
 </div>
@@ -94,6 +97,26 @@ of our Reformer may be due to under-training, implementation differences or nuan
 exploding gradients were encountered with mixed precision training and several model settings were found to be
 unstable depending on the random seed or learning rate.</p>
 </blockquote>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Trained-Models">Trained Models<a class="anchor-link" href="#Trained-Models"> </a></h2><p>All trained models from this project can be found in our <a href="https://wandb.ai/fastai_community/reformer-fastai/artifacts">Weights &amp; Biases project here</a></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Project-Links">Project Links<a class="anchor-link" href="#Project-Links"> </a></h2><ul>
+<li><a href="https://openreview.net/forum?id=3s8Y7dHYkN-">Our OpenReview paper submission</a></li>
+<li><a href="https://wandb.ai/fastai_community/reformer-fastai/reports/Reformer-Reproducibility-Final-Edits---Vmlldzo0MzQ1OTg">Reformer Reproducibility Report on WandB</a></li>
+<li><a href="https://arampacha.github.io/reformer_fastai/">Our project documentation</a></li>
+<li><a href="https://forums.fast.ai/t/reproducibility-challenge-2020-fastai-folks-interested/80336/39">Fastai forums thread</a></li>
+<li><a href="https://docs.google.com/document/d/1wF83E3B3yXIGZixEgOUJI2T2XXhT1DVCrPXS5Dbsyh8/edit">Google doc used for early planning</a></li>
+</ul>
 
 </div>
 </div>
@@ -180,6 +203,7 @@ unstable depending on the random seed or learning rate.</p>
 <div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Related">Related<a class="anchor-link" href="#Related"> </a></h3><ul>
 <li><a href="https://www.coursera.org/learn/attention-models-in-nlp">Coursera Attention Models in NLP course, with Reformer co-author</a></li>
+<li><a href="https://hallvagi.github.io/dl-explorer/fastai/attention/lstm/2020/06/29/Attention.html">@hallvagi Attention blogpost</a></li>
 <li><a href="https://lilianweng.github.io/lil-log/2020/04/07/the-transformer-family.html">The Transformer Family by @lilianweng</a></li>
 <li><a href="https://lilianweng.github.io/lil-log/2018/06/24/attention-attention.html#a-family-of-attention-mechanisms">A Family of Attention Mechanisms bu @lilianweng</a></li>
 </ul>
